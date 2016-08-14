@@ -85,7 +85,7 @@ class StatifyBlacklist
       get_option('statify-blacklist'),
       array(
         'active_referer' => 0,
-        'referer'        => ''
+        'referer'        => array()
       )
     );
   }
@@ -112,7 +112,7 @@ class StatifyBlacklist
       $referer = implode('.', $referer);
 
     /* Get blacklist */
-    $blacklist = explode("\r\n", self::$_options['referer']);
+    $blacklist = self::$_options['referer'];
 
     /* Check blacklist */
     return in_array($referer, $blacklist);

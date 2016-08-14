@@ -5,7 +5,7 @@ if ( ! empty($_POST['statifyblacklist']) ) {
     StatifyBlacklist::update_options(
       array(
         'active_referer' => (int)@$_POST['statifyblacklist']['active_referer'],
-        'referer'        => (string)@$_POST['statifyblacklist']['referer']
+        'referer'        => explode("\r\n", $_POST['statifyblacklist']['referer'])
       )
     );
 }
@@ -25,7 +25,7 @@ if ( ! empty($_POST['statifyblacklist']) ) {
             <li>
                 <label for="statify-blacklist_referer">
                     <?php  esc_html_e('Referer blacklist:', 'statify-blacklist'); ?><br />
-                    <textarea cols="40" rows="5" name="statifyblacklist[referer]" id="statify-blacklist_referer"><?php print StatifyBlacklist::$_options['referer']; ?></textarea><br />
+                    <textarea cols="40" rows="5" name="statifyblacklist[referer]" id="statify-blacklist_referer"><?php print implode("\r\n", StatifyBlacklist::$_options['referer']); ?></textarea><br />
                     <small>(<?php esc_html_e('Add one domain (without subdomains) each line, e.g. example.com', 'statify-blacklist'); ?>)</small>
                 </label>
             </li>

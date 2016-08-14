@@ -13,10 +13,17 @@ class StatifyBlacklist
   /**
    * Plugin options
    *
+   * @var array
    * @since   1.0.0
    */
   public static $_options;
 
+  /**
+   * Multisite Status
+   *
+   * @var bool
+   * @since   1.0.0
+   */
   public static $multisite;
 
   /**
@@ -44,6 +51,7 @@ class StatifyBlacklist
     /* Plugin options */
     self::update_options();
 
+    /* Get multisite status */
     self::$multisite = (is_multisite() && array_key_exists(STATIFYBLACKLIST_BASE, (array)get_site_option('active_sitewide_plugins')));
 
     /* Add Filter to statify hook */
@@ -58,7 +66,7 @@ class StatifyBlacklist
       add_filter('plugin_row_meta', array('StatifyBlacklist_Admin', 'plugin_meta_link'), 10, 2);
 
       if (is_multisite()) {
-        register_deactivation_hook(__FILE__, array('StatifyBlacklist_Admin', 'single_site_deactivate'));
+        register_deactivation_hook(__FILE__, array('StatifyBlacklist_Admin', 'deactivate'));
         add_action('network_admin_menu', array('StatifyBlacklist_Admin', '_add_menu_page'));
         add_filter('network_admin_plugin_action_links', array('StatifyBlacklist_Admin', 'plugin_actions_links'), 10, 2);
       } else {

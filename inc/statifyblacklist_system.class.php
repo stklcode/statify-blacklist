@@ -8,7 +8,6 @@ defined('ABSPATH') OR exit;
  *
  * @since 1.0.0
  */
-
 class StatifyBlacklist_System extends StatifyBlacklist
 {
   /**
@@ -43,15 +42,6 @@ class StatifyBlacklist_System extends StatifyBlacklist
     }
   }
 
-  /**
-   * Plugin deactivation actions
-   *
-   * @since   1.0.0
-   */
-
-  public static function deactivate()
-  {
-  }
 
   /**
    * Plugin uninstall handler.

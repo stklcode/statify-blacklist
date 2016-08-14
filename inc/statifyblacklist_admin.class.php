@@ -2,6 +2,11 @@
 
 class StatifyBlacklist_Admin extends StatifyBlacklist
 {
+  /**
+   * Add configuration page to admin menu
+   *
+   * @since   1.0.0
+   */
   public function _add_menu_page() {
     $title = __( 'Statify Blacklist', 'statify-blacklist' );
     if (self::$multisite)

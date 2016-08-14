@@ -66,7 +66,6 @@ class StatifyBlacklist
       add_filter('plugin_row_meta', array('StatifyBlacklist_Admin', 'plugin_meta_link'), 10, 2);
 
       if (is_multisite()) {
-        register_deactivation_hook(__FILE__, array('StatifyBlacklist_Admin', 'deactivate'));
         add_action('network_admin_menu', array('StatifyBlacklist_Admin', '_add_menu_page'));
         add_filter('network_admin_plugin_action_links', array('StatifyBlacklist_Admin', 'plugin_actions_links'), 10, 2);
       } else {

@@ -4,7 +4,7 @@
 defined('ABSPATH') OR exit;
 
 /**
- * Statify system configuration
+ * Statify Blacklist system configuration
  *
  * @since 1.0.0
  */

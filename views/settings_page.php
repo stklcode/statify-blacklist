@@ -2,18 +2,19 @@
 
 /* Update plugin options */
 if ( ! empty($_POST['statifyblacklist']) ) {
-    StatifyBlacklist::update_options(
-      array(
-        'active_referer' => (int)@$_POST['statifyblacklist']['active_referer'],
-        'referer'        => explode("\r\n", $_POST['statifyblacklist']['referer'])
-      )
-    );
+  StatifyBlacklist::update_options(
+    array(
+      'active_referer' => (int)@$_POST['statifyblacklist']['active_referer'],
+      'referer'        => explode("\r\n", $_POST['statifyblacklist']['referer'])
+    )
+  );
 }
 
 ?>
 
 <div class="wrap">
     <h1><?php _e( 'Statify Blacklist', 'statify-blacklist') ?></h1>
+    <?php if (is_plugin_inactive('statify/statify.php')) { print '<div class="notice notice-warning"><p>'; esc_html_e('Statify plugin is not active.', 'statify-blacklist'); print '</p></div>'; } ?>
     <form action="" method="post" id="statify-blacklist-settings">
         <ul style="list-style: none;">
             <li>

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Statify Blacklist admin configuration
+ *
+ * @since 1.0.0
+ */
 class StatifyBlacklist_Admin extends StatifyBlacklist
 {
   /**

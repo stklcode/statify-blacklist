@@ -49,8 +49,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist
    *
    * @since   1.0.0
    */
-  public static function plugin_actions_links($links, $file)
-  {
+  public static function plugin_actions_links($links, $file) {
     $base = self::$multisite ? network_admin_url( 'settings.php' ) : admin_url( 'options-general.php' );
 
     if( $file == STATIFYBLACKLIST_BASE && current_user_can('manage_options') ) {
@@ -60,5 +59,26 @@ class StatifyBlacklist_Admin extends StatifyBlacklist
       );
     }
     return $links;
+  }
+
+  /**
+   * Filter database for cleanup.
+   *
+   * @since   1.1.0
+   */
+  public static function cleanup_database() {
+    global $wpdb;
+
+    /* Build filter regexp */
+    $refererRegexp = str_replace('.', '\.', implode('|', self::$_options['referer']));
+    if (!empty($refererRegexp)) {
+      /* Execute filter on database */
+      $wpdb->query(
+        $wpdb->prepare("DELETE FROM `$wpdb->statify` WHERE referrer REGEXP %s", $refererRegexp)
+      );
+    }
+
+    /* Optimize DB */
+    $wpdb->query("OPTIMIZE TABLE `$wpdb->statify`");
   }
 }

@@ -1,13 +1,18 @@
 <?php
 
 /* Update plugin options */
-if ( ! empty($_POST['statifyblacklist']) ) {
-  StatifyBlacklist::update_options(
-    array(
-      'active_referer' => (int)@$_POST['statifyblacklist']['active_referer'],
-      'referer'        => explode("\r\n", $_POST['statifyblacklist']['referer'])
-    )
-  );
+if ( !empty($_POST['statifyblacklist']) ) {
+  if (!empty($_POST['cleanUp'])) {
+    /* CleanUp DB */
+    StatifyBlacklist_Admin::cleanup_database();
+  } else {
+    StatifyBlacklist::update_options(
+      array(
+        'active_referer' => (int)@$_POST['statifyblacklist']['active_referer'],
+        'referer' => explode("\r\n", $_POST['statifyblacklist']['referer'])
+      )
+    );
+  }
 }
 
 ?>
@@ -33,6 +38,13 @@ if ( ! empty($_POST['statifyblacklist']) ) {
         </ul>
         <?php wp_nonce_field('statify-blacklist-settings'); ?>
 
-        <p class="submit"><input class="button-primary" type="submit" name="submit" value="<?php _e('Save Changes') ?>"></p>
+        <p class="submit">
+            <input class="button-primary" type="submit" name="submit" value="<?php _e('Save Changes') ?>">
+          <hr>
+          <input class="button-secondary" type="submit" name="cleanUp" value="<?php esc_html_e('CleanUp Database', 'statify-blacklist') ?>"
+                 onclick="return confirm('Do you really want to apply filters to database? This cannot be undone.');">
+          <br>
+          <small>(<?php esc_html_e('Applies filter (even if disabled) to data stored in database. This cannot be undone!', 'statify-blacklist'); ?>)</small>
+        </p>
     </form>
 </div>

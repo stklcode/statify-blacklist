@@ -1,5 +1,8 @@
 <?php
 
+/* Quit */
+defined('ABSPATH') OR exit;
+
 /**
  * Statify Blacklist admin configuration
  *
@@ -7,6 +10,36 @@
  */
 class StatifyBlacklist_Admin extends StatifyBlacklist
 {
+  /**
+   * Update options
+   *
+   * @return mixed  array of sanitized array on errors, FALSE if there were none
+   * @since   1.1.1
+   */
+  public static function update_options($options) {
+    if (isset($options) && current_user_can('manage_options')) {
+      /* Sanitize URLs and remove empty inputs */
+      $givenReferer = $options['referer'];
+      $sanitizedReferer = self::sanitizeURLs($givenReferer);
+
+      /* Abort on errors */
+      if (!empty(array_diff($givenReferer, $sanitizedReferer))) {
+        return $sanitizedReferer;
+      }
+
+      /* Update database on success */
+      if ((is_multisite() && array_key_exists(STATIFYBLACKLIST_BASE, (array)get_site_option('active_sitewide_plugins'))))
+        update_site_option('statify-blacklist', $options);
+      else
+        update_option('statify-blacklist', $options);
+    }
+
+    /* Refresh options */
+    parent::update_options();
+
+    return false;
+  }
+
   /**
    * Add configuration page to admin menu
    *
@@ -65,20 +98,47 @@ class StatifyBlacklist_Admin extends StatifyBlacklist
    * Filter database for cleanup.
    *
    * @since   1.1.0
+   * @changed 1.1.1
    */
   public static function cleanup_database() {
+    /* Check user permissions */
+    if (!current_user_can('manage_options'))
+      die(_e('Are you sure you want to do this?'));
+
     global $wpdb;
 
+    /* Sanitize URLs */
+    $referer = self::sanitizeURLs(self::$_options['referer']);
+
     /* Build filter regexp */
-    $refererRegexp = str_replace('.', '\.', implode('|', self::$_options['referer']));
+    $refererRegexp = str_replace('.', '\.', implode('|', $referer));
     if (!empty($refererRegexp)) {
       /* Execute filter on database */
       $wpdb->query(
         $wpdb->prepare("DELETE FROM `$wpdb->statify` WHERE referrer REGEXP %s", $refererRegexp)
       );
-    }
 
-    /* Optimize DB */
-    $wpdb->query("OPTIMIZE TABLE `$wpdb->statify`");
+      /* Optimize DB */
+      $wpdb->query("OPTIMIZE TABLE `$wpdb->statify`");
+    }
+  }
+
+
+  /**
+   * Sanitize URLs and remove empty results
+   * @param $urls array   given array of URLs
+   * @return array  sanitized array
+   *
+   * @since    1.1.1
+   */
+  private static function sanitizeURLs($urls) {
+    return array_filter(
+      array_map(
+        function($r) {
+          return preg_replace('/[^\da-z\.-]/i', '', filter_var($r, FILTER_SANITIZE_URL));
+        },
+        $urls
+      )
+    );
   }
 }

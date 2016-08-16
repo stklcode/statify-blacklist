@@ -79,15 +79,9 @@ class StatifyBlacklist
    * Update options
    *
    * @since   1.0.0
+   * @changed 1.1.1
    */
-  public static function update_options($options = null) {
-    if (isset($options)) {
-      if ((is_multisite() && array_key_exists(STATIFYBLACKLIST_BASE, (array)get_site_option('active_sitewide_plugins'))))
-        update_site_option('statify-blacklist', $options);
-      else
-        update_option('statify-blacklist', $options);
-    }
-
+  public static function update_options() {
     self::$_options = wp_parse_args(
       get_option('statify-blacklist'),
       array(

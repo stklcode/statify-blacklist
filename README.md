@@ -1,8 +1,8 @@
 # Statify Blacklist #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 3.9
-* Tested up to:      4.5.3
-* Stable tag:        1.1.1
+* Tested up to:      4.6
+* Stable tag:        1.1.2
 * License:           GPLv3 or later
 * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,13 +13,13 @@ This plugin adds customizable blacklist to Statify to allow blocking of referer 
 
 ### Current Features ##
 #### Referer Blacklist ####
-Add a list of domains (for simplicity onl second-level, e.g. _example.com_ which blocks _everything.example.com_).
+Add a list of domains (for simplicity only second-level, e.g. _example.com_ which blocks _everything.example.com_).
 
 #### CleanUp Database ####
 Filters can be applied to data stored in database after modifying filter rules or for one-time clean-up.
 
 #### Compatibility ####
-This plugin requires Statify to be installed. The extension has been tested with Statify 1.4.2
+This plugin requires Statify to be installed. The extension has been tested with Statify 1.4.3
 The plugin is capable of handling multisite installations.
 
 ### Credits ###
@@ -40,6 +40,9 @@ The plugin is capable of handling multisite installations.
 1. Statify Blacklist settings page
 
 ## Changelog ##
+### 1.1.2 / 17.08.2016 ###
+* Prepared for localization
+
 ### 1.1.1 / 16.08.2016 ###
 * Some security fixes
 

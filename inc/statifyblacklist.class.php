@@ -40,6 +40,7 @@ class StatifyBlacklist
    * Class constructor
    *
    * @since   1.0.0
+   * @changed 1.1.2
    */
   public function __construct()
   {
@@ -58,11 +59,13 @@ class StatifyBlacklist
     add_filter('statify_skip_tracking', array('StatifyBlacklist', 'apply_blacklist_filter'));
 
     /* Admin only filters */
-    if ( is_admin() ) {
+    if (is_admin()) {
+      /* Load Textdomain (only needed for backend */
+      load_plugin_textdomain( 'statifyblacklist', false, STATIFYBLACKLIST_DIR.'/lang/');
+
+      /* Add actions */
       add_action('wpmu_new_blog', array('StatifyBlacklist_Install', 'init_site'));
-
       add_action('delete_blog', array('StatifyBlacklist_System', 'init_site'));
-
       add_filter('plugin_row_meta', array('StatifyBlacklist_Admin', 'plugin_meta_link'), 10, 2);
 
       if (is_multisite()) {

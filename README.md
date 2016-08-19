@@ -36,6 +36,30 @@ The plugin is capable of handling multisite installations.
 * WordPress 3.9
 * Statify plugin installed and activated (tested up to 1.4.3)
 
+## Frequently Asked Questions ##
+
+### What is blocked by default? ###
+Nothing. By default all blacklists are empty and disabled. They can and have to be filled by the blog administrator.
+
+A default blacklist is not provided, as the plugin itself totally neutral. If you want to filter out referer spam, 
+visitors from search engines or just "false" referers from 301 redirects only depends on you.
+
+### Does the filter effect user experience? ###
+No. It only prevent's _Statify_ from tracking, nothing more or less.
+
+### Does live filtering impact performance? ###
+Yes, but probalby not noticeable. Checking a single referer string against a (usually small) list should be neglectible compared to the total loading procedure.
+If this still is an issue for you, consider deactivating the filter and only run the one-time-cleanup.
+ 
+### Is any personal data collected? ###
+No. The privacy policy of _Statify_ is untouched. Data is only processed, not stored or exposed to anyone.
+
+### Are regular expression filters possible? ###
+Not for now. At the moment it's only a simple domain filter, as regular expression matching is significantly slower.
+
+If you like to have this feature, please leave a feature request in GitHub or the WordPress support forum.
+
+
 ## Screenshots ##
 1. Statify Blacklist settings page
 

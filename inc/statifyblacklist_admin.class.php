@@ -18,7 +18,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	public static function update_options( $options ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
 			/* Sanitize URLs and remove empty inputs */
-			$givenReferer = $options['referer'];
+			$givenReferer     = $options['referer'];
 			$sanitizedReferer = self::sanitizeURLs( $givenReferer );
 
 			/* Abort on errors */
@@ -109,7 +109,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 * Filter database for cleanup.
 	 *
 	 * @since   1.1.0
-	 * @changed 1.1.1
+	 * @changed 1.2.1
 	 */
 	public static function cleanup_database() {
 		/* Check user permissions */
@@ -123,7 +123,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		$referer = self::sanitizeURLs( self::$_options['referer'] );
 
 		/* Build filter regexp */
-		$refererRegexp = str_replace( '.', '\.', implode( '|', $referer ) );
+		$refererRegexp = str_replace( '.', '\.', implode( '|', array_flip( $referer ) ) );
 		if ( ! empty( $refererRegexp ) ) {
 			/* Execute filter on database */
 			$wpdb->query(
@@ -144,14 +144,17 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 * @return array  sanitized array
 	 *
 	 * @since    1.1.1
+	 * @changed  1.2.0
 	 */
 	private static function sanitizeURLs( $urls ) {
-		return array_filter(
-			array_map(
-				function ( $r ) {
-					return preg_replace( '/[^\da-z\.-]/i', '', filter_var( $r, FILTER_SANITIZE_URL ) );
-				},
-				$urls
+		return array_flip(
+			array_filter(
+				array_map(
+					function ( $r ) {
+						return preg_replace( '/[^\da-z\.-]/i', '', filter_var( $r, FILTER_SANITIZE_URL ) );
+					},
+					array_flip( $urls )
+				)
 			)
 		);
 	}

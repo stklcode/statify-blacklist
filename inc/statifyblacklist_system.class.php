@@ -28,7 +28,10 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 				switch_to_blog( $site_id );
 				add_option(
 					'statify-blacklist',
-					array()
+					array(
+						'activate-referer' => 0,
+						'referer'          => array()
+					)
 				);
 			}
 
@@ -36,7 +39,10 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		} else {
 			add_option(
 				'statify-blacklist',
-				array()
+				array(
+					'activate-referer' => 0,
+					'referer'          => array()
+				)
 			);
 		}
 	}
@@ -65,5 +71,29 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		}
 
 		delete_option( 'statify-blacklist' );
+	}
+
+
+	/**
+	 * Upgrade plugin options.
+	 *
+	 * @param object $upgrader Upgrader object (unused)
+	 * @param array $options Options array
+	 *
+	 * @since 1.2.0
+	 */
+	public static function upgrade() {
+		self::update_options();
+		/* Check if config array is not associative (pre 1.2.0) */
+		if ( array_keys( self::$_options['referer'] ) === range( 0, count( self::$_options['referer'] ) - 1 ) ) {
+			/* Flip referer array to make domains keys */
+			$options            = self::$_options;
+			$options['referer'] = array_flip( self::$_options['referer'] );
+			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
+				update_site_option( 'statify-blacklist', $options );
+			} else {
+				update_option( 'statify-blacklist', $options );
+			}
+		}
 	}
 }

@@ -64,6 +64,9 @@ If you like to have this feature, please leave a feature request in GitHub or th
 1. Statify Blacklist settings page
 
 ## Changelog ##
+### 1.2.0 / (work in progress) ###
+* Switched from `in_array()` to faster `isset()` for referer checking
+
 ### 1.1.2 / 17.08.2016 ###
 * Prepared for localization
 

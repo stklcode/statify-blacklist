@@ -8,7 +8,7 @@ Author:      Stefan Kalscheuer
 Author URI:  https://stklcode.de
 Plugin URI:  https://wordpress.org/plugins/statify-blacklist
 License:     GPLv3 or later
-Version:     1.1.2
+Version:     1.2.0
 */
 
 /* Quit */
@@ -25,6 +25,9 @@ add_action( 'plugins_loaded', array( 'StatifyBlacklist', 'instance' ) );
 register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'install' ) );
 
 register_uninstall_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'uninstall' ) );
+
+/* Upgrade hook to v1.2.0 */
+register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'upgrade' ) );
 
 /* Autoload */
 spl_autoload_register( 'statifyBlacklist_autoload' );

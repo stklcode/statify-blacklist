@@ -100,6 +100,7 @@ class StatifyBlacklist {
 	 * @return  TRUE if referer matches blacklist.
 	 *
 	 * @since   1.0.0
+	 * @changed 1.2.0
 	 */
 	public static function apply_blacklist_filter() {
 		/* Skip if blacklist is inactive */
@@ -121,6 +122,6 @@ class StatifyBlacklist {
 
 		/* Check blacklist */
 
-		return in_array( $referer, $blacklist );
+		return isset( $blacklist[ $referer ] );
 	}
 }

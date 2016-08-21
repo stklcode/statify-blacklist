@@ -28,7 +28,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		$statifyBlacklistUpdateResult = StatifyBlacklist_Admin::update_options(
 			array(
 				'active_referer' => (int) @$_POST['statifyblacklist']['active_referer'],
-				'referer'        => $referer
+				'referer'        => array_flip( $referer )
 			)
 		);
 
@@ -76,12 +76,11 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 					<?php esc_html_e( 'Referer blacklist:', 'statify-blacklist' ); ?><br/>
 					<textarea cols="40" rows="5" name="statifyblacklist[referer]" id="statify-blacklist_referer"><?php
 						if ( isset( $statifyBlacklistUpdateResult ) && $statifyBlacklistUpdateResult !== false ) {
-							print esc_html( implode( "\r\n", $statifyBlacklistUpdateResult ) );
+							print esc_html( implode( "\r\n", array_keys( $statifyBlacklistUpdateResult ) ) );
 						} else {
-							print esc_html( implode( "\r\n", StatifyBlacklist::$_options['referer'] ) );
+							print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['referer'] ) ) );
 						}
-						?></textarea>
-					<br />
+						?></textarea><br/>
 					<small>
 						(<?php esc_html_e( 'Add one domain (without subdomains) each line, e.g. example.com', 'statify-blacklist' ); ?>
 						)
@@ -92,12 +91,12 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		<?php wp_nonce_field( 'statify-blacklist-settings' ); ?>
 
 		<p class="submit">
-			<input class="button-primary" type="submit" name="submit" value="<?php _e( 'Save Changes' ) ?>" />
-		<hr />
+			<input class="button-primary" type="submit" name="submit" value="<?php _e( 'Save Changes' ) ?>">
+		<hr>
 		<input class="button-secondary" type="submit" name="cleanUp"
 		       value="<?php esc_html_e( 'CleanUp Database', 'statify-blacklist' ) ?>"
 		       onclick="return confirm('Do you really want to apply filters to database? This cannot be undone.');">
-		<br />
+		<br>
 		<small><?php esc_html_e( 'Applies filter (even if disabled) to data stored in database. This cannot be undone!', 'statify-blacklist' ); ?></small>
 		</p>
 	</form>

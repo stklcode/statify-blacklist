@@ -81,10 +81,11 @@ class StatifyBlacklist {
 	/**
 	 * Update options
 	 *
+	 * @param  $options array  New options to save
 	 * @since   1.0.0
 	 * @changed 1.1.1
 	 */
-	public static function update_options() {
+	public static function update_options( $options = null ) {
 		self::$_options = wp_parse_args(
 			get_option( 'statify-blacklist' ),
 			array(

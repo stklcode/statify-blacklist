@@ -12,10 +12,11 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Update options
 	 *
+	 * @param  $options array  New options to save
 	 * @return mixed  array of sanitized array on errors, FALSE if there were none
 	 * @since   1.1.1
 	 */
-	public static function update_options( $options ) {
+	public static function update_options( $options = null ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
 			/* Sanitize URLs and remove empty inputs */
 			$givenReferer     = $options['referer'];
@@ -35,7 +36,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		}
 
 		/* Refresh options */
-		parent::update_options();
+		parent::update_options( $options );
 
 		return false;
 	}

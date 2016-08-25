@@ -28,6 +28,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		$statifyBlacklistUpdateResult = StatifyBlacklist_Admin::update_options(
 			array(
 				'active_referer' => (int) @$_POST['statifyblacklist']['active_referer'],
+				'cron_referer'   => (int) @$_POST['statifyblacklist']['cron_referer'],
 				'referer'        => array_flip( $referer )
 			)
 		);
@@ -40,7 +41,6 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		}
 	}
 }
-
 ?>
 
 <div class="wrap">
@@ -72,6 +72,13 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</label>
 			</li>
 			<li>
+				<label for="statify-blacklist_cron_referer">
+					<input type="checkbox" name="statifyblacklist[cron_referer]" id="statifyblacklist_cron_referer"
+					       value="1" <?php checked( StatifyBlacklist::$_options['cron_referer'], 1 ); ?> />
+					<?php esc_html_e( 'CronJob execution', 'statify-blacklist' ); ?>
+				</label>
+			</li>
+			<li>
 				<label for="statify-blacklist_referer">
 					<?php esc_html_e( 'Referer blacklist:', 'statify-blacklist' ); ?><br/>
 					<textarea cols="40" rows="5" name="statifyblacklist[referer]" id="statify-blacklist_referer"><?php
@@ -80,7 +87,8 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 						} else {
 							print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['referer'] ) ) );
 						}
-						?></textarea><br/>
+						?></textarea>
+					<br />
 					<small>
 						(<?php esc_html_e( 'Add one domain (without subdomains) each line, e.g. example.com', 'statify-blacklist' ); ?>
 						)
@@ -92,11 +100,11 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 
 		<p class="submit">
 			<input class="button-primary" type="submit" name="submit" value="<?php _e( 'Save Changes' ) ?>">
-		<hr>
+		<hr />
 		<input class="button-secondary" type="submit" name="cleanUp"
 		       value="<?php esc_html_e( 'CleanUp Database', 'statify-blacklist' ) ?>"
 		       onclick="return confirm('Do you really want to apply filters to database? This cannot be undone.');">
-		<br>
+		<br />
 		<small><?php esc_html_e( 'Applies filter (even if disabled) to data stored in database. This cannot be undone!', 'statify-blacklist' ); ?></small>
 		</p>
 	</form>

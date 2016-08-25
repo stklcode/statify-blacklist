@@ -19,7 +19,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	public static function update_options( $options = null ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
 			/* Sanitize URLs and remove empty inputs */
-			$givenReferer     = $options['referer'];
+			$givenReferer = $options['referer'];
 			$sanitizedReferer = self::sanitizeURLs( $givenReferer );
 
 			/* Abort on errors */
@@ -110,11 +110,11 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 * Filter database for cleanup.
 	 *
 	 * @since   1.1.0
-	 * @changed 1.2.1
+	 * @changed 1.2.0
 	 */
 	public static function cleanup_database() {
 		/* Check user permissions */
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) && ! ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
 			die( _e( 'Are you sure you want to do this?' ) );
 		}
 

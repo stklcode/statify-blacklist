@@ -52,8 +52,10 @@ class StatifyBlacklist {
 		/* Get multisite status */
 		self::$multisite = ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) );
 
-		/* Add Filter to statify hook */
-		add_filter( 'statify_skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
+		/* Add Filter to statify hook if enabled */
+		if ( self::$_options['active_referer'] != 1 ) {
+			add_filter( 'statify_skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
+		}
 
 		/* Admin only filters */
 		if ( is_admin() ) {
@@ -76,6 +78,13 @@ class StatifyBlacklist {
 				add_filter( 'plugin_action_links', array( 'StatifyBlacklist_Admin', 'plugin_actions_links' ), 10, 2 );
 			}
 		}
+
+		/* CronJob to clean up database */
+		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+			if ( self::$_options['cron_referer'] == 1 ) {
+				add_action( 'statify_cleanup', array( 'StatifyBlacklist_Admin', 'cleanup_database' ) );
+			}
+		}
 	}
 
 	/**
@@ -90,6 +99,7 @@ class StatifyBlacklist {
 			get_option( 'statify-blacklist' ),
 			array(
 				'active_referer' => 0,
+				'cron_referer'   => 0,
 				'referer'        => array()
 			)
 		);

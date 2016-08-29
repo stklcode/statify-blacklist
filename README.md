@@ -2,7 +2,7 @@
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 3.9
 * Tested up to:      4.6
-* Stable tag:        1.1.2
+* Stable tag:        1.2.0
 * License:           GPLv3 or later
 * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -41,7 +41,7 @@ The plugin is capable of handling multisite installations.
 ### What is blocked by default? ###
 Nothing. By default all blacklists are empty and disabled. They can and have to be filled by the blog administrator.
 
-A default blacklist is not provided, as the plugin itself totally neutral. If you want to filter out referer spam, 
+A default blacklist is not provided, as the plugin itself is totally neutral. If you want to filter out referer spam, 
 visitors from search engines or just "false" referers from 301 redirects only depends on you.
 
 ### Does the filter effect user experience? ###
@@ -64,7 +64,7 @@ If you like to have this feature, please leave a feature request in GitHub or th
 1. Statify Blacklist settings page
 
 ## Changelog ##
-### 1.2.0 / (work in progress) ###
+### 1.2.0 / 29.08.2016 ###
 * Switched from `in_array()` to faster `isset()` for referer checking
 * Optional cron execiton implemented
 

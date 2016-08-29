@@ -76,6 +76,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 					<input type="checkbox" name="statifyblacklist[cron_referer]" id="statifyblacklist_cron_referer"
 					       value="1" <?php checked( StatifyBlacklist::$_options['cron_referer'], 1 ); ?> />
 					<?php esc_html_e( 'CronJob execution', 'statify-blacklist' ); ?>
+					<small>(<?php esc_html_e( 'Clean database periodically in background', 'statify-blacklist' ); ?>)</small>
 				</label>
 			</li>
 			<li>

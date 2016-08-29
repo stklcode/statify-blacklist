@@ -133,6 +133,9 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 
 			/* Optimize DB */
 			$wpdb->query( "OPTIMIZE TABLE `$wpdb->statify`" );
+
+			/* Delete transient statify data */
+			delete_transient('statify_data');
 		}
 	}
 

@@ -49,7 +49,7 @@ No. It only prevent's _Statify_ from tracking, nothing more or less.
 
 ### Does live filtering impact performance? ###
 Yes, but probalby not noticeable. Checking a single referer string against a (usually small) list should be neglectible compared to the total loading procedure.
-If this still is an issue for you, consider deactivating the filter and only run the one-time-cleanup.
+If this still is an issue for you, consider deactivating the filter and only run the one-time-cleanup or activate the cron job.
  
 ### Is any personal data collected? ###
 No. The privacy policy of _Statify_ is untouched. Data is only processed, not stored or exposed to anyone.
@@ -66,6 +66,7 @@ If you like to have this feature, please leave a feature request in GitHub or th
 ## Changelog ##
 ### 1.2.0 / (work in progress) ###
 * Switched from `in_array()` to faster `isset()` for referer checking
+* Optional cron execiton implemented
 
 ### 1.1.2 / 17.08.2016 ###
 * Prepared for localization

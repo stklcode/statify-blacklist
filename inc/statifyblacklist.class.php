@@ -91,6 +91,7 @@ class StatifyBlacklist {
 	 * Update options
 	 *
 	 * @param  $options array  New options to save
+	 *
 	 * @since   1.0.0
 	 * @changed 1.1.1
 	 */
@@ -122,11 +123,11 @@ class StatifyBlacklist {
 		/* Extract relevant domain parts */
 		$referer = strtolower( ( isset( $_SERVER['HTTP_REFERER'] ) ? parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) : '' ) );
 		$referer = explode( '.', $referer );
-		if ( count( $referer ) > 1 ) {
-			$referer = implode( '.', array_slice( $referer, - 2 ) );
-		} else {
+//		if ( count( $referer ) > 1 ) {
+//			$referer = implode( '.', array_slice( $referer, - 2 ) );
+//		} else {
 			$referer = implode( '.', $referer );
-		}
+//		}
 
 		/* Get blacklist */
 		$blacklist = self::$_options['referer'];

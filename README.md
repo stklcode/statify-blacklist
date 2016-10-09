@@ -65,6 +65,9 @@ If you like to have this feature, please leave a feature request in GitHub or th
 
 ## Changelog ##
 
+### 1.3.0 / [under development] ###
+* Regular expressions filtering implemented
+
 ### 1.2.1 / 10.10.2016 ###
 * Fix live filter configuration check
 

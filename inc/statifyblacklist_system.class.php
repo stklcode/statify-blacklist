@@ -80,7 +80,8 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @param object $upgrader Upgrader object (unused)
 	 * @param array $options Options array
 	 *
-	 * @since 1.2.0
+	 * @since   1.2.0
+	 * @changed 1.3.0
 	 */
 	public static function upgrade() {
 		self::update_options();
@@ -89,6 +90,17 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			/* Flip referer array to make domains keys */
 			$options            = self::$_options;
 			$options['referer'] = array_flip( self::$_options['referer'] );
+			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
+				update_site_option( 'statify-blacklist', $options );
+			} else {
+				update_option( 'statify-blacklist', $options );
+			}
+		}
+
+		/* Check if regular expressions option exists (pre 1.3.0) */
+		if ( isset( self::$_options['referer_regexp'] ) ) {
+			$options = self::$_options;
+			$options['referer_regexp'] = 0;
 			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
 				update_site_option( 'statify-blacklist', $options );
 			} else {

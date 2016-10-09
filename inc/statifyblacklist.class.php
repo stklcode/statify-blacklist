@@ -101,7 +101,8 @@ class StatifyBlacklist {
 			array(
 				'active_referer' => 0,
 				'cron_referer'   => 0,
-				'referer'        => array()
+				'referer'        => array(),
+				'referer_regexp' => 0
 			)
 		);
 	}
@@ -112,7 +113,7 @@ class StatifyBlacklist {
 	 * @return  TRUE if referer matches blacklist.
 	 *
 	 * @since   1.0.0
-	 * @changed 1.2.0
+	 * @changed 1.3.0
 	 */
 	public static function apply_blacklist_filter() {
 		/* Skip if blacklist is inactive */
@@ -120,20 +121,26 @@ class StatifyBlacklist {
 			return false;
 		}
 
-		/* Extract relevant domain parts */
-		$referer = strtolower( ( isset( $_SERVER['HTTP_REFERER'] ) ? parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) : '' ) );
-		$referer = explode( '.', $referer );
-//		if ( count( $referer ) > 1 ) {
-//			$referer = implode( '.', array_slice( $referer, - 2 ) );
-//		} else {
-			$referer = implode( '.', $referer );
-//		}
+		/* Regular Expression filtering since 1.3.0 */
+		if ( isset(self::$_options['referer_regexp']) && self::$_options['referer_regexp'] > 0 ) {
+			/* Get full referer string */
+			$referer = ( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' );
+			/* Merge given regular expressions into one */
+			$regexp = '/' . implode( "|", array_keys( self::$_options['referer'] ) ) . '/';
+			if ( self::$_options['referer_regexp'] == 2 ) {
+				$regexp .= 'i';
+			}
+			/* Check blacklist */
+			return preg_match( $regexp, $referer) === 1;
+		} else {
+			/* Extract relevant domain parts */
+			$referer = strtolower( ( isset( $_SERVER['HTTP_REFERER'] ) ? parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) : '' ) );
 
-		/* Get blacklist */
-		$blacklist = self::$_options['referer'];
+			/* Get blacklist */
+			$blacklist = self::$_options['referer'];
 
-		/* Check blacklist */
-
-		return isset( $blacklist[ $referer ] );
+			/* Check blacklist */
+			return isset( $blacklist[ $referer ] );
+		}
 	}
 }

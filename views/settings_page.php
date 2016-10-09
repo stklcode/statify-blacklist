@@ -29,7 +29,8 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			array(
 				'active_referer' => (int) @$_POST['statifyblacklist']['active_referer'],
 				'cron_referer'   => (int) @$_POST['statifyblacklist']['cron_referer'],
-				'referer'        => array_flip( $referer )
+				'referer'        => array_flip( $referer ),
+				'referer_regexp' => (int) @$_POST['statifyblacklist']['referer_regexp']
 			)
 		);
 
@@ -80,6 +81,24 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</label>
 			</li>
 			<li>
+				<label for="statify-blacklist_referer_regexp">
+					<?php esc_html_e( 'Use regular expressions', 'statify-blacklist' ); ?>:
+					<select name="statifyblacklist[referer_regexp]" id="statifyblacklist_referer_regexp">
+						<option value="0" <?php selected( StatifyBlacklist::$_options['referer_regexp'], 0 ); ?>>
+							<?php esc_html_e( 'Disabled', 'statify-blacklist' ); ?>
+						</option>
+						<option value="1" <?php selected( StatifyBlacklist::$_options['referer_regexp'], 1 ); ?>>
+							<?php esc_html_e( 'Case-sensitive', 'statify-blacklist' ); ?>
+						</option>
+						<option value="2" <?php selected( StatifyBlacklist::$_options['referer_regexp'], 2 ); ?>>
+							<?php esc_html_e( 'Case-insensitive', 'statify-blacklist' ); ?>
+						</option>
+					</select>
+					<br />
+					<small>(<?php esc_html_e( 'Performance slower than standard domain filter. Recommended for cron or manual execition only.', 'statify-blacklist' ); ?>)</small>
+				</label>
+			</li>
+			<li>
 				<label for="statify-blacklist_referer">
 					<?php esc_html_e( 'Referer blacklist:', 'statify-blacklist' ); ?><br/>
 					<textarea cols="40" rows="5" name="statifyblacklist[referer]" id="statify-blacklist_referer"><?php
@@ -101,12 +120,12 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 
 		<p class="submit">
 			<input class="button-primary" type="submit" name="submit" value="<?php _e( 'Save Changes' ) ?>">
-		<hr />
-		<input class="button-secondary" type="submit" name="cleanUp"
-		       value="<?php esc_html_e( 'CleanUp Database', 'statify-blacklist' ) ?>"
-		       onclick="return confirm('Do you really want to apply filters to database? This cannot be undone.');">
-		<br />
-		<small><?php esc_html_e( 'Applies filter (even if disabled) to data stored in database. This cannot be undone!', 'statify-blacklist' ); ?></small>
+			<hr />
+			<input class="button-secondary" type="submit" name="cleanUp"
+			       value="<?php esc_html_e( 'CleanUp Database', 'statify-blacklist' ) ?>"
+			       onclick="return confirm('Do you really want to apply filters to database? This cannot be undone.');">
+			<br />
+			<small><?php esc_html_e( 'Applies filter (even if disabled) to data stored in database. This cannot be undone!', 'statify-blacklist' ); ?></small>
 		</p>
 	</form>
 </div>

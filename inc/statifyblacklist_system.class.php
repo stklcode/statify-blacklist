@@ -9,6 +9,9 @@ defined( 'ABSPATH' ) OR exit;
  * @since 1.0.0
  */
 class StatifyBlacklist_System extends StatifyBlacklist {
+
+	const VERSION_MAIN = 1.3;
+
 	/**
 	 * Plugin install handler.
 	 *
@@ -77,9 +80,6 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	/**
 	 * Upgrade plugin options.
 	 *
-	 * @param object $upgrader Upgrader object (unused)
-	 * @param array $options Options array
-	 *
 	 * @since   1.2.0
 	 * @changed 1.3.0
 	 */
@@ -97,9 +97,12 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			}
 		}
 
-		/* Check if regular expressions option exists (pre 1.3.0) */
-		if ( isset( self::$_options['referer_regexp'] ) ) {
+		/* Check if version is set (not before 1.3.0) */
+		if ( ! isset( self::$_options['version'] ) ) {
 			$options = self::$_options;
+			/* Set version */
+			$options['version'] = self::VERSION_MAIN;
+			/* Add regular expression option (as of 1.3) */
 			$options['referer_regexp'] = 0;
 			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
 				update_site_option( 'statify-blacklist', $options );

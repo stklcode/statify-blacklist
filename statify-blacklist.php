@@ -26,7 +26,7 @@ register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System
 
 register_uninstall_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'uninstall' ) );
 
-/* Upgrade hook to v1.2.0 */
+/* Upgrade hook */
 register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'upgrade' ) );
 
 /* Autoload */

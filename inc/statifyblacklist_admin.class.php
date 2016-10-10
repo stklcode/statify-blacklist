@@ -126,10 +126,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 
 		if ( isset( self::$_options['referer_regexp'] ) && self::$_options['referer_regexp'] > 0 ) {
 			/* Merge given regular expressions into one */
-			$refererRegexp = '/' . implode( "|", array_keys( self::$_options['referer'] ) ) . '/';
-			if ( self::$_options['referer_regexp'] == 2 ) {
-				$refererRegexp .= 'i';
-			}
+			$refererRegexp = implode( "|", array_keys( self::$_options['referer'] ) );
 		} else {
 			/* Sanitize URLs */
 			$referer = self::sanitizeURLs( self::$_options['referer'] );
@@ -141,7 +138,9 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		if ( ! empty( $refererRegexp ) ) {
 			/* Execute filter on database */
 			$wpdb->query(
-				$wpdb->prepare( "DELETE FROM `$wpdb->statify` WHERE referrer REGEXP %s", $refererRegexp )
+				$wpdb->prepare( "DELETE FROM `$wpdb->statify` WHERE "
+				                . ( ( self::$_options['referer_regexp'] == 1 ) ? " BINARY " : "" )
+				                . "referrer REGEXP %s", $refererRegexp )
 			);
 
 			/* Optimize DB */

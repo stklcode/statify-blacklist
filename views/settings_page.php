@@ -83,6 +83,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			<li>
 				<label for="statify-blacklist_referer_regexp">
 					<?php esc_html_e( 'Use regular expressions', 'statify-blacklist' ); ?>:
+					<br />
 					<select name="statifyblacklist[referer_regexp]" id="statifyblacklist_referer_regexp">
 						<option value="0" <?php selected( StatifyBlacklist::$_options['referer_regexp'], 0 ); ?>>
 							<?php esc_html_e( 'Disabled', 'statify-blacklist' ); ?>
@@ -94,7 +95,6 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 							<?php esc_html_e( 'Case-insensitive', 'statify-blacklist' ); ?>
 						</option>
 					</select>
-					<br />
 					<small>(<?php esc_html_e( 'Performance slower than standard domain filter. Recommended for cron or manual execition only.', 'statify-blacklist' ); ?>)</small>
 				</label>
 			</li>

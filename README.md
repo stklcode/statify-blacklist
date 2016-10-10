@@ -2,7 +2,7 @@
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 3.9
 * Tested up to:      4.6
-* Stable tag:        1.2.0
+* Stable tag:        1.2.1
 * License:           GPLv3 or later
 * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,8 +32,8 @@ The plugin is capable of handling multisite installations.
 * Goto _Settings_ -> _Statify Blacklist_ to configure the plugin
 
 ### Requirements ###
-* PHP 5.2.4
-* WordPress 3.9
+* PHP 5.2.4 or above
+* WordPress 3.9 or above
 * Statify plugin installed and activated (tested up to 1.4.3)
 
 ## Frequently Asked Questions ##
@@ -64,6 +64,10 @@ If you like to have this feature, please leave a feature request in GitHub or th
 1. Statify Blacklist settings page
 
 ## Changelog ##
+
+### 1.2.1 / 10.10.2016 ###
+* Fix live filter configuration check
+
 ### 1.2.0 / 29.08.2016 ###
 * Switched from `in_array()` to faster `isset()` for referer checking
 * Optional cron execiton implemented

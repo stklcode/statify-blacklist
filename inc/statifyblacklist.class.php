@@ -38,7 +38,7 @@ class StatifyBlacklist {
 	 * Class constructor
 	 *
 	 * @since   1.0.0
-	 * @changed 1.1.2
+	 * @changed 1.2.1
 	 */
 	public function __construct() {
 		/* Skip on autosave or AJAX */
@@ -53,7 +53,7 @@ class StatifyBlacklist {
 		self::$multisite = ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) );
 
 		/* Add Filter to statify hook if enabled */
-		if ( self::$_options['active_referer'] != 1 ) {
+		if ( self::$_options['active_referer'] != 0 ) {
 			add_filter( 'statify_skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
 		}
 

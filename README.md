@@ -55,9 +55,9 @@ If this still is an issue for you, consider deactivating the filter and only run
 No. The privacy policy of _Statify_ is untouched. Data is only processed, not stored or exposed to anyone.
 
 ### Are regular expression filters possible? ###
-Not for now. At the moment it's only a simple domain filter, as regular expression matching is significantly slower.
+Yes, it it. Just select if you want to filter using regular expressions case sensitive or insensitive.
 
-If you like to have this feature, please leave a feature request in GitHub or the WordPress support forum.
+Note, that regular expression matching is significantly slower than the plain domain filter. Hence it is only recommended for asynchronous cron or manual execution and not for live filtering.
 
 
 ## Screenshots ##
@@ -65,7 +65,7 @@ If you like to have this feature, please leave a feature request in GitHub or th
 
 ## Changelog ##
 
-### 1.3.0 / [under development] ###
+### 1.3.0 / 17.10.2016 ###
 * Regular expressions filtering implemented
 
 ### 1.2.1 / 10.10.2016 ###

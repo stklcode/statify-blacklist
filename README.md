@@ -1,7 +1,7 @@
 # Statify Blacklist #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 3.9
-* Tested up to:      4.6
+* Tested up to:      4.7
 * Stable tag:        1.3.0
 * License:           GPLv3 or later
 * License URI:       https://www.gnu.org/licenses/gpl-3.0.html

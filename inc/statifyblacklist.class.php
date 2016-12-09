@@ -113,12 +113,12 @@ class StatifyBlacklist {
 	 * @return  TRUE if referer matches blacklist.
 	 *
 	 * @since   1.0.0
-	 * @changed 1.3.0
+	 * @changed 1.3.1
 	 */
 	public static function apply_blacklist_filter() {
 		/* Skip if blacklist is inactive */
 		if ( self::$_options['active_referer'] != 1 ) {
-			return false;
+			return NULL;
 		}
 
 		/* Regular Expression filtering since 1.3.0 */
@@ -130,8 +130,8 @@ class StatifyBlacklist {
 			if ( self::$_options['referer_regexp'] == 2 ) {
 				$regexp .= 'i';
 			}
-			/* Check blacklist */
-			return preg_match( $regexp, $referer) === 1;
+			/* Check blacklist (return NULL to continue filtering) */
+			return (preg_match( $regexp, $referer) === 1) ? true : NULL;
 		} else {
 			/* Extract relevant domain parts */
 			$referer = strtolower( ( isset( $_SERVER['HTTP_REFERER'] ) ? parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) : '' ) );
@@ -139,8 +139,8 @@ class StatifyBlacklist {
 			/* Get blacklist */
 			$blacklist = self::$_options['referer'];
 
-			/* Check blacklist */
-			return isset( $blacklist[ $referer ] );
+			/* Check blacklist (return NULL to continue filtering) */
+			return isset($blacklist[ $referer]) ? true : NULL;
 		}
 	}
 }

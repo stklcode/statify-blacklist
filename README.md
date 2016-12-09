@@ -2,7 +2,7 @@
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 3.9
 * Tested up to:      4.7
-* Stable tag:        1.3.0
+* Stable tag:        1.3.1
 * License:           GPLv3 or later
 * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -64,6 +64,9 @@ Note, that regular expression matching is significantly slower than the plain do
 1. Statify Blacklist settings page
 
 ## Changelog ##
+
+### 1.3.1 / 09.12.2016 ###
+* Continue filtering if no filter applies (#6)
 
 ### 1.3.0 / 17.10.2016 ###
 * Regular expressions filtering implemented

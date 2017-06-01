@@ -1,13 +1,13 @@
 # Statify Blacklist #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 3.9
-* Tested up to:      4.7
+* Tested up to:      4.8
 * Stable tag:        1.3.1
 * License:           GPLv3 or later
 * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
 ## Description ##
-A blacklist extension for the famous [Statify](http://statify.de) Wordpress plugin.
+A blacklist extension for the famous [Statify](https://de.wordpress.org/plugins/statify/) Wordpress plugin.
 
 This plugin adds customizable blacklist to Statify to allow blocking of referer spam or internal interactions.
 
@@ -19,12 +19,12 @@ Add a list of domains (for simplicity only second-level, e.g. _example.com_ whic
 Filters can be applied to data stored in database after modifying filter rules or for one-time clean-up.
 
 #### Compatibility ####
-This plugin requires Statify to be installed. The extension has been tested with Statify 1.4.3
+This plugin requires Statify to be installed. The extension has been tested with Statify up to version 1.5.1
 The plugin is capable of handling multisite installations.
 
 ### Credits ###
 * Author: Stefan Kalscheuer
-* Special Thanks to [pluginkollektiv](http://pluginkollektiv.org/) for maintaining _Statify_
+* Special Thanks to [pluginkollektiv](https://github.com/pluginkollektiv) for maintaining _Statify_
 
 ## Installation ##
 * If you don’t know how to install a plugin for WordPress, [here’s how](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
@@ -32,9 +32,9 @@ The plugin is capable of handling multisite installations.
 * Goto _Settings_ -> _Statify Blacklist_ to configure the plugin
 
 ### Requirements ###
-* PHP 5.2.4 or above
+* PHP 5.3 or above
 * WordPress 3.9 or above
-* Statify plugin installed and activated (tested up to 1.4.3)
+* Statify plugin installed and activated (tested up to 1.5.1)
 
 ## Frequently Asked Questions ##
 

@@ -7,6 +7,8 @@ require_once( '../inc/statifyblacklist.class.php' );
  * Class StatifyBlacklistTest
  *
  * PHPUnit test class for StatifyBlacklist
+ *
+ * @version 1.4.0~dev
  */
 class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 
@@ -18,7 +20,8 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 			'referer'        => array(
 				'example.com' => 0,
 				'example.net' => 1
-			)
+			),
+			'version'        => 1.3
 		);
 
 		/* No multisite */
@@ -26,25 +29,25 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 
 		/* No referer */
 		unset( $_SERVER['HTTP_REFERER'] );
-		$this->assertFalse( StatifyBlacklist::apply_blacklist_filter() );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		/* Non-blacklisted referer */
 		$_SERVER['HTTP_REFERER'] = 'http://example.org';
-		$this->assertFalse( StatifyBlacklist::apply_blacklist_filter() );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		/* Blacklisted referer */
 		$_SERVER['HTTP_REFERER'] = 'http://example.com';
-		$this->assertFalse( StatifyBlacklist::apply_blacklist_filter() );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		/* Blacklisted referer with path */
 		$_SERVER['HTTP_REFERER'] = 'http://example.net/foo/bar.html';
-		$this->assertFalse( StatifyBlacklist::apply_blacklist_filter() );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		/* Activate filter and run tests again */
 		StatifyBlacklist::$_options['active_referer'] = 1;
 
 		unset( $_SERVER['HTTP_REFERER'] );
-		$this->assertFalse( StatifyBlacklist::apply_blacklist_filter() );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		$_SERVER['HTTP_REFERER'] = 'http://example.org';
-		$this->assertFalse( StatifyBlacklist::apply_blacklist_filter() );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		$_SERVER['HTTP_REFERER'] = 'http://example.com';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
@@ -60,9 +63,10 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 			'cron_referer'   => 0,
 			'referer'        => array(
 				'example.[a-z]+' => 0,
-				'test' => 1
+				'test'           => 1
 			),
-			'referer_regexp' => 1
+			'referer_regexp' => 1,
+			'version'        => 1.3
 		);
 
 		/* No multisite */
@@ -70,10 +74,10 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 
 		/* No referer */
 		unset( $_SERVER['HTTP_REFERER'] );
-		$this->assertFalse( StatifyBlacklist::apply_blacklist_filter() );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		/* Non-blacklisted referer */
 		$_SERVER['HTTP_REFERER'] = 'http://not.evil';
-		$this->assertFalse( StatifyBlacklist::apply_blacklist_filter() );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		/* Blacklisted referer */
 		$_SERVER['HTTP_REFERER'] = 'http://example.com';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
@@ -85,7 +89,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		/* Mathinc with wrong case */
 		$_SERVER['HTTP_REFERER'] = 'http://eXaMpLe.NeT/tEsT/mE';
-		$this->assertFalse( StatifyBlacklist::apply_blacklist_filter() );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		/* Set RegExp filter to case insensitive */
 		StatifyBlacklist::$_options['referer_regexp'] = 2;

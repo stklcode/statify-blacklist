@@ -10,7 +10,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 
 	/* Check user capabilities */
 	if ( ! current_user_can( 'manage_options' ) ) {
-		die( _e( 'Are you sure you want to do this?' ) );
+		die( __( 'Are you sure you want to do this?' ) );
 	}
 
 	if ( ! empty( $_POST['cleanUp'] ) ) {

@@ -6,7 +6,8 @@ defined( 'ABSPATH' ) OR exit;
 /**
  * Statify Blacklist
  *
- * @since 1.0.0
+ * @since   1.0.0
+ * @version 1.4.0~dev
  */
 class StatifyBlacklist {
 	/**

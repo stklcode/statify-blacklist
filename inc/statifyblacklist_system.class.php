@@ -6,7 +6,8 @@ defined( 'ABSPATH' ) OR exit;
 /**
  * Statify Blacklist system configuration
  *
- * @since 1.0.0
+ * @since   1.0.0
+ * @version 1.4.0~dev
  */
 class StatifyBlacklist_System extends StatifyBlacklist {
 
@@ -15,26 +16,27 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	/**
 	 * Plugin install handler.
 	 *
-	 * @since 1.0.0
+	 * @since   1.0.0
+	 * @changed 1.4.0
 	 *
 	 * @param bool $network_wide Whether the plugin was activated network-wide or not.
 	 */
 	public static function install( $network_wide = false ) {
-		global $wpdb;
-
 		// Create tables for each site in a network.
 		if ( is_multisite() && $network_wide ) {
-			// Todo: Use get_sites() in WordPress 4.6+
-			$ids = $wpdb->get_col( "SELECT blog_id FROM `$wpdb->blogs`" );
+			if ( function_exists( 'get_sites' ) ) {
+				$sites = get_sites();
+			} elseif ( function_exists( 'wp_get_sites' ) ) {
+				$sites = wp_get_sites();    /* legacy support for WP < 4.6 */
+			} else {
+				return;
+			}
 
-			foreach ( $ids as $site_id ) {
-				switch_to_blog( $site_id );
+			foreach ( $sites as $site ) {
+				switch_to_blog( $site['blog_id'] );
 				add_option(
 					'statify-blacklist',
-					array(
-						'activate-referer' => 0,
-						'referer'          => array()
-					)
+					self::defaultOptions()
 				);
 			}
 
@@ -42,12 +44,26 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		} else {
 			add_option(
 				'statify-blacklist',
-				array(
-					'activate-referer' => 0,
-					'referer'          => array()
-				)
+				self::defaultOptions()
 			);
 		}
+	}
+
+	/**
+	 * Create default plugin configuration.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @return array the options array
+	 */
+	private static function defaultOptions() {
+		return array(
+			'activate-referer' => 0,
+			'cron_referer'     => 0,
+			'referer'          => array(),
+			'referer_regexp'   => 0,
+			'version'          => self::VERSION_MAIN
+		);
 	}
 
 
@@ -57,16 +73,19 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @since 1.0.0
 	 */
 	public static function uninstall() {
-		global $wpdb;
-
 		if ( is_multisite() ) {
 			$old = get_current_blog_id();
 
-			// Todo: Use get_sites() in WordPress 4.6+
-			$ids = $wpdb->get_col( "SELECT blog_id FROM `$wpdb->blogs`" );
+			if ( function_exists( 'get_sites' ) ) {
+				$sites = get_sites();
+			} elseif ( function_exists( 'wp_get_sites' ) ) {
+				$sites = wp_get_sites();    /* legacy support for WP < 4.6 */
+			} else {
+				return;
+			}
 
-			foreach ( $ids as $id ) {
-				switch_to_blog( $id );
+			foreach ( $sites as $site ) {
+				switch_to_blog( $site['blog_id'] );
 				delete_option( 'statify-blacklist' );
 			}
 

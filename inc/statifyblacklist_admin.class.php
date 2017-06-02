@@ -6,7 +6,8 @@ defined( 'ABSPATH' ) OR exit;
 /**
  * Statify Blacklist admin configuration
  *
- * @since 1.0.0
+ * @since   1.0.0
+ * @version 1.4.0~dev
  */
 class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
@@ -114,12 +115,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 * Filter database for cleanup.
 	 *
 	 * @since   1.1.0
-	 * @changed 1.3.0
+	 * @changed 1.4.0
 	 */
 	public static function cleanup_database() {
 		/* Check user permissions */
 		if ( ! current_user_can( 'manage_options' ) && ! ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
-			die( _e( 'Are you sure you want to do this?' ) );
+			die( __( 'Are you sure you want to do this?' ) );
 		}
 
 		global $wpdb;

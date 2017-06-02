@@ -32,7 +32,7 @@ The plugin is capable of handling multisite installations.
 * Goto _Settings_ -> _Statify Blacklist_ to configure the plugin
 
 ### Requirements ###
-* PHP 5.3 or above
+* PHP 5.5 or above
 * WordPress 3.9 or above
 * Statify plugin installed and activated (tested up to 1.5.1)
 

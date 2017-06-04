@@ -132,7 +132,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$optionsUpdated = get_option( 'statify-blacklist' );
 
 		/* Verify size against default options (no junk left) */
-		$this->assertEquals( 7, sizeof( $optionsUpdated ) );
+		$this->assertEquals( 11, sizeof( $optionsUpdated ) );
 
 		/* Verify that original attributes are unchanged */
 		$this->assertEquals( $options13['active_referer'], $optionsUpdated['active_referer'] );
@@ -294,6 +294,114 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['HTTP_X_REAL_IP'] = '2001:db8:a0b:12f0:0::1';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 	}
+
+	/**
+	 * Test simple target filter.
+	 */
+	public function testTargetFilter() {
+		/* Prepare Options: 2 blacklisted domains, disabled */
+		StatifyBlacklist::$_options = array(
+			'active_referer' => 0,
+			'cron_referer'   => 0,
+			'referer'        => array(
+				'example.com' => 0,
+				'example.net' => 1
+			),
+			'referer_regexp' => 0,
+			'active_target'  => 0,
+			'cron_target'    => 0,
+			'target'         => array(
+				'/excluded/page/' => 0,
+				'/?page_id=3'     => 1
+			),
+			'target_regexp'  => 0,
+			'active_ip'      => 0,
+			'ip'             => array(),
+			'version'        => StatifyBlacklist::VERSION_MAIN
+		);
+
+		/* No multisite */
+		StatifyBlacklist::$multisite = false;
+
+		/* Empty target */
+		unset( $_SERVER['REQUEST_URI'] );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		/* Non-blacklisted targets */
+		$_SERVER['REQUEST_URI'] = '';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['REQUEST_URI'] = '/';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['REQUEST_URI'] = '/?page_id=1';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		/* Blacklisted referer */
+		$_SERVER['REQUEST_URI'] = '/excluded/page/';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['REQUEST_URI'] = '/?page_id=3';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+
+		/* Activate filter and run tests again */
+		StatifyBlacklist::$_options['active_target'] = 1;
+
+		unset( $_SERVER['REQUEST_URI'] );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+
+		$_SERVER['REQUEST_URI'] = '';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['REQUEST_URI'] = '/';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['REQUEST_URI'] = '/?page_id=1';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+
+		$_SERVER['REQUEST_URI'] = '/excluded/page/';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['REQUEST_URI'] = '/?page_id=3';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['REQUEST_URI'] = '/?page_id=3';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+	}
+
+	/**
+	 * Test target filter using regular expressions.
+	 */
+	public function testTargetRegexFilter() {
+		/* Prepare Options: 2 regular expressions */
+		StatifyBlacklist::$_options = array(
+			'active_referer' => 1,
+			'cron_referer'   => 0,
+			'referer'        => array(
+				'example.[a-z]+' => 0,
+				'test'           => 1
+			),
+			'referer_regexp' => 1,
+			'version'        => 1.3
+		);
+
+		/* No multisite */
+		StatifyBlacklist::$multisite = false;
+
+		/* No referer */
+		unset( $_SERVER['HTTP_REFERER'] );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		/* Non-blacklisted referer */
+		$_SERVER['HTTP_REFERER'] = 'http://not.evil';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		/* Blacklisted referer */
+		$_SERVER['HTTP_REFERER'] = 'http://example.com';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		/* Blacklisted referer with path */
+		$_SERVER['HTTP_REFERER'] = 'http://foobar.net/test/me';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		/* Matching both */
+		$_SERVER['HTTP_REFERER'] = 'http://example.net/test/me';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		/* Mathinc with wrong case */
+		$_SERVER['HTTP_REFERER'] = 'http://eXaMpLe.NeT/tEsT/mE';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+
+		/* Set RegExp filter to case insensitive */
+		StatifyBlacklist::$_options['referer_regexp'] = 2;
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+	}
 }
 
 /**
@@ -345,4 +453,8 @@ function get_option( $option, $default = false ) {
 function update_option( $option, $value, $autoload = null ) {
 	global $mock_options;
 	$mock_options[ $option ] = $value;
+}
+
+function wp_unslash ( $value ) {
+	return is_string( $value ) ? stripslashes( $value ) : $value;
 }

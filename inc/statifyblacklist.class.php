@@ -85,7 +85,7 @@ class StatifyBlacklist {
 
 		/* CronJob to clean up database */
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			if ( self::$_options['cron_referer'] == 1 ) {
+			if ( self::$_options['cron_referer'] == 1 ||  self::$_options['cron_target'] == 1 ) {
 				add_action( 'statify_cleanup', array( 'StatifyBlacklist_Admin', 'cleanup_database' ) );
 			}
 		}
@@ -119,6 +119,10 @@ class StatifyBlacklist {
 			'cron_referer'   => 0,
 			'referer'        => array(),
 			'referer_regexp' => 0,
+			'active_target'  => 0,
+			'cron_target'    => 0,
+			'target'         => array(),
+			'target_regexp'  => 0,
 			'active_ip'      => 0,
 			'ip'             => array(),
 			'version'        => self::VERSION_MAIN
@@ -130,8 +134,8 @@ class StatifyBlacklist {
 	 *
 	 * @return  TRUE if referer matches blacklist.
 	 *
-	 * @since   1.0.0
-	 * @changed 1.4.0
+	 * @since  1.0.0
+	 * @since  1.4.0 Target and IP blacklist
 	 */
 	public static function apply_blacklist_filter() {
 		/* Referer blacklist */
@@ -158,6 +162,33 @@ class StatifyBlacklist {
 
 				/* Check blacklist */
 				if ( isset( $blacklist[ $referer ] ) ) {
+					return true;
+				}
+			}
+		}
+
+		/* Target blacklist (since 1.4.0) */
+		if ( isset( self::$_options['active_target'] ) && self::$_options['active_target'] != 0 ) {
+			/* Regular Expression filtering since 1.3.0 */
+			if ( isset( self::$_options['target_regexp'] ) && self::$_options['target_regexp'] > 0 ) {
+				/* Get full referer string */
+				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/' );
+				/* Merge given regular expressions into one */
+				$regexp = '/' . implode( "|", array_keys( self::$_options['target'] ) ) . '/';
+				if ( self::$_options['target_regexp'] == 2 ) {
+					$regexp .= 'i';
+				}
+
+				/* Check blacklist (return NULL to continue filtering) */
+
+				return ( preg_match( $regexp, $target ) === 1 ) ? true : null;
+			} else {
+				/* Extract target page */
+				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/' );
+				/* Get blacklist */
+				$blacklist = self::$_options['target'];
+				/* Check blacklist */
+				if ( isset( $blacklist[ $target ] ) ) {
 					return true;
 				}
 			}

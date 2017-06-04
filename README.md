@@ -15,6 +15,9 @@ This plugin adds customizable blacklist to Statify to allow blocking of referer 
 #### Referer Blacklist ####
 Add a list of domains (for simplicity only second-level, e.g. _example.com_ which blocks _everything.example.com_).
 
+#### Target Blacklist ####
+Add a list of target pages (e.g. _/test/page/_, _/?page_id=123_) that will be excluded from tracking.
+
 #### IP Blacklist ####
 Add a list of IP addresses or subnets (e.g. _192.0.2.123_, _198.51.100.0/24_, _2001:db8:a0b:12f0::/64_).
 
@@ -74,6 +77,7 @@ Because of this, an IP blacklist can only be applied while processing the reques
 
 ### 1.4.0 / work in progress ###
 * IP blacklist implemented (#7)
+* Target page blacklist implemented (#8)
 
 ### 1.3.1 / 09.12.2016 ###
 * Continue filtering if no filter applies (#6)

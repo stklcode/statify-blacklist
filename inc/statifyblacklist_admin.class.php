@@ -131,26 +131,57 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			die( __( 'Are you sure you want to do this?' ) );
 		}
 
-		global $wpdb;
-
-		if ( isset( self::$_options['referer_regexp'] ) && self::$_options['referer_regexp'] > 0 ) {
-			/* Merge given regular expressions into one */
-			$refererRegexp = implode( "|", array_keys( self::$_options['referer'] ) );
+		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+			$cleanRef = ( self::$_options['cron_referer'] == 1 );
+			$cleanTrg = ( self::$_options['cron_target'] == 1 );
 		} else {
-			/* Sanitize URLs */
-			$referer = self::sanitizeURLs( self::$_options['referer'] );
-
-			/* Build filter regexp */
-			$refererRegexp = str_replace( '.', '\.', implode( '|', array_flip( $referer ) ) );
+			$cleanRef = true;
+			$cleanTrg = true;
 		}
 
-		if ( ! empty( $refererRegexp ) ) {
+
+		if ( $cleanRef ) {
+			if ( isset( self::$_options['referer_regexp'] ) && self::$_options['referer_regexp'] > 0 ) {
+				/* Merge given regular expressions into one */
+				$refererRegexp = implode( "|", array_keys( self::$_options['referer'] ) );
+			} else {
+				/* Sanitize URLs */
+				$referer = self::sanitizeURLs( self::$_options['referer'] );
+
+				/* Build filter regexp */
+				$refererRegexp = str_replace( '.', '\.', implode( '|', array_flip( $referer ) ) );
+			}
+		}
+
+		if ( $cleanTrg ) {
+			if ( isset( self::$_options['target_regexp'] ) && self::$_options['target_regexp'] > 0 ) {
+				/* Merge given regular expressions into one */
+				$targetRegexp = implode( "|", array_keys( self::$_options['target'] ) );
+			} else {
+				/* Build filter regexp */
+				$targetRegexp = str_replace( '.', '\.', implode( '|', array_flip( self::$_options['target'] ) ) );
+			}
+		}
+
+
+		if ( ! empty( $refererRegexp ) || ! empty( $targetRegexp ) ) {
+			global $wpdb;
+
 			/* Execute filter on database */
-			$wpdb->query(
-				$wpdb->prepare( "DELETE FROM `$wpdb->statify` WHERE "
-				                . ( ( self::$_options['referer_regexp'] == 1 ) ? " BINARY " : "" )
-				                . "referrer REGEXP %s", $refererRegexp )
-			);
+			if ( ! empty( $refererRegexp ) ) {
+				$wpdb->query(
+					$wpdb->prepare( "DELETE FROM `$wpdb->statify` WHERE "
+					                . ( ( self::$_options['referer_regexp'] == 1 ) ? " BINARY " : "" )
+					                . "referrer REGEXP %s", $refererRegexp )
+				);
+			}
+			if ( ! empty( $targetRegexp ) ) {
+				$wpdb->query(
+					$wpdb->prepare( "DELETE FROM `$wpdb->statify` WHERE "
+					                . ( ( self::$_options['target_regexp'] == 1 ) ? " BINARY " : "" )
+					                . "target REGEXP %s", $targetRegexp )
+				);
+			}
 
 			/* Optimize DB */
 			$wpdb->query( "OPTIMIZE TABLE `$wpdb->statify`" );
@@ -195,10 +226,10 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 */
 	private static function sanitizeIPs( $ips ) {
 		return array_filter( $ips, function ( $ip ) {
-			return preg_match('/^((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])'.
-			                  '(\/([0-9]|[1-2][0-9]|3[0-2]))?$/', $ip) ||
-			       preg_match('/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))'.
-			                  '(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/', $ip);
+			return preg_match( '/^((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])' .
+			                   '(\/([0-9]|[1-2][0-9]|3[0-2]))?$/', $ip ) ||
+			       preg_match( '/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))' .
+			                   '(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/', $ip );
 		} );
 	}
 }

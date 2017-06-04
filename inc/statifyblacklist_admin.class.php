@@ -14,22 +14,30 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 * Update options
 	 *
 	 * @param  $options array  New options to save
+	 *
 	 * @return mixed  array of sanitized array on errors, FALSE if there were none
 	 * @since   1.1.1
-	 * @changed 1.3.0
+	 * @changed 1.4.0
 	 */
 	public static function update_options( $options = null ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
 			/* Sanitize URLs and remove empty inputs */
 			$givenReferer = $options['referer'];
-			if ($options['referer_regexp'] == 0)
+			if ( $options['referer_regexp'] == 0 ) {
 				$sanitizedReferer = self::sanitizeURLs( $givenReferer );
-			else
+			} else {
 				$sanitizedReferer = $givenReferer;
+			}
+
+			/* Sanitize IPs and Subnets and remove empty inputs */
+			$givenIP     = $options['ip'];
+			$sanitizedIP = self::sanitizeIPs( $givenIP );
 
 			/* Abort on errors */
-			if ( ! empty( array_diff( $givenReferer, $sanitizedReferer ) ) ) {
-				return $sanitizedReferer;
+			if ( ! empty( array_diff( array_keys( $givenReferer ), array_keys( $sanitizedReferer ) ) ) ) {
+				return array( 'referer' => $sanitizedReferer );
+			} elseif ( ! empty( array_diff( $givenIP, $sanitizedIP ) ) ) {
+				return array( 'ip' => array_diff( $givenIP, $sanitizedIP ) );
 			}
 
 			/* Update database on success */
@@ -174,5 +182,23 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				)
 			)
 		);
+	}
+
+	/**
+	 * Sanitize IP addresses with optional CIDR notation and remove empty results
+	 *
+	 * @param $ips array   given array of URLs
+	 *
+	 * @return array  sanitized array
+	 *
+	 * @since    1.4.0
+	 */
+	private static function sanitizeIPs( $ips ) {
+		return array_filter( $ips, function ( $ip ) {
+			return preg_match('/^((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])'.
+			                  '(\/([0-9]|[1-2][0-9]|3[0-2]))?$/', $ip) ||
+			       preg_match('/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))'.
+			                  '(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/', $ip);
+		} );
 	}
 }

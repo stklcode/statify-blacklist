@@ -10,6 +10,9 @@ defined( 'ABSPATH' ) OR exit;
  * @version 1.4.0~dev
  */
 class StatifyBlacklist {
+
+	const VERSION_MAIN = 1.4;
+
 	/**
 	 * Plugin options
 	 *
@@ -99,12 +102,26 @@ class StatifyBlacklist {
 	public static function update_options( $options = null ) {
 		self::$_options = wp_parse_args(
 			get_option( 'statify-blacklist' ),
-			array(
-				'active_referer' => 0,
-				'cron_referer'   => 0,
-				'referer'        => array(),
-				'referer_regexp' => 0
-			)
+			self::defaultOptions()
+		);
+	}
+
+	/**
+	 * Create default plugin configuration.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @return array the options array
+	 */
+	protected static function defaultOptions() {
+		return array(
+			'active_referer' => 0,
+			'cron_referer'   => 0,
+			'referer'        => array(),
+			'referer_regexp' => 0,
+			'active_ip'      => 0,
+			'ip'             => array(),
+			'version'        => self::VERSION_MAIN
 		);
 	}
 
@@ -114,34 +131,150 @@ class StatifyBlacklist {
 	 * @return  TRUE if referer matches blacklist.
 	 *
 	 * @since   1.0.0
-	 * @changed 1.3.1
+	 * @changed 1.4.0
 	 */
 	public static function apply_blacklist_filter() {
-		/* Skip if blacklist is inactive */
-		if ( self::$_options['active_referer'] != 1 ) {
-			return NULL;
+		/* Referer blacklist */
+		if ( isset( self::$_options['active_referer'] ) && self::$_options['active_referer'] != 0 ) {
+			/* Regular Expression filtering since 1.3.0 */
+			if ( isset( self::$_options['referer_regexp'] ) && self::$_options['referer_regexp'] > 0 ) {
+				/* Get full referer string */
+				$referer = ( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' );
+				/* Merge given regular expressions into one */
+				$regexp = '/' . implode( "|", array_keys( self::$_options['referer'] ) ) . '/';
+				if ( self::$_options['referer_regexp'] == 2 ) {
+					$regexp .= 'i';
+				}
+
+				/* Check blacklist (return NULL to continue filtering) */
+
+				return ( preg_match( $regexp, $referer ) === 1 ) ? true : null;
+			} else {
+				/* Extract relevant domain parts */
+				$referer = strtolower( ( isset( $_SERVER['HTTP_REFERER'] ) ? parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) : '' ) );
+
+				/* Get blacklist */
+				$blacklist = self::$_options['referer'];
+
+				/* Check blacklist */
+				if ( isset( $blacklist[ $referer ] ) ) {
+					return true;
+				}
+			}
 		}
 
-		/* Regular Expression filtering since 1.3.0 */
-		if ( isset(self::$_options['referer_regexp']) && self::$_options['referer_regexp'] > 0 ) {
-			/* Get full referer string */
-			$referer = ( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' );
-			/* Merge given regular expressions into one */
-			$regexp = '/' . implode( "|", array_keys( self::$_options['referer'] ) ) . '/';
-			if ( self::$_options['referer_regexp'] == 2 ) {
-				$regexp .= 'i';
+		/* IP blacklist (since 1.4.0) */
+		if ( isset ( self::$_options['active_ip'] ) && self::$_options['active_ip'] != 0 ) {
+			if ( ( $ip = self::getIP() ) !== false ) {
+				foreach ( self::$_options['ip'] as $net ) {
+					if ( self::cidrMatch( $ip, $net ) ) {
+						return true;
+					}
+				}
 			}
-			/* Check blacklist (return NULL to continue filtering) */
-			return (preg_match( $regexp, $referer) === 1) ? true : NULL;
-		} else {
-			/* Extract relevant domain parts */
-			$referer = strtolower( ( isset( $_SERVER['HTTP_REFERER'] ) ? parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) : '' ) );
+		}
 
-			/* Get blacklist */
-			$blacklist = self::$_options['referer'];
+		/* Skip and continue (return NULL), if all blacklists are inactive */
 
-			/* Check blacklist (return NULL to continue filtering) */
-			return isset($blacklist[ $referer]) ? true : NULL;
+		return null;
+	}
+
+	/**
+	 * Helper method to determine the client's IP address.
+	 * If a proxy is used, the X-Real-IP or X-Forwarded-For header is checked, otherwise the default remote address.
+	 * For performance reasons only the most common flags are checked. This might be even reduce by user configuration.
+	 * Maybe some community feedback will ease the decision on that.
+	 *
+	 * @return string|bool the client's IP address or FALSE, if none could be determined
+	 */
+	private static function getIP() {
+		foreach (
+			array(
+//				'HTTP_CLIENT_IP',
+				'HTTP_X_REAL_IP',
+				'HTTP_X_FORWARDED_FOR',
+//				'HTTP_X_FORWARDED',
+//				'HTTP_X_CLUSTER_CLIENT_IP',
+//				'HTTP_FORWARDED_FOR',
+//				'HTTP_FORWARDED',
+				'REMOTE_ADDR'
+			) as $k
+		) {
+			if ( isset( $_SERVER[ $k ] ) ) {
+				foreach ( explode( ',', $_SERVER[ $k ] ) as $ip ) {
+					if ( filter_var( $ip, FILTER_VALIDATE_IP ) !== false ) {
+						return $ip;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Helper function to check if an IP address matches a given subnet.
+	 *
+	 * @param $ip  string IP address to check
+	 * @param $net string IP address or subnet in CIDR notation
+	 *
+	 * @return bool TRUE, if the given IP addresses matches the given subnet
+	 */
+	private static function cidrMatch( $ip, $net ) {
+		if ( substr_count( $net, ':' ) > 1 ) {  /* Check for IPv6 */
+			if ( ! ( ( extension_loaded( 'sockets' ) && defined( 'AF_INET6' ) ) || @inet_pton( '::1' ) ) ) {
+				return false;
+			}
+
+			if ( false !== strpos( $net, '/' ) ) {   /* Parse CIDR subnet */
+				list( $base, $mask ) = explode( '/', $net, 2 );
+
+				if ( $mask < 1 || $mask > 128 ) {
+					return false;
+				}
+			} else {
+				$base = $net;
+				$mask = 128;
+			}
+
+			$bytesAddr = unpack( 'n*', @inet_pton( $base ) );
+			$bytesTest = unpack( 'n*', @inet_pton( $ip ) );
+
+			if ( ! $bytesAddr || ! $bytesTest ) {
+				return false;
+			}
+
+			for ( $i = 1, $ceil = ceil( $mask / 16 ); $i <= $ceil; ++ $i ) {
+				$left  = $mask - 16 * ( $i - 1 );
+				$left  = ( $left <= 16 ) ? $left : 16;
+				$maskB = ~( 0xffff >> $left ) & 0xffff;
+				if ( ( $bytesAddr[ $i ] & $maskB ) != ( $bytesTest[ $i ] & $maskB ) ) {
+					return false;
+				}
+			}
+
+			return true;
+		} else {    /* Check for IPv4 */
+			if ( ! filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) ) {
+				return false;
+			}
+
+			if ( false !== strpos( $net, '/' ) ) {  /* Parse CIDR subnet */
+				list( $base, $mask ) = explode( '/', $net, 2 );
+
+				if ( $mask === '0' ) {
+					return filter_var( $base, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
+				}
+
+				if ( $mask < 0 || $mask > 32 ) {
+					return false;
+				}
+			} else {    /* Use single address */
+				$base = $net;
+				$mask = 32;
+			}
+
+			return 0 === substr_compare( sprintf( '%032b', ip2long( $ip ) ), sprintf( '%032b', ip2long( $base ) ), 0, $mask );
 		}
 	}
 }

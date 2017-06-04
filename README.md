@@ -15,6 +15,9 @@ This plugin adds customizable blacklist to Statify to allow blocking of referer 
 #### Referer Blacklist ####
 Add a list of domains (for simplicity only second-level, e.g. _example.com_ which blocks _everything.example.com_).
 
+#### IP Blacklist ####
+Add a list of IP addresses or subnets (e.g. _192.0.2.123_, _198.51.100.0/24_, _2001:db8:a0b:12f0::/64_).
+
 #### CleanUp Database ####
 Filters can be applied to data stored in database after modifying filter rules or for one-time clean-up.
 
@@ -42,7 +45,7 @@ The plugin is capable of handling multisite installations.
 Nothing. By default all blacklists are empty and disabled. They can and have to be filled by the blog administrator.
 
 A default blacklist is not provided, as the plugin itself is totally neutral. If you want to filter out referer spam, 
-visitors from search engines or just "false" referers from 301 redirects only depends on you.
+visitors from search engines, just "false" referers from 301 redirects or you own IP address used for testing only depends on you.
 
 ### Does the filter effect user experience? ###
 No. It only prevent's _Statify_ from tracking, nothing more or less.
@@ -59,11 +62,18 @@ Yes, it it. Just select if you want to filter using regular expressions case sen
 
 Note, that regular expression matching is significantly slower than the plain domain filter. Hence it is only recommended for asynchronous cron or manual execution and not for live filtering.
 
+### Why is IP filtering only available as live filter? ###
+As you might know, Statify does not store any personal information, including IP addresses in the database.
+Because of this, an IP blacklist can only be applied while processing the request and not afterwards.
+
 
 ## Screenshots ##
 1. Statify Blacklist settings page
 
 ## Changelog ##
+
+### 1.4.0 / work in progress ###
+* IP blacklist implemented (#7)
 
 ### 1.3.1 / 09.12.2016 ###
 * Continue filtering if no filter applies (#6)

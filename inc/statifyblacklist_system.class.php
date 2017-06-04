@@ -11,8 +11,6 @@ defined( 'ABSPATH' ) OR exit;
  */
 class StatifyBlacklist_System extends StatifyBlacklist {
 
-	const VERSION_MAIN = 1.3;
-
 	/**
 	 * Plugin install handler.
 	 *
@@ -49,23 +47,6 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		}
 	}
 
-	/**
-	 * Create default plugin configuration.
-	 *
-	 * @since 1.4.0
-	 *
-	 * @return array the options array
-	 */
-	private static function defaultOptions() {
-		return array(
-			'activate-referer' => 0,
-			'cron_referer'     => 0,
-			'referer'          => array(),
-			'referer_regexp'   => 0,
-			'version'          => self::VERSION_MAIN
-		);
-	}
-
 
 	/**
 	 * Plugin uninstall handler.
@@ -100,7 +81,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * Upgrade plugin options.
 	 *
 	 * @since   1.2.0
-	 * @changed 1.3.0
+	 * @changed 1.4.0
 	 */
 	public static function upgrade() {
 		self::update_options();
@@ -116,13 +97,11 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			}
 		}
 
-		/* Check if version is set (not before 1.3.0) */
-		if ( ! isset( self::$_options['version'] ) ) {
-			$options = self::$_options;
-			/* Set version */
+		/* Version not set (pre 1.3.0) or older than current major release */
+		if ( ! isset( self::$_options['version'] ) || self::$_options['version'] < self::VERSION_MAIN ) {
+			/* Merge default options with current config, assuming only additive changes */
+			$options = array_merge( self::defaultOptions(), self::$_options );
 			$options['version'] = self::VERSION_MAIN;
-			/* Add regular expression option (as of 1.3) */
-			$options['referer_regexp'] = 0;
 			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
 				update_site_option( 'statify-blacklist', $options );
 			} else {

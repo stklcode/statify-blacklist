@@ -22,15 +22,15 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	public static function update_options( $options = null ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
 			/* Sanitize URLs and remove empty inputs */
-			$givenReferer = $options['referer'];
-			if ( $options['referer_regexp'] == 0 ) {
+			$givenReferer = $options['referer']['blacklist'];
+			if ( $options['referer']['regexp'] == 0 ) {
 				$sanitizedReferer = self::sanitizeURLs( $givenReferer );
 			} else {
 				$sanitizedReferer = $givenReferer;
 			}
 
 			/* Sanitize IPs and Subnets and remove empty inputs */
-			$givenIP     = $options['ip'];
+			$givenIP     = $options['ip']['blacklist'];
 			$sanitizedIP = self::sanitizeIPs( $givenIP );
 
 			/* Abort on errors */
@@ -132,8 +132,8 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		}
 
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			$cleanRef = ( self::$_options['cron_referer'] == 1 );
-			$cleanTrg = ( self::$_options['cron_target'] == 1 );
+			$cleanRef = ( self::$_options['referer']['cron'] == 1 );
+			$cleanTrg = ( self::$_options['target']['cron'] == 1 );
 		} else {
 			$cleanRef = true;
 			$cleanTrg = true;
@@ -141,12 +141,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 
 
 		if ( $cleanRef ) {
-			if ( isset( self::$_options['referer_regexp'] ) && self::$_options['referer_regexp'] > 0 ) {
+			if ( isset( self::$_options['referer']['regexp'] ) && self::$_options['referer']['regexp'] > 0 ) {
 				/* Merge given regular expressions into one */
-				$refererRegexp = implode( "|", array_keys( self::$_options['referer'] ) );
+				$refererRegexp = implode( "|", array_keys( self::$_options['referer']['blacklist'] ) );
 			} else {
 				/* Sanitize URLs */
-				$referer = self::sanitizeURLs( self::$_options['referer'] );
+				$referer = self::sanitizeURLs( self::$_options['referer']['blacklist'] );
 
 				/* Build filter regexp */
 				$refererRegexp = str_replace( '.', '\.', implode( '|', array_flip( $referer ) ) );
@@ -154,12 +154,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		}
 
 		if ( $cleanTrg ) {
-			if ( isset( self::$_options['target_regexp'] ) && self::$_options['target_regexp'] > 0 ) {
+			if ( isset( self::$_options['target']['regexp'] ) && self::$_options['target']['regexp'] > 0 ) {
 				/* Merge given regular expressions into one */
-				$targetRegexp = implode( "|", array_keys( self::$_options['target'] ) );
+				$targetRegexp = implode( "|", array_keys( self::$_options['target']['blacklist'] ) );
 			} else {
 				/* Build filter regexp */
-				$targetRegexp = str_replace( '.', '\.', implode( '|', array_flip( self::$_options['target'] ) ) );
+				$targetRegexp = str_replace( '.', '\.', implode( '|', array_flip( self::$_options['target']['blacklist'] ) ) );
 			}
 		}
 
@@ -171,14 +171,14 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			if ( ! empty( $refererRegexp ) ) {
 				$wpdb->query(
 					$wpdb->prepare( "DELETE FROM `$wpdb->statify` WHERE "
-					                . ( ( self::$_options['referer_regexp'] == 1 ) ? " BINARY " : "" )
+					                . ( ( self::$_options['referer']['regexp'] == 1 ) ? " BINARY " : "" )
 					                . "referrer REGEXP %s", $refererRegexp )
 				);
 			}
 			if ( ! empty( $targetRegexp ) ) {
 				$wpdb->query(
 					$wpdb->prepare( "DELETE FROM `$wpdb->statify` WHERE "
-					                . ( ( self::$_options['target_regexp'] == 1 ) ? " BINARY " : "" )
+					                . ( ( self::$_options['target']['regexp'] == 1 ) ? " BINARY " : "" )
 					                . "target REGEXP %s", $targetRegexp )
 				);
 			}

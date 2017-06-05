@@ -57,7 +57,7 @@ class StatifyBlacklist {
 		self::$multisite = ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) );
 
 		/* Add Filter to statify hook if enabled */
-		if ( self::$_options['active_referer'] != 0 ) {
+		if ( self::$_options['referer']['active'] != 0 ) {
 			add_filter( 'statify_skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
 		}
 
@@ -85,7 +85,7 @@ class StatifyBlacklist {
 
 		/* CronJob to clean up database */
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			if ( self::$_options['cron_referer'] == 1 ||  self::$_options['cron_target'] == 1 ) {
+			if ( self::$_options['referer']['cron'] == 1 ||  self::$_options['target']['cron'] == 1 ) {
 				add_action( 'statify_cleanup', array( 'StatifyBlacklist_Admin', 'cleanup_database' ) );
 			}
 		}
@@ -115,17 +115,23 @@ class StatifyBlacklist {
 	 */
 	protected static function defaultOptions() {
 		return array(
-			'active_referer' => 0,
-			'cron_referer'   => 0,
-			'referer'        => array(),
-			'referer_regexp' => 0,
-			'active_target'  => 0,
-			'cron_target'    => 0,
-			'target'         => array(),
-			'target_regexp'  => 0,
-			'active_ip'      => 0,
-			'ip'             => array(),
-			'version'        => self::VERSION_MAIN
+			'referer' => array(
+				'active'    => 0,
+				'cron'      => 0,
+				'regexp'    => 0,
+				'blacklist' => array()
+			),
+			'target'  => array(
+				'active'    => 0,
+				'cron'      => 0,
+				'regexp'    => 0,
+				'blacklist' => array()
+			),
+			'ip'      => array(
+				'active'    => 0,
+				'blacklist' => array()
+			),
+			'version' => self::VERSION_MAIN
 		);
 	}
 
@@ -139,14 +145,14 @@ class StatifyBlacklist {
 	 */
 	public static function apply_blacklist_filter() {
 		/* Referer blacklist */
-		if ( isset( self::$_options['active_referer'] ) && self::$_options['active_referer'] != 0 ) {
+		if ( isset( self::$_options['referer']['active'] ) && self::$_options['referer']['active'] != 0 ) {
 			/* Regular Expression filtering since 1.3.0 */
-			if ( isset( self::$_options['referer_regexp'] ) && self::$_options['referer_regexp'] > 0 ) {
+			if ( isset( self::$_options['referer']['regexp'] ) && self::$_options['referer']['regexp'] > 0 ) {
 				/* Get full referer string */
 				$referer = ( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' );
 				/* Merge given regular expressions into one */
-				$regexp = '/' . implode( "|", array_keys( self::$_options['referer'] ) ) . '/';
-				if ( self::$_options['referer_regexp'] == 2 ) {
+				$regexp = '/' . implode( "|", array_keys( self::$_options['referer']['blacklist'] ) ) . '/';
+				if ( self::$_options['referer']['regexp'] == 2 ) {
 					$regexp .= 'i';
 				}
 
@@ -158,7 +164,7 @@ class StatifyBlacklist {
 				$referer = strtolower( ( isset( $_SERVER['HTTP_REFERER'] ) ? parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) : '' ) );
 
 				/* Get blacklist */
-				$blacklist = self::$_options['referer'];
+				$blacklist = self::$_options['referer']['blacklist'];
 
 				/* Check blacklist */
 				if ( isset( $blacklist[ $referer ] ) ) {
@@ -168,14 +174,14 @@ class StatifyBlacklist {
 		}
 
 		/* Target blacklist (since 1.4.0) */
-		if ( isset( self::$_options['active_target'] ) && self::$_options['active_target'] != 0 ) {
+		if ( isset( self::$_options['target']['active'] ) && self::$_options['target']['active'] != 0 ) {
 			/* Regular Expression filtering since 1.3.0 */
-			if ( isset( self::$_options['target_regexp'] ) && self::$_options['target_regexp'] > 0 ) {
+			if ( isset( self::$_options['target']['regexp'] ) && self::$_options['target']['regexp'] > 0 ) {
 				/* Get full referer string */
 				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/' );
 				/* Merge given regular expressions into one */
-				$regexp = '/' . implode( "|", array_keys( self::$_options['target'] ) ) . '/';
-				if ( self::$_options['target_regexp'] == 2 ) {
+				$regexp = '/' . implode( "|", array_keys( self::$_options['target']['blacklist'] ) ) . '/';
+				if ( self::$_options['target']['regexp'] == 2 ) {
 					$regexp .= 'i';
 				}
 
@@ -186,7 +192,7 @@ class StatifyBlacklist {
 				/* Extract target page */
 				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/' );
 				/* Get blacklist */
-				$blacklist = self::$_options['target'];
+				$blacklist = self::$_options['target']['blacklist'];
 				/* Check blacklist */
 				if ( isset( $blacklist[ $target ] ) ) {
 					return true;
@@ -195,9 +201,9 @@ class StatifyBlacklist {
 		}
 
 		/* IP blacklist (since 1.4.0) */
-		if ( isset ( self::$_options['active_ip'] ) && self::$_options['active_ip'] != 0 ) {
+		if ( isset ( self::$_options['ip']['active'] ) && self::$_options['ip']['active'] != 0 ) {
 			if ( ( $ip = self::getIP() ) !== false ) {
-				foreach ( self::$_options['ip'] as $net ) {
+				foreach ( self::$_options['ip']['blacklist'] as $net ) {
 					if ( self::cidrMatch( $ip, $net ) ) {
 						return true;
 					}

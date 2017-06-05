@@ -20,15 +20,26 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 	public function testRefererFilter() {
 		/* Prepare Options: 2 blacklisted domains, disabled */
 		StatifyBlacklist::$_options = array(
-			'active_referer' => 0,
-			'cron_referer'   => 0,
-			'referer'        => array(
-				'example.com' => 0,
-				'example.net' => 1
+			'referer' => array(
+				'active' => 0,
+				'cron'   => 0,
+				'regexp'    => 0,
+				'blacklist' => array(
+					'example.com' => 0,
+					'example.net' => 1
+				)
 			),
-			'active_ip'      => 0,
-			'ip'             => array(),
-			'version'        => StatifyBlacklist::VERSION_MAIN
+			'target' => array(
+				'active' => 0,
+				'cron'   => 0,
+				'regexp'    => 0,
+				'blacklist' => array()
+			),
+			'ip' => array(
+				'active' => 0,
+				'blacklist' => array()
+			),
+			'version' => StatifyBlacklist::VERSION_MAIN
 		);
 
 		/* No multisite */
@@ -48,7 +59,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		/* Activate filter and run tests again */
-		StatifyBlacklist::$_options['active_referer'] = 1;
+		StatifyBlacklist::$_options['referer']['active'] = 1;
 
 		unset( $_SERVER['HTTP_REFERER'] );
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
@@ -69,14 +80,26 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 	public function testRefererRegexFilter() {
 		/* Prepare Options: 2 regular expressions */
 		StatifyBlacklist::$_options = array(
-			'active_referer' => 1,
-			'cron_referer'   => 0,
-			'referer'        => array(
-				'example.[a-z]+' => 0,
-				'test'           => 1
+			'referer' => array(
+				'active' => 1,
+				'cron'   => 0,
+				'regexp'    => 1,
+				'blacklist' => array(
+					'example.[a-z]+' => 0,
+					'test'           => 1
+				)
 			),
-			'referer_regexp' => 1,
-			'version'        => 1.3
+			'target' => array(
+				'active' => 0,
+				'cron'   => 0,
+				'regexp'    => 0,
+				'blacklist' => array()
+			),
+			'ip' => array(
+				'active' => 0,
+				'blacklist' => array()
+			),
+			'version' => StatifyBlacklist::VERSION_MAIN
 		);
 
 		/* No multisite */
@@ -102,7 +125,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		/* Set RegExp filter to case insensitive */
-		StatifyBlacklist::$_options['referer_regexp'] = 2;
+		StatifyBlacklist::$_options['referer']['regexp'] = 2;
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 	}
 
@@ -132,17 +155,24 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$optionsUpdated = get_option( 'statify-blacklist' );
 
 		/* Verify size against default options (no junk left) */
-		$this->assertEquals( 11, sizeof( $optionsUpdated ) );
+		$this->assertEquals( 4, sizeof( $optionsUpdated ) );
+		$this->assertEquals( 4, sizeof( $optionsUpdated['referer'] ) );
+		$this->assertEquals( 4, sizeof( $optionsUpdated['target'] ) );
+		$this->assertEquals( 2, sizeof( $optionsUpdated['ip'] ) );
 
 		/* Verify that original attributes are unchanged */
-		$this->assertEquals( $options13['active_referer'], $optionsUpdated['active_referer'] );
-		$this->assertEquals( $options13['cron_referer'], $optionsUpdated['cron_referer'] );
-		$this->assertEquals( $options13['referer'], $optionsUpdated['referer'] );
-		$this->assertEquals( $options13['referer_regexp'], $optionsUpdated['referer_regexp'] );
+		$this->assertEquals( $options13['active_referer'], $optionsUpdated['referer']['active'] );
+		$this->assertEquals( $options13['cron_referer'], $optionsUpdated['referer']['cron'] );
+		$this->assertEquals( $options13['referer'], $optionsUpdated['referer']['blacklist'] );
+		$this->assertEquals( $options13['referer_regexp'], $optionsUpdated['referer']['regexp'] );
 
-		/* Verify that new attributes are present in config */
-		$this->assertEquals( 0, $optionsUpdated['active_ip'] );
-		$this->assertEquals( array(), $optionsUpdated['ip'] );
+		/* Verify that new attributes are present in config and filled with default values (disabled, empty) */
+		$this->assertEquals( 0, $optionsUpdated['target']['active'] );
+		$this->assertEquals( 0, $optionsUpdated['target']['cron'] );
+		$this->assertEquals( 0, $optionsUpdated['target']['regexp'] );
+		$this->assertEquals( array(), $optionsUpdated['target']['blacklist'] );
+		$this->assertEquals( 0, $optionsUpdated['ip']['active'] );
+		$this->assertEquals( array(), $optionsUpdated['ip']['blacklist'] );
 
 		/* Verify that version number has changed to current release */
 		$this->assertEquals( StatifyBlacklist::VERSION_MAIN, $optionsUpdated['version'] );
@@ -242,15 +272,26 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 	public function testIPFilter() {
 		/* Prepare Options: 2 blacklisted IPs, disabled */
 		StatifyBlacklist::$_options = array(
-			'active_referer' => 0,
-			'cron_referer'   => 0,
-			'referer'        => array(),
-			'active_ip'      => 0,
-			'ip'             => array(
-				'192.0.2.123',
-				'2001:db8:a0b:12f0::1'
+			'referer' => array(
+				'active' => 0,
+				'cron'   => 0,
+				'regexp'    => 0,
+				'blacklist' => array()
 			),
-			'version'        => StatifyBlacklist::VERSION_MAIN
+			'target' => array(
+				'active' => 0,
+				'cron'   => 0,
+				'regexp'    => 0,
+				'blacklist' => array()
+			),
+			'ip' => array(
+				'active' => 0,
+				'blacklist' => array(
+					'192.0.2.123',
+					'2001:db8:a0b:12f0::1'
+				)
+			),
+			'version' => StatifyBlacklist::VERSION_MAIN
 		);
 
 		/* No multisite */
@@ -260,7 +301,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['REMOTE_ADDR'] = '192.0.2.123';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		/* Activate filter */
-		StatifyBlacklist::$_options['active_ip'] = 1;
+		StatifyBlacklist::$_options['ip']['active'] = 1;
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		/* Try matching v6 address */
 		$_SERVER['REMOTE_ADDR'] = '2001:db8:a0b:12f0::1';
@@ -271,7 +312,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$_SERVER['REMOTE_ADDR'] = '2001:db8:a0b:12f0::2';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		/* Subnet matching */
-		StatifyBlacklist::$_options['ip'] = array(
+		StatifyBlacklist::$_options['ip']['blacklist'] = array(
 			'192.0.2.0/25',
 			'2001:db8:a0b:12f0::/96'
 		);
@@ -301,23 +342,26 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 	public function testTargetFilter() {
 		/* Prepare Options: 2 blacklisted domains, disabled */
 		StatifyBlacklist::$_options = array(
-			'active_referer' => 0,
-			'cron_referer'   => 0,
-			'referer'        => array(
-				'example.com' => 0,
-				'example.net' => 1
+			'referer' => array(
+				'active' => 0,
+				'cron'   => 0,
+				'regexp'    => 0,
+				'blacklist' => array()
 			),
-			'referer_regexp' => 0,
-			'active_target'  => 0,
-			'cron_target'    => 0,
-			'target'         => array(
-				'/excluded/page/' => 0,
-				'/?page_id=3'     => 1
+			'target' => array(
+				'active' => 0,
+				'cron'   => 0,
+				'regexp'    => 0,
+				'blacklist' => array(
+					'/excluded/page/' => 0,
+					'/?page_id=3'     => 1
+				)
 			),
-			'target_regexp'  => 0,
-			'active_ip'      => 0,
-			'ip'             => array(),
-			'version'        => StatifyBlacklist::VERSION_MAIN
+			'ip' => array(
+				'active' => 0,
+				'blacklist' => array()
+			),
+			'version' => StatifyBlacklist::VERSION_MAIN
 		);
 
 		/* No multisite */
@@ -340,7 +384,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		/* Activate filter and run tests again */
-		StatifyBlacklist::$_options['active_target'] = 1;
+		StatifyBlacklist::$_options['target']['active'] = 1;
 
 		unset( $_SERVER['REQUEST_URI'] );
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
@@ -364,43 +408,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 	 * Test target filter using regular expressions.
 	 */
 	public function testTargetRegexFilter() {
-		/* Prepare Options: 2 regular expressions */
-		StatifyBlacklist::$_options = array(
-			'active_referer' => 1,
-			'cron_referer'   => 0,
-			'referer'        => array(
-				'example.[a-z]+' => 0,
-				'test'           => 1
-			),
-			'referer_regexp' => 1,
-			'version'        => 1.3
-		);
-
-		/* No multisite */
-		StatifyBlacklist::$multisite = false;
-
-		/* No referer */
-		unset( $_SERVER['HTTP_REFERER'] );
-		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		/* Non-blacklisted referer */
-		$_SERVER['HTTP_REFERER'] = 'http://not.evil';
-		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		/* Blacklisted referer */
-		$_SERVER['HTTP_REFERER'] = 'http://example.com';
-		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
-		/* Blacklisted referer with path */
-		$_SERVER['HTTP_REFERER'] = 'http://foobar.net/test/me';
-		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
-		/* Matching both */
-		$_SERVER['HTTP_REFERER'] = 'http://example.net/test/me';
-		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
-		/* Mathinc with wrong case */
-		$_SERVER['HTTP_REFERER'] = 'http://eXaMpLe.NeT/tEsT/mE';
-		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-
-		/* Set RegExp filter to case insensitive */
-		StatifyBlacklist::$_options['referer_regexp'] = 2;
-		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		// TODO
 	}
 }
 

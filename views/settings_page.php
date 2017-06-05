@@ -18,40 +18,46 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		StatifyBlacklist_Admin::cleanup_database();
 	} else {
 		/* Extract referer array */
-		if ( empty( trim( $_POST['statifyblacklist']['referer'] ) ) ) {
+		if ( empty( trim( $_POST['statifyblacklist']['referer']['blacklist'] ) ) ) {
 			$referer = array();
 		} else {
-			$referer = explode( "\r\n", $_POST['statifyblacklist']['referer'] );
+			$referer = explode( "\r\n", $_POST['statifyblacklist']['referer']['blacklist'] );
 		}
 
 		/* Extract target array */
-		if ( empty( trim( $_POST['statifyblacklist']['target'] ) ) ) {
+		if ( empty( trim( $_POST['statifyblacklist']['target']['blacklist'] ) ) ) {
 			$target = array();
 		} else {
-			$target = explode( "\r\n", str_replace( '\\\\', '\\', $_POST['statifyblacklist']['target'] ) );
+			$target = explode( "\r\n", str_replace( '\\\\', '\\', $_POST['statifyblacklist']['target']['blacklist'] ) );
 		}
 
 		/* Extract IP array */
-		if ( empty( trim( $_POST['statifyblacklist']['ip'] ) ) ) {
+		if ( empty( trim( $_POST['statifyblacklist']['ip']['blacklist'] ) ) ) {
 			$ip = array();
 		} else {
-			$ip = explode( "\r\n", $_POST['statifyblacklist']['ip'] );
+			$ip = explode( "\r\n", $_POST['statifyblacklist']['ip']['blacklist'] );
 		}
 
 		/* Update options (data will be sanitized) */
 		$statifyBlacklistUpdateResult = StatifyBlacklist_Admin::update_options(
 			array(
-				'active_referer' => (int) @$_POST['statifyblacklist']['active_referer'],
-				'cron_referer'   => (int) @$_POST['statifyblacklist']['cron_referer'],
-				'referer'        => array_flip( $referer ),
-				'referer_regexp' => (int) @$_POST['statifyblacklist']['referer_regexp'],
-				'active_target'  => (int) @$_POST['statifyblacklist']['active_target'],
-				'cron_target'    => (int) @$_POST['statifyblacklist']['cron_target'],
-				'target'         => array_flip( $target ),
-				'target_regexp'  => (int) @$_POST['statifyblacklist']['target_regexp'],
-				'active_ip'      => (int) @$_POST['statifyblacklist']['active_ip'],
-				'ip'             => $ip,
-				'version'        => StatifyBlacklist::VERSION_MAIN
+				'referer' => array(
+					'active'    => (int) @$_POST['statifyblacklist']['referer']['active'],
+					'cron'      => (int) @$_POST['statifyblacklist']['referer']['cron'],
+					'regexp'    => (int) @$_POST['statifyblacklist']['referer']['regexp'],
+					'blacklist' => array_flip( $referer )
+				),
+				'target'  => array(
+					'active'    => (int) @$_POST['statifyblacklist']['target']['active'],
+					'cron'      => (int) @$_POST['statifyblacklist']['target']['cron'],
+					'regexp'    => (int) @$_POST['statifyblacklist']['target']['regexp'],
+					'blacklist' => array_flip( $target )
+				),
+				'ip'      => array(
+					'active'    => (int) @$_POST['statifyblacklist']['ip']['active'],
+					'blacklist' => $ip
+				),
+				'version' => StatifyBlacklist::VERSION_MAIN
 			)
 		);
 
@@ -96,16 +102,16 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
             <ul style="list-style: none;">
                 <li>
                     <label for="statify-blacklist_active_referer">
-                        <input type="checkbox" name="statifyblacklist[active_referer]"
+                        <input type="checkbox" name="statifyblacklist[referer][active]"
                                id="statifyblacklist_active_referer"
-                               value="1" <?php checked( StatifyBlacklist::$_options['active_referer'], 1 ); ?> />
+                               value="1" <?php checked( StatifyBlacklist::$_options['referer']['active'], 1 ); ?> />
 						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
                     </label>
                 </li>
                 <li>
                     <label for="statify-blacklist_cron_referer">
-                        <input type="checkbox" name="statifyblacklist[cron_referer]" id="statifyblacklist_cron_referer"
-                               value="1" <?php checked( StatifyBlacklist::$_options['cron_referer'], 1 ); ?> />
+                        <input type="checkbox" name="statifyblacklist[referer][cron]" id="statifyblacklist_cron_referer"
+                               value="1" <?php checked( StatifyBlacklist::$_options['referer']['cron'], 1 ); ?> />
 						<?php esc_html_e( 'CronJob execution', 'statify-blacklist' ); ?>
                         <small>(<?php esc_html_e( 'Clean database periodically in background', 'statify-blacklist' ); ?>
                             )
@@ -116,14 +122,14 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
                     <label for="statify-blacklist_referer_regexp">
 						<?php esc_html_e( 'Use regular expressions', 'statify-blacklist' ); ?>:
                         <br/>
-                        <select name="statifyblacklist[referer_regexp]" id="statifyblacklist_referer_regexp">
-                            <option value="0" <?php selected( StatifyBlacklist::$_options['referer_regexp'], 0 ); ?>>
+                        <select name="statifyblacklist[referer][regexp]" id="statifyblacklist_referer_regexp">
+                            <option value="0" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 0 ); ?>>
 								<?php esc_html_e( 'Disabled', 'statify-blacklist' ); ?>
                             </option>
-                            <option value="1" <?php selected( StatifyBlacklist::$_options['referer_regexp'], 1 ); ?>>
+                            <option value="1" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 1 ); ?>>
 								<?php esc_html_e( 'Case-sensitive', 'statify-blacklist' ); ?>
                             </option>
-                            <option value="2" <?php selected( StatifyBlacklist::$_options['referer_regexp'], 2 ); ?>>
+                            <option value="2" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 2 ); ?>>
 								<?php esc_html_e( 'Case-insensitive', 'statify-blacklist' ); ?>
                             </option>
                         </select>
@@ -136,11 +142,11 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
                 <li>
                     <label for="statify-blacklist_referer">
 						<?php esc_html_e( 'Referer blacklist:', 'statify-blacklist' ); ?><br/>
-                        <textarea cols="40" rows="5" name="statifyblacklist[referer]" id="statify-blacklist_referer"><?php
+                        <textarea cols="40" rows="5" name="statifyblacklist[referer][blacklist]" id="statify-blacklist_referer"><?php
 							if ( isset( $statifyBlacklistUpdateResult['referer'] ) ) {
 								print esc_html( implode( "\r\n", array_keys( $statifyBlacklistUpdateResult['referer'] ) ) );
 							} else {
-								print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['referer'] ) ) );
+								print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['referer']['blacklist'] ) ) );
 							}
 							?></textarea>
                         <br/>
@@ -158,16 +164,16 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
             <ul style="list-style: none;">
                 <li>
                     <label for="statify-blacklist_active_target">
-                        <input type="checkbox" name="statifyblacklist[active_target]"
+                        <input type="checkbox" name="statifyblacklist[target][active]"
                                id="statifyblacklist_active_target"
-                               value="1" <?php checked( StatifyBlacklist::$_options['active_target'], 1 ); ?> />
+                               value="1" <?php checked( StatifyBlacklist::$_options['target']['active'], 1 ); ?> />
 						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
                     </label>
                 </li>
                 <li>
                     <label for="statify-blacklist_cron_target">
-                        <input type="checkbox" name="statifyblacklist[cron_target]" id="statifyblacklist_cron_target"
-                               value="1" <?php checked( StatifyBlacklist::$_options['cron_target'], 1 ); ?> />
+                        <input type="checkbox" name="statifyblacklist[target][cron]" id="statifyblacklist_cron_target"
+                               value="1" <?php checked( StatifyBlacklist::$_options['target']['cron'], 1 ); ?> />
 						<?php esc_html_e( 'CronJob execution', 'statify-blacklist' ); ?>
                         <small>(<?php esc_html_e( 'Clean database periodically in background', 'statify-blacklist' ); ?>
                             )
@@ -178,14 +184,14 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
                     <label for="statify-blacklist_target_regexp">
 						<?php esc_html_e( 'Use regular expressions', 'statify-blacklist' ); ?>:
                         <br/>
-                        <select name="statifyblacklist[target_regexp]" id="statifyblacklist_target_regexp">
-                            <option value="0" <?php selected( StatifyBlacklist::$_options['target_regexp'], 0 ); ?>>
+                        <select name="statifyblacklist[target][regexp]" id="statifyblacklist_target_regexp">
+                            <option value="0" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 0 ); ?>>
 								<?php esc_html_e( 'Disabled', 'statify-blacklist' ); ?>
                             </option>
-                            <option value="1" <?php selected( StatifyBlacklist::$_options['target_regexp'], 1 ); ?>>
+                            <option value="1" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 1 ); ?>>
 								<?php esc_html_e( 'Case-sensitive', 'statify-blacklist' ); ?>
                             </option>
-                            <option value="2" <?php selected( StatifyBlacklist::$_options['target_regexp'], 2 ); ?>>
+                            <option value="2" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 2 ); ?>>
 								<?php esc_html_e( 'Case-insensitive', 'statify-blacklist' ); ?>
                             </option>
                         </select>
@@ -198,11 +204,11 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
                 <li>
                     <label for="statify-blacklist_target">
 						<?php esc_html_e( 'Target blacklist:', 'statify-blacklist' ); ?><br/>
-                        <textarea cols="40" rows="5" name="statifyblacklist[target]" id="statify-blacklist_target"><?php
+                        <textarea cols="40" rows="5" name="statifyblacklist[target][blacklist]" id="statify-blacklist_target"><?php
 							if ( isset( $statifyBlacklistUpdateResult['target'] ) ) {
 								print esc_html( implode( "\r\n", array_keys( $statifyBlacklistUpdateResult['target'] ) ) );
 							} else {
-								print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['target'] ) ) );
+								print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['target']['blacklist'] ) ) );
 							}
 							?></textarea>
                         <br/>
@@ -221,8 +227,8 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
             <ul style="list-style: none;">
                 <li>
                     <label for="statify-blacklist_active_ip">
-                        <input type="checkbox" name="statifyblacklist[active_ip]" id="statifyblacklist_active_ip"
-                               value="1" <?php checked( StatifyBlacklist::$_options['active_ip'], 1 ); ?> />
+                        <input type="checkbox" name="statifyblacklist[ip][active]" id="statifyblacklist_active_ip"
+                               value="1" <?php checked( StatifyBlacklist::$_options['ip']['active'], 1 ); ?> />
 						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
                     </label>
                 </li>
@@ -235,11 +241,11 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
                 <li>
                     <label for="statify-blacklist_ip">
 						<?php esc_html_e( 'IP blacklist:', 'statify-blacklist' ); ?><br/>
-                        <textarea cols="40" rows="5" name="statifyblacklist[ip]" id="statify-blacklist_ip"><?php
+                        <textarea cols="40" rows="5" name="statifyblacklist[ip][blacklist]" id="statify-blacklist_ip"><?php
 							if ( isset( $statifyBlacklistUpdateResult['ip'] ) ) {
-								print esc_html( $_POST['statifyblacklist']['ip'] );
+								print esc_html( $_POST['statifyblacklist']['ip']['blacklist'] );
 							} else {
-								print esc_html( implode( "\r\n", StatifyBlacklist::$_options['ip'] ) );
+								print esc_html( implode( "\r\n", StatifyBlacklist::$_options['ip']['blacklist'] ) );
 							}
 							?></textarea>
                         <br/>

@@ -97,8 +97,38 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			}
 		}
 
-		/* Version not set (pre 1.3.0) or older than current major release */
-		if ( ! isset( self::$_options['version'] ) || self::$_options['version'] < self::VERSION_MAIN ) {
+		/* Version not set (pre 1.3.0) or older than 1.4 */
+		if ( ! isset( self::$_options['version'] ) || self::$_options['version'] < 1.4 ) {
+			/* Upgrade options to new schema */
+			$options = array(
+				'referer' => array(
+					'active'    => self::$_options['active_referer'],
+					'cron'      => self::$_options['cron_referer'],
+					'regexp'    => self::$_options['referer_regexp'],
+					'blacklist' => self::$_options['referer']
+				),
+				'target'  => array(
+					'active'    => 0,
+					'cron'      => 0,
+					'regexp'    => 0,
+					'blacklist' => array()
+				),
+				'ip'      => array(
+					'active'    => 0,
+					'blacklist' => array()
+				),
+				'version' => 1.4
+			);
+			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
+				update_site_option( 'statify-blacklist', $options );
+			} else {
+				update_option( 'statify-blacklist', $options );
+			}
+			self::update_options();
+		}
+
+		/* Version older than current major release */
+		if ( self::$_options['version'] < self::VERSION_MAIN ) {
 			/* Merge default options with current config, assuming only additive changes */
 			$options = array_merge( self::defaultOptions(), self::$_options );
 			$options['version'] = self::VERSION_MAIN;

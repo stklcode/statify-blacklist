@@ -35,7 +35,7 @@ spl_autoload_register( 'statifyBlacklist_autoload' );
 /**
  * Autoloader for StatifyBlacklist classes.
  *
- * @param $class
+ * @param string $class name of the class to load
  *
  * @since 1.0.0
  */

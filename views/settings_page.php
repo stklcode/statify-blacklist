@@ -141,7 +141,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
                 </li>
                 <li>
                     <label for="statify-blacklist_referer">
-						<?php esc_html_e( 'Referer blacklist:', 'statify-blacklist' ); ?><br/>
+						<?php esc_html_e( 'Referer blacklist', 'statify-blacklist' ); ?>:<br/>
                         <textarea cols="40" rows="5" name="statifyblacklist[referer][blacklist]" id="statify-blacklist_referer"><?php
 							if ( isset( $statifyBlacklistUpdateResult['referer'] ) ) {
 								print esc_html( implode( "\r\n", array_keys( $statifyBlacklistUpdateResult['referer'] ) ) );
@@ -203,7 +203,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
                 </li>
                 <li>
                     <label for="statify-blacklist_target">
-						<?php esc_html_e( 'Target blacklist:', 'statify-blacklist' ); ?><br/>
+						<?php esc_html_e( 'Target blacklist', 'statify-blacklist' ); ?>:<br/>
                         <textarea cols="40" rows="5" name="statifyblacklist[target][blacklist]" id="statify-blacklist_target"><?php
 							if ( isset( $statifyBlacklistUpdateResult['target'] ) ) {
 								print esc_html( implode( "\r\n", array_keys( $statifyBlacklistUpdateResult['target'] ) ) );
@@ -240,7 +240,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
                 </li>
                 <li>
                     <label for="statify-blacklist_ip">
-						<?php esc_html_e( 'IP blacklist:', 'statify-blacklist' ); ?><br/>
+						<?php esc_html_e( 'IP blacklist', 'statify-blacklist' ); ?>:<br/>
                         <textarea cols="40" rows="5" name="statifyblacklist[ip][blacklist]" id="statify-blacklist_ip"><?php
 							if ( isset( $statifyBlacklistUpdateResult['ip'] ) ) {
 								print esc_html( $_POST['statifyblacklist']['ip']['blacklist'] );

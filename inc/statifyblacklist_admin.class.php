@@ -13,11 +13,10 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Update options
 	 *
-	 * @param  $options array  New options to save
+	 * @param  array $options New options to save
 	 *
-	 * @return mixed  array of sanitized array on errors, FALSE if there were none
-	 * @since   1.1.1
-	 * @changed 1.4.0
+	 * @return array|bool  array of sanitized array on errors, FALSE if there were none
+	 * @since 1.1.1
 	 */
 	public static function update_options( $options = null ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
@@ -57,7 +56,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Add configuration page to admin menu
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 */
 	public function _add_menu_page() {
 		$title = __( 'Statify Blacklist', 'statify-blacklist' );
@@ -82,12 +81,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Add plugin meta links
 	 *
-	 * @param $links
-	 * @param $file
+	 * @param array $links Registered links
+	 * @param string $file The filename
 	 *
-	 * @return array
+	 * @return array  Merged links
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 */
 	public static function plugin_meta_link( $links, $file ) {
 		if ( $file == STATIFYBLACKLIST_BASE ) {
@@ -100,11 +99,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Add plugin action links
 	 *
-	 * @param   array $input Registered links
+	 * @param array $links Registered links
+	 * @param string $file The filename
 	 *
-	 * @return  array           Merged links
+	 * @return array  Merged links
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 */
 	public static function plugin_actions_links( $links, $file ) {
 		$base = self::$multisite ? network_admin_url( 'settings.php' ) : admin_url( 'options-general.php' );
@@ -122,8 +122,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Filter database for cleanup.
 	 *
-	 * @since   1.1.0
-	 * @changed 1.4.0
+	 * @since 1.1.0
 	 */
 	public static function cleanup_database() {
 		/* Check user permissions */
@@ -195,12 +194,11 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Sanitize URLs and remove empty results
 	 *
-	 * @param $urls array   given array of URLs
+	 * @param array $urls given array of URLs
 	 *
 	 * @return array  sanitized array
 	 *
-	 * @since    1.1.1
-	 * @changed  1.2.0
+	 * @since 1.1.1
 	 */
 	private static function sanitizeURLs( $urls ) {
 		return array_flip(
@@ -218,11 +216,11 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Sanitize IP addresses with optional CIDR notation and remove empty results
 	 *
-	 * @param $ips array   given array of URLs
+	 * @param array $ips given array of URLs
 	 *
 	 * @return array  sanitized array
 	 *
-	 * @since    1.4.0
+	 * @since 1.4.0
 	 */
 	private static function sanitizeIPs( $ips ) {
 		return array_filter( $ips, function ( $ip ) {

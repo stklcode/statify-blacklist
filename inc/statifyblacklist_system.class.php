@@ -14,8 +14,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	/**
 	 * Plugin install handler.
 	 *
-	 * @since   1.0.0
-	 * @changed 1.4.0
+	 * @since 1.0.0
 	 *
 	 * @param bool $network_wide Whether the plugin was activated network-wide or not.
 	 */
@@ -80,8 +79,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	/**
 	 * Upgrade plugin options.
 	 *
-	 * @since   1.2.0
-	 * @changed 1.4.0
+	 * @since 1.2.0
 	 */
 	public static function upgrade() {
 		self::update_options();
@@ -130,7 +128,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		/* Version older than current major release */
 		if ( self::$_options['version'] < self::VERSION_MAIN ) {
 			/* Merge default options with current config, assuming only additive changes */
-			$options = array_merge( self::defaultOptions(), self::$_options );
+			$options            = array_merge_recursive( self::defaultOptions(), self::$_options );
 			$options['version'] = self::VERSION_MAIN;
 			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
 				update_site_option( 'statify-blacklist', $options );

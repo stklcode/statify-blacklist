@@ -7,7 +7,7 @@
 * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
 ## Description ##
-A blacklist extension for the famous [Statify](https://de.wordpress.org/plugins/statify/) Wordpress plugin.
+A blacklist extension for the famous [Statify](https://wordpress.org/plugins/statify/) Wordpress plugin.
 
 This plugin adds customizable blacklist to Statify to allow blocking of referer spam or internal interactions.
 
@@ -54,14 +54,14 @@ visitors from search engines, just "false" referers from 301 redirects or you ow
 No. It only prevent's _Statify_ from tracking, nothing more or less.
 
 ### Does live filtering impact performance? ###
-Yes, but probalby not noticeable. Checking a single referer string against a (usually small) list should be neglectible compared to the total loading procedure.
+Yes, but probalby not noticeable. Checking a single referer string against a (usually small) list should be negligible compared to the total loading procedure.
 If this still is an issue for you, consider deactivating the filter and only run the one-time-cleanup or activate the cron job.
  
 ### Is any personal data collected? ###
 No. The privacy policy of _Statify_ is untouched. Data is only processed, not stored or exposed to anyone.
 
 ### Are regular expression filters possible? ###
-Yes, it it. Just select if you want to filter using regular expressions case sensitive or insensitive.
+Yes, it is. Just select if you want to filter using regular expressions case sensitive or insensitive.
 
 Note, that regular expression matching is significantly slower than the plain domain filter. Hence it is only recommended for asynchronous cron or manual execution and not for live filtering.
 
@@ -78,6 +78,7 @@ Because of this, an IP blacklist can only be applied while processing the reques
 ### 1.4.0 / work in progress ###
 * IP blacklist implemented (#7)
 * Target page blacklist implemented (#8)
+* Internal configuration restructured (upgrade on plugin activation)
 
 ### 1.3.1 / 09.12.2016 ###
 * Continue filtering if no filter applies (#6)

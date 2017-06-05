@@ -17,7 +17,7 @@ class StatifyBlacklist {
 	 * Plugin options
 	 *
 	 * @var array
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 */
 	public static $_options;
 
@@ -25,14 +25,14 @@ class StatifyBlacklist {
 	 * Multisite Status
 	 *
 	 * @var bool
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 */
 	public static $multisite;
 
 	/**
 	 * Class self initialize
 	 *
-	 * @since   1.0.0
+	 * @since 1.0.0
 	 */
 	public static function instance() {
 		new self();
@@ -41,8 +41,7 @@ class StatifyBlacklist {
 	/**
 	 * Class constructor
 	 *
-	 * @since   1.0.0
-	 * @changed 1.2.1
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 		/* Skip on autosave or AJAX */
@@ -85,7 +84,7 @@ class StatifyBlacklist {
 
 		/* CronJob to clean up database */
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			if ( self::$_options['referer']['cron'] == 1 ||  self::$_options['target']['cron'] == 1 ) {
+			if ( self::$_options['referer']['cron'] == 1 || self::$_options['target']['cron'] == 1 ) {
 				add_action( 'statify_cleanup', array( 'StatifyBlacklist_Admin', 'cleanup_database' ) );
 			}
 		}
@@ -94,10 +93,10 @@ class StatifyBlacklist {
 	/**
 	 * Update options
 	 *
-	 * @param  $options array  New options to save
+	 * @param array $options New options to save
 	 *
-	 * @since   1.0.0
-	 * @changed 1.1.1
+	 * @since 1.0.0
+	 * @since 1.2.1 update_options($options = null) Parameter with default value introduced
 	 */
 	public static function update_options( $options = null ) {
 		self::$_options = wp_parse_args(
@@ -138,10 +137,9 @@ class StatifyBlacklist {
 	/**
 	 * Apply the blacklist filter if active
 	 *
-	 * @return  TRUE if referer matches blacklist.
+	 * @return bool TRUE if referer matches blacklist.
 	 *
-	 * @since  1.0.0
-	 * @since  1.4.0 Target and IP blacklist
+	 * @since 1.0.0
 	 */
 	public static function apply_blacklist_filter() {
 		/* Referer blacklist */
@@ -252,8 +250,8 @@ class StatifyBlacklist {
 	/**
 	 * Helper function to check if an IP address matches a given subnet.
 	 *
-	 * @param $ip  string IP address to check
-	 * @param $net string IP address or subnet in CIDR notation
+	 * @param string $ip IP address to check
+	 * @param string $net IP address or subnet in CIDR notation
 	 *
 	 * @return bool TRUE, if the given IP addresses matches the given subnet
 	 */

@@ -28,6 +28,11 @@ Filters can be applied to data stored in database after modifying filter rules o
 This plugin requires Statify to be installed. The extension has been tested with Statify up to version 1.5.1
 The plugin is capable of handling multisite installations.
 
+### Support & Contributions ###
+* If experience any issues, use the [support forums](https://wordpress.org/support/plugin/statify-statify).
+* Latest sources and development are handled on [GitHub](https://github.com/stklcode/statify-blacklist). You might contribute there or file an issue for code related bugs.
+* If you want to translate this plugin you can do this on [WordPress Translate](https://translate.wordpress.org/projects/wp-plugins/statify-blacklist).
+
 ### Credits ###
 * Author: Stefan Kalscheuer
 * Special Thanks to [pluginkollektiv](https://github.com/pluginkollektiv) for maintaining _Statify_

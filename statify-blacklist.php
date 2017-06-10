@@ -8,7 +8,7 @@ Author:      Stefan Kalscheuer
 Author URI:  https://www.stklcode.de
 Plugin URI:  https://wordpress.org/plugins/statify-blacklist
 License:     GPLv3 or later
-Version:     1.4.0~dev
+Version:     1.4.0
 */
 
 /* Quit */

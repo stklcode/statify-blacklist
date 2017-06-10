@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) OR exit;
  * Statify Blacklist system configuration
  *
  * @since   1.0.0
- * @version 1.4.0~dev
+ * @version 1.4.0
  */
 class StatifyBlacklist_System extends StatifyBlacklist {
 

@@ -10,7 +10,7 @@ require_once( '../inc/statifyblacklist_admin.class.php' );
  *
  * PHPUnit test class for StatifyBlacklist
  *
- * @version 1.4.0~dev
+ * @version 1.4.0
  */
 class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 

@@ -2,7 +2,7 @@
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 3.9
 * Tested up to:      4.8
-* Stable tag:        1.3.1
+* Stable tag:        1.4.0
 * License:           GPLv3 or later
 * License URI:       https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -80,10 +80,11 @@ Because of this, an IP blacklist can only be applied while processing the reques
 
 ## Changelog ##
 
-### 1.4.0 / work in progress ###
+### 1.4.0 / 10.06.2017 ###
 * IP blacklist implemented (#7)
 * Target page blacklist implemented (#8)
 * Internal configuration restructured (upgrade on plugin activation)
+* Statify hook name changed to `statify__skip_tracking` (as of Statify 1.5.0)
 
 ### 1.3.1 / 09.12.2016 ###
 * Continue filtering if no filter applies (#6)

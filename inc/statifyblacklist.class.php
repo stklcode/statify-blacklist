@@ -57,7 +57,7 @@ class StatifyBlacklist {
 
 		/* Add Filter to statify hook if enabled */
 		if ( self::$_options['referer']['active'] != 0 ) {
-			add_filter( 'statify_skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
+			add_filter( 'statify__skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
 		}
 
 		/* Admin only filters */

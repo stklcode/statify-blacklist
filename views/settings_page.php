@@ -250,7 +250,8 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 							?></textarea>
                         <br/>
                         <small>
-                            (<?php esc_html_e( 'Add one IP address or range per line, e.g.' ) ?> 127.0.0.1,
+                            (<?php esc_html_e( 'Add one IP address or range per line, e.g.', 'statify-blacklist' ) ?>
+                            127.0.0.1,
                             192.168.123.0/24, 2001:db8:a0b:12f0::1/64
                             )
                         </small>

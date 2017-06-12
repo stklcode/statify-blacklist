@@ -29,7 +29,7 @@ This plugin requires Statify to be installed. The extension has been tested with
 The plugin is capable of handling multisite installations.
 
 ### Support & Contributions ###
-* If experience any issues, use the [support forums](https://wordpress.org/support/plugin/statify-statify).
+* If experience any issues, use the [support forums](https://wordpress.org/support/plugin/statify-blacklist).
 * Latest sources and development are handled on [GitHub](https://github.com/stklcode/statify-blacklist). You might contribute there or file an issue for code related bugs.
 * If you want to translate this plugin you can do this on [WordPress Translate](https://translate.wordpress.org/projects/wp-plugins/statify-blacklist).
 

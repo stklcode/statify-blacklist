@@ -1,13 +1,21 @@
 <?php
+/**
+ * Statify Blacklist: StatifyBlacklist_Syste, class
+ *
+ * This file contains the derived class for the plugin's system operations.
+ *
+ * @package   Statify_Blacklist
+ * @subpackge System
+ * @since     1.0.0
+ */
 
-/* Quit */
+// Quit.
 defined( 'ABSPATH' ) OR exit;
 
 /**
- * Statify Blacklist system configuration
+ * Statify Blacklist system configuration.
  *
  * @since   1.0.0
- * @version 1.4.0
  */
 class StatifyBlacklist_System extends StatifyBlacklist {
 
@@ -24,7 +32,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
 			} elseif ( function_exists( 'wp_get_sites' ) ) {
-				$sites = wp_get_sites();    /* legacy support for WP < 4.6 */
+				$sites = wp_get_sites();    // legacy support for WP < 4.6.
 			} else {
 				return;
 			}
@@ -59,7 +67,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
 			} elseif ( function_exists( 'wp_get_sites' ) ) {
-				$sites = wp_get_sites();    /* legacy support for WP < 4.6 */
+				$sites = wp_get_sites();    // legacy support for WP < 4.6.
 			} else {
 				return;
 			}
@@ -83,9 +91,9 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 */
 	public static function upgrade() {
 		self::update_options();
-		/* Check if config array is not associative (pre 1.2.0) */
+		// Check if config array is not associative (pre 1.2.0).
 		if ( array_keys( self::$_options['referer'] ) === range( 0, count( self::$_options['referer'] ) - 1 ) ) {
-			/* Flip referer array to make domains keys */
+			// Flip referer array to make domains keys.
 			$options            = self::$_options;
 			$options['referer'] = array_flip( self::$_options['referer'] );
 			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
@@ -95,9 +103,9 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			}
 		}
 
-		/* Version not set (pre 1.3.0) or older than 1.4 */
+		// Version not set (pre 1.3.0) or older than 1.4.
 		if ( ! isset( self::$_options['version'] ) || self::$_options['version'] < 1.4 ) {
-			/* Upgrade options to new schema */
+			// Upgrade options to new schema.
 			$options = array(
 				'referer' => array(
 					'active'    => self::$_options['active_referer'],
@@ -125,9 +133,9 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			self::update_options();
 		}
 
-		/* Version older than current major release */
+		// Version older than current major release.
 		if ( self::$_options['version'] < self::VERSION_MAIN ) {
-			/* Merge default options with current config, assuming only additive changes */
+			// Merge default options with current config, assuming only additive changes.
 			$options            = array_merge_recursive( self::defaultOptions(), self::$_options );
 			$options['version'] = self::VERSION_MAIN;
 			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {

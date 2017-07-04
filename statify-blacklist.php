@@ -1,41 +1,55 @@
 <?php
 /*
 Plugin Name: Statify Blacklist
-Description: Extension for the statify plugin to add a customizable blacklists.
-Text Domain: statify-blacklist
-Domain Path: /lang
-Author:      Stefan Kalscheuer
+Plugin URI:  https://de.wordpress.org/plugins/statify-blacklist/
+Description: Extension for the Statify plugin to add a customizable blacklists.
+Version:     1.4.0
+Author:      Stefan Kalscheuer (@stklcode)
 Author URI:  https://www.stklcode.de
 Plugin URI:  https://wordpress.org/plugins/statify-blacklist
-License:     GPLv3 or later
-Version:     1.4.0
+Text Domain: statify-blacklist
+Domain Path: /lang
+License:     GPLv2 or later
+
+Statify Blacklist is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+any later version.
+
+Statify Blacklist is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Statify Blacklist. If not, see http://www.gnu.org/licenses/gpl-2.0.html.
 */
 
-/* Quit */
+// Quit
 defined( 'ABSPATH' ) OR exit;
 
-/*  Constants */
+//  Constants
 define( 'STATIFYBLACKLIST_FILE', __FILE__ );
 define( 'STATIFYBLACKLIST_DIR', dirname( __FILE__ ) );
 define( 'STATIFYBLACKLIST_BASE', plugin_basename( __FILE__ ) );
 
-/* System Hooks */
+// System Hooks.
 add_action( 'plugins_loaded', array( 'StatifyBlacklist', 'instance' ) );
 
 register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'install' ) );
 
 register_uninstall_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'uninstall' ) );
 
-/* Upgrade hook */
+// Upgrade hook
 register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'upgrade' ) );
 
-/* Autoload */
+// Autoload
 spl_autoload_register( 'statifyBlacklist_autoload' );
 
 /**
  * Autoloader for StatifyBlacklist classes.
  *
- * @param string $class name of the class to load
+ * @param string $class Name of the class to load.
  *
  * @since 1.0.0
  */

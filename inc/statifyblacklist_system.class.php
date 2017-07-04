@@ -125,7 +125,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 				),
 				'version' => 1.4
 			);
-			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
+			if ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) {
 				update_site_option( 'statify-blacklist', $options );
 			} else {
 				update_option( 'statify-blacklist', $options );
@@ -134,7 +134,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		}
 
 		// Version older than current major release.
-		if ( self::$_options['version'] < self::VERSION_MAIN ) {
+		if ( self::VERSION_MAIN > self::$_options['version'] ) {
 			// Merge default options with current config, assuming only additive changes.
 			$options            = array_merge_recursive( self::defaultOptions(), self::$_options );
 			$options['version'] = self::VERSION_MAIN;

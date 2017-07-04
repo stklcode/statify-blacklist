@@ -69,7 +69,7 @@ class StatifyBlacklist {
 		self::$multisite = ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) );
 
 		// Add Filter to statify hook if enabled.
-		if ( self::$_options['referer']['active'] != 0 ) {
+		if ( 0 !== self::$_options['referer']['active'] ) {
 			add_filter( 'statify__skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
 		}
 
@@ -99,7 +99,7 @@ class StatifyBlacklist {
 
 		// CronJob to clean up database.
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			if ( self::$_options['referer']['cron'] == 1 || self::$_options['target']['cron'] == 1 ) {
+			if ( 1 === self::$_options['referer']['cron'] || 1 === self::$_options['target']['cron'] ) {
 				add_action( 'statify_cleanup', array( 'StatifyBlacklist_Admin', 'cleanup_database' ) );
 			}
 		}
@@ -111,7 +111,7 @@ class StatifyBlacklist {
 	 * @since 1.0.0
 	 * @since 1.2.1 update_options($options = null) Parameter with default value introduced.
 	 *
-	 * @param array $options New options to save.
+	 * @param array $options Optional. New options to save.
 	 *
 	 */
 	public static function update_options( $options = null ) {
@@ -159,20 +159,20 @@ class StatifyBlacklist {
 	 */
 	public static function apply_blacklist_filter() {
 		// Referer blacklist.
-		if ( isset( self::$_options['referer']['active'] ) && self::$_options['referer']['active'] != 0 ) {
+		if ( isset( self::$_options['referer']['active'] ) && 0 !== self::$_options['referer']['active'] ) {
 			// Regular Expression filtering since 1.3.0.
 			if ( isset( self::$_options['referer']['regexp'] ) && self::$_options['referer']['regexp'] > 0 ) {
 				// Get full referer string.
 				$referer = ( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' );
 				// Merge given regular expressions into one.
 				$regexp = '/' . implode( "|", array_keys( self::$_options['referer']['blacklist'] ) ) . '/';
-				if ( self::$_options['referer']['regexp'] == 2 ) {
+				if ( 2 === self::$_options['referer']['regexp'] ) {
 					$regexp .= 'i';
 				}
 
 				// Check blacklist (return NULL to continue filtering).
 
-				return ( preg_match( $regexp, $referer ) === 1 ) ? true : null;
+				return ( 1 === preg_match( $regexp, $referer ) ) ? true : null;
 			} else {
 				// Extract relevant domain parts.
 				$referer = strtolower( ( isset( $_SERVER['HTTP_REFERER'] ) ? parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) : '' ) );
@@ -188,20 +188,20 @@ class StatifyBlacklist {
 		}
 
 		// Target blacklist (since 1.4.0)
-		if ( isset( self::$_options['target']['active'] ) && self::$_options['target']['active'] != 0 ) {
+		if ( isset( self::$_options['target']['active'] ) && 0 !== self::$_options['target']['active'] ) {
 			// Regular Expression filtering since 1.3.0.
-			if ( isset( self::$_options['target']['regexp'] ) && self::$_options['target']['regexp'] > 0 ) {
+			if ( isset( self::$_options['target']['regexp'] ) && 0 < self::$_options['target']['regexp'] ) {
 				// Get full referer string.
 				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/' );
 				// Merge given regular expressions into one
 				$regexp = '/' . implode( "|", array_keys( self::$_options['target']['blacklist'] ) ) . '/';
-				if ( self::$_options['target']['regexp'] == 2 ) {
+				if ( 2 === self::$_options['target']['regexp'] ) {
 					$regexp .= 'i';
 				}
 
 				// Check blacklist (return NULL to continue filtering).
 
-				return ( preg_match( $regexp, $target ) === 1 ) ? true : null;
+				return ( 1 === preg_match( $regexp, $target ) ) ? true : null;
 			} else {
 				// Extract target page.
 				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/' );
@@ -215,8 +215,8 @@ class StatifyBlacklist {
 		}
 
 		// IP blacklist (since 1.4.0).
-		if ( isset ( self::$_options['ip']['active'] ) && self::$_options['ip']['active'] != 0 ) {
-			if ( ( $ip = self::getIP() ) !== false ) {
+		if ( isset ( self::$_options['ip']['active'] ) && 0 !== self::$_options['ip']['active'] ) {
+			if ( false !== ( $ip = self::getIP() ) ) {
 				foreach ( self::$_options['ip']['blacklist'] as $net ) {
 					if ( self::cidrMatch( $ip, $net ) ) {
 						return true;
@@ -254,7 +254,7 @@ class StatifyBlacklist {
 		) {
 			if ( isset( $_SERVER[$k] ) ) {
 				foreach ( explode( ',', $_SERVER[$k] ) as $ip ) {
-					if ( filter_var( $ip, FILTER_VALIDATE_IP ) !== false ) {
+					if ( false !== filter_var( $ip, FILTER_VALIDATE_IP ) ) {
 						return $ip;
 					}
 				}
@@ -300,7 +300,7 @@ class StatifyBlacklist {
 				$left  = $mask - 16 * ( $i - 1 );
 				$left  = ( $left <= 16 ) ? $left : 16;
 				$maskB = ~( 0xffff >> $left ) & 0xffff;
-				if ( ( $bytesAddr[$i] & $maskB ) != ( $bytesTest[$i] & $maskB ) ) {
+				if ( ( $bytesAddr[$i] & $maskB ) !== ( $bytesTest[$i] & $maskB ) ) {
 					return false;
 				}
 			}
@@ -326,7 +326,7 @@ class StatifyBlacklist {
 				$mask = 32;
 			}
 
-			return 0 === substr_compare( sprintf( '%032b', ip2long( $ip ) ), sprintf( '%032b', ip2long( $base ) ), 0, $mask );
+			return ( 0 === substr_compare( sprintf( '%032b', ip2long( $ip ) ), sprintf( '%032b', ip2long( $base ) ), 0, $mask ) );
 		}
 	}
 }

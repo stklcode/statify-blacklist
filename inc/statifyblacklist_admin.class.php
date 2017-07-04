@@ -21,7 +21,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Update options.
 	 *
-	 * @param  array $options New options to save.
+	 * @param  array $options Optional. New options to save.
 	 *
 	 * @return array|bool  array of sanitized array on errors, FALSE if there were none.
 	 * @since 1.1.1
@@ -30,7 +30,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
 			// Sanitize URLs and remove empty inputs.
 			$givenReferer = $options['referer']['blacklist'];
-			if ( $options['referer']['regexp'] == 0 ) {
+			if ( 0 === $options['referer']['regexp'] ) {
 				$sanitizedReferer = self::sanitizeURLs( $givenReferer );
 			} else {
 				$sanitizedReferer = $givenReferer;
@@ -107,7 +107,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 *
 	 */
 	public static function plugin_meta_link( $links, $file ) {
-		if ( $file == STATIFYBLACKLIST_BASE ) {
+		if ( $file === STATIFYBLACKLIST_BASE ) {
 			$links[] = '<a href="https://github.com/stklcode/statify-blacklist">GitHub</a>';
 		}
 
@@ -128,7 +128,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	public static function plugin_actions_links( $links, $file ) {
 		$base = self::$multisite ? network_admin_url( 'settings.php' ) : admin_url( 'options-general.php' );
 
-		if ( $file == STATIFYBLACKLIST_BASE && current_user_can( 'manage_options' ) ) {
+		if ( $file === STATIFYBLACKLIST_BASE && current_user_can( 'manage_options' ) ) {
 			array_unshift(
 				$links,
 				sprintf( '<a href="%s">%s</a>', esc_attr( add_query_arg( 'page', 'statify-blacklist', $base ) ), __( 'Settings' ) )
@@ -152,8 +152,8 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		}
 
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			$cleanRef = ( self::$_options['referer']['cron'] == 1 );
-			$cleanTrg = ( self::$_options['target']['cron'] == 1 );
+			$cleanRef = ( 1 === self::$_options['referer']['cron'] );
+			$cleanTrg = ( 1 === self::$_options['target']['cron'] );
 		} else {
 			$cleanRef = true;
 			$cleanTrg = true;
@@ -192,7 +192,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
-						. ( ( self::$_options['referer']['regexp'] == 1 ) ? " BINARY " : "" )
+						. ( ( 1 === self::$_options['referer']['regexp'] ) ? " BINARY " : "" )
 						. "referrer REGEXP %s", $refererRegexp
 					)
 				);
@@ -201,7 +201,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
-						. ( ( self::$_options['target']['regexp'] == 1 ) ? " BINARY " : "" )
+						. ( ( 1 === self::$_options['target']['regexp'] ) ? " BINARY " : "" )
 						. "target REGEXP %s", $targetRegexp
 					)
 				);

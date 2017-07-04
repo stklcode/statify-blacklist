@@ -11,7 +11,8 @@ A blacklist extension for the famous [Statify](https://wordpress.org/plugins/sta
 
 This plugin adds customizable blacklist to Statify to allow blocking of referer spam or internal interactions.
 
-### Current Features ##
+### Features ##
+
 #### Referer Blacklist ####
 Add a list of domains (for simplicity only second-level, e.g. _example.com_ which blocks _everything.example.com_).
 
@@ -79,6 +80,10 @@ Because of this, an IP blacklist can only be applied while processing the reques
 1. Statify Blacklist settings page
 
 ## Changelog ##
+
+### Work in Progress ###
+* Relicensed to GPLv2 or later
+* Minor changes for WP Coding Standard
 
 ### 1.4.0 / 10.06.2017 ###
 * IP blacklist implemented (#7)

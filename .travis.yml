@@ -1,0 +1,14 @@
+language: php
+dist: trusty
+php:
+  - '5.5'
+  - '5.6'
+  - '7.0'
+  - '7.1'
+before_script:
+  - composer install --no-interaction
+  - vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs
+script:
+  - vendor/bin/phpunit ./test/statifyblacklist-test.php
+  - vendor/bin/phpcs statify-blacklist.php --standard=ruleset.xml
+  - vendor/bin/phpcs ./inc/ --standard=ruleset.xml --extensions=php

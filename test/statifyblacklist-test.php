@@ -20,17 +20,17 @@ const ABSPATH = false;
 /**
  * The StatifyBlacklist base class.
  */
-require_once( '../inc/statifyblacklist.class.php' );
+require_once( 'inc/statifyblacklist.class.php' );
 
 /**
  * The StatifyBlacklist system class.
  */
-require_once( '../inc/statifyblacklist_system.class.php' );
+require_once( 'inc/statifyblacklist-system.class.php' );
 
 /**
  * The StatifyBlacklist admin class.
  */
-require_once( '../inc/statifyblacklist_admin.class.php' );
+require_once( 'inc/statifyblacklist-admin.class.php' );
 
 /**
  * Class StatifyBlacklistTest.
@@ -39,13 +39,13 @@ require_once( '../inc/statifyblacklist_admin.class.php' );
  *
  * @since 1.3.0
  */
-class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
+class StatifyBlacklistTest extends PHPUnit\Framework\TestCase {
 
 	/**
 	 * Test simple referer filter.
 	 */
 	public function testRefererFilter() {
-		// Prepare Options: 2 blacklisted domains, disabled
+		// Prepare Options: 2 blacklisted domains, disabled.
 		StatifyBlacklist::$_options = array(
 			'referer' => array(
 				'active'    => 0,
@@ -53,20 +53,20 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 				'regexp'    => 0,
 				'blacklist' => array(
 					'example.com' => 0,
-					'example.net' => 1
-				)
+					'example.net' => 1,
+				),
 			),
 			'target'  => array(
 				'active'    => 0,
 				'cron'      => 0,
 				'regexp'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
 			'ip'      => array(
 				'active'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
-			'version' => StatifyBlacklist::VERSION_MAIN
+			'version' => StatifyBlacklist::VERSION_MAIN,
 		);
 
 		// No multisite.
@@ -113,20 +113,20 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 				'regexp'    => 1,
 				'blacklist' => array(
 					'example.[a-z]+' => 0,
-					'test'           => 1
-				)
+					'test'           => 1,
+				),
 			),
 			'target'  => array(
 				'active'    => 0,
 				'cron'      => 0,
 				'regexp'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
 			'ip'      => array(
 				'active'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
-			'version' => StatifyBlacklist::VERSION_MAIN
+			'version' => StatifyBlacklist::VERSION_MAIN,
 		);
 
 		// No multisite.
@@ -166,10 +166,10 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 			'cron_referer'   => 0,
 			'referer'        => array(
 				'example.net' => 0,
-				'example.com' => 1
+				'example.com' => 1,
 			),
 			'referer_regexp' => 0,
-			'version'        => 1.3
+			'version'        => 1.3,
 		);
 
 		// Set options in mock.
@@ -182,10 +182,10 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$optionsUpdated = get_option( 'statify-blacklist' );
 
 		// Verify size against default options (no junk left).
-		$this->assertEquals( 4, sizeof( $optionsUpdated ) );
-		$this->assertEquals( 4, sizeof( $optionsUpdated['referer'] ) );
-		$this->assertEquals( 4, sizeof( $optionsUpdated['target'] ) );
-		$this->assertEquals( 2, sizeof( $optionsUpdated['ip'] ) );
+		$this->assertEquals( 4, count( $optionsUpdated ) );
+		$this->assertEquals( 4, count( $optionsUpdated['referer'] ) );
+		$this->assertEquals( 4, count( $optionsUpdated['target'] ) );
+		$this->assertEquals( 2, count( $optionsUpdated['ip'] ) );
 
 		// Verify that original attributes are unchanged.
 		$this->assertEquals( $options13['active_referer'], $optionsUpdated['referer']['active'] );
@@ -210,92 +210,92 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCidrMatch() {
 		// IPv4 tests.
-		$this->assertTrue( invokeStatic( StatifyBlacklist::class, 'cidrMatch', array( '127.0.0.1', '127.0.0.1' ) ) );
-		$this->assertTrue( invokeStatic( StatifyBlacklist::class, 'cidrMatch', array( '127.0.0.1', '127.0.0.1/32' ) ) );
+		$this->assertTrue( invokeStatic( StatifyBlacklist::class, 'cidr_match', array( '127.0.0.1', '127.0.0.1' ) ) );
+		$this->assertTrue( invokeStatic( StatifyBlacklist::class, 'cidr_match', array( '127.0.0.1', '127.0.0.1/32' ) ) );
 		$this->assertFalse(
 			invokeStatic(
-				StatifyBlacklist::class, 'cidrMatch', array(
+				StatifyBlacklist::class, 'cidr_match', array(
 					'127.0.0.1',
-					'127.0.0.1/33'
+					'127.0.0.1/33',
 				)
 			)
 		);
 		$this->assertFalse(
 			invokeStatic(
-				StatifyBlacklist::class, 'cidrMatch', array(
+				StatifyBlacklist::class, 'cidr_match', array(
 					'127.0.0.1',
-					'127.0.0.1/-1'
+					'127.0.0.1/-1',
 				)
 			)
 		);
 		$this->assertTrue(
 			invokeStatic(
-				StatifyBlacklist::class, 'cidrMatch', array(
+				StatifyBlacklist::class, 'cidr_match', array(
 					'192.0.2.123',
-					'192.0.2.0/24'
+					'192.0.2.0/24',
 				)
 			)
 		);
 		$this->assertFalse(
 			invokeStatic(
-				StatifyBlacklist::class, 'cidrMatch', array(
+				StatifyBlacklist::class, 'cidr_match', array(
 					'192.0.3.123',
-					'192.0.2.0/24'
+					'192.0.2.0/24',
 				)
 			)
 		);
 		$this->assertTrue(
 			invokeStatic(
-				StatifyBlacklist::class, 'cidrMatch', array(
+				StatifyBlacklist::class, 'cidr_match', array(
 					'192.0.2.123',
-					'192.0.2.120/29'
+					'192.0.2.120/29',
 				)
 			)
 		);
 		$this->assertFalse(
 			invokeStatic(
-				StatifyBlacklist::class, 'cidrMatch', array(
+				StatifyBlacklist::class, 'cidr_match', array(
 					'192.0.2.128',
-					'192.0.2.120/29'
+					'192.0.2.120/29',
 				)
 			)
 		);
-		$this->assertTrue( invokeStatic( StatifyBlacklist::class, 'cidrMatch', array( '10.11.12.13', '10.0.0.0/8' ) ) );
+		$this->assertTrue( invokeStatic( StatifyBlacklist::class, 'cidr_match', array( '10.11.12.13', '10.0.0.0/8' ) ) );
 		$this->assertFalse(
 			invokeStatic(
-				StatifyBlacklist::class, 'cidrMatch', array(
+				StatifyBlacklist::class, 'cidr_match', array(
 					'10.11.12.345',
-					'10.0.0.0/8'
+					'10.0.0.0/8',
 				)
 			)
 		);
 
 		// IPv6 tests.
-		$this->assertTrue( invokeStatic( StatifyBlacklist::class, 'cidrMatch', array( '::1', '::1' ) ) );
-		$this->assertTrue( invokeStatic( StatifyBlacklist::class, 'cidrMatch', array( '::1', '::1/128' ) ) );
-		$this->assertFalse( invokeStatic( StatifyBlacklist::class, 'cidrMatch', array( '::1', '::1/129' ) ) );
-		$this->assertFalse( invokeStatic( StatifyBlacklist::class, 'cidrMatch', array( '::1', '::1/-1' ) ) );
+		$this->assertTrue( invokeStatic( StatifyBlacklist::class, 'cidr_match', array( '::1', '::1' ) ) );
+		$this->assertTrue( invokeStatic( StatifyBlacklist::class, 'cidr_match', array( '::1', '::1/128' ) ) );
+		$this->assertFalse( invokeStatic( StatifyBlacklist::class, 'cidr_match', array( '::1', '::1/129' ) ) );
+		$this->assertFalse( invokeStatic( StatifyBlacklist::class, 'cidr_match', array( '::1', '::1/-1' ) ) );
 		$this->assertTrue(
 			invokeStatic(
-				StatifyBlacklist::class, 'cidrMatch', array(
+				StatifyBlacklist::class, 'cidr_match', array(
 					'2001:db8:a0b:12f0:1:2:3:4',
-					'2001:db8:a0b:12f0::1/64 '
+					'2001:db8:a0b:12f0::1/64 ',
 				)
 			)
 		);
 		$this->assertTrue(
 			invokeStatic(
-				StatifyBlacklist::class, 'cidrMatch', array(
+				StatifyBlacklist::class, 'cidr_match', array(
 					'2001:db8:a0b:12f0::123:456',
-					'2001:db8:a0b:12f0::1/96 '
+					'2001:db8:a0b:12f0::1/96 ',
 				)
 			)
 		);
 		$this->assertFalse(
 			invokeStatic(
-				StatifyBlacklist::class, 'cidrMatch', array(
+				StatifyBlacklist::class, 'cidr_match', array(
 					'2001:db8:a0b:12f0::1:132:465',
-					'2001:db8:a0b:12f0::1/96 '
+					'2001:db8:a0b:12f0::1/96 ',
 				)
 			)
 		);
@@ -318,14 +318,14 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 			'2001:db8:a0b:12f0::',
 			'2001:db8:a0b:12f0::1',
 			'2001:db8:a0b:12f0::1/128',
-			'2001:db8:a0b:12f0::/64'
+			'2001:db8:a0b:12f0::/64',
 		);
 		$invalid = array(
 			'2001:db8:a0b:12f0::x',
 			'2001:db8:a0b:12f0:::',
 			'2001:fffff:a0b:12f0::1',
 			'2001:db8:a0b:12f0::/129',
-			'1:2:3:4:5:6:7:8:9'
+			'1:2:3:4:5:6:7:8:9',
 		);
 		$result  = invokeStatic( StatifyBlacklist_Admin::class, 'sanitizeIPs', array( array_merge( $valid, $invalid ) ) );
 		$this->assertNotFalse( $result );
@@ -343,22 +343,22 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 				'active'    => 0,
 				'cron'      => 0,
 				'regexp'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
 			'target'  => array(
 				'active'    => 0,
 				'cron'      => 0,
 				'regexp'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
 			'ip'      => array(
 				'active'    => 0,
 				'blacklist' => array(
 					'192.0.2.123',
-					'2001:db8:a0b:12f0::1'
-				)
+					'2001:db8:a0b:12f0::1',
+				),
 			),
-			'version' => StatifyBlacklist::VERSION_MAIN
+			'version' => StatifyBlacklist::VERSION_MAIN,
 		);
 
 		// No multisite.
@@ -381,7 +381,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		// Subnet matching.
 		StatifyBlacklist::$_options['ip']['blacklist'] = array(
 			'192.0.2.0/25',
-			'2001:db8:a0b:12f0::/96'
+			'2001:db8:a0b:12f0::/96',
 		);
 		$_SERVER['REMOTE_ADDR']                        = '192.0.2.123';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
@@ -413,7 +413,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 				'active'    => 0,
 				'cron'      => 0,
 				'regexp'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
 			'target'  => array(
 				'active'    => 0,
@@ -421,14 +421,14 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 				'regexp'    => 0,
 				'blacklist' => array(
 					'/excluded/page/' => 0,
-					'/?page_id=3'     => 1
-				)
+					'/?page_id=3'     => 1,
+				),
 			),
 			'ip'      => array(
 				'active'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
-			'version' => StatifyBlacklist::VERSION_MAIN
+			'version' => StatifyBlacklist::VERSION_MAIN,
 		);
 
 		// No multisite.
@@ -471,12 +471,7 @@ class StatifyBlacklistTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 	}
 
-	/**
-	 * Test target filter using regular expressions.
-	 */
-	public function testTargetRegexFilter() {
-		// TODO
-	}
+	// TODO: Test target regex filter.
 }
 
 
@@ -491,7 +486,6 @@ function invokeStatic( $class, $methodName, $parameters = array() ) {
 
 
 // Some mocked WP functions.
-
 $mock_options   = array();
 $mock_multisite = false;
 
@@ -523,13 +517,22 @@ function wp_parse_args( $args, $defaults = '' ) {
 function get_option( $option, $default = false ) {
 	global $mock_options;
 
-	return isset( $mock_options[$option] ) ? $mock_options[$option] : $default;
+	return isset( $mock_options[ $option ] ) ? $mock_options[ $option ] : $default;
 }
 
 /** @ignore */
 function update_option( $option, $value, $autoload = null ) {
 	global $mock_options;
-	$mock_options[$option] = $value;
+	$mock_options[ $option ] = $value;
+}
+
+/** @ignore */
+function wp_get_raw_referer() {
+	return isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '';
+}
+
+function wp_parse_url( $value ) {
+	return parse_url( $value );
 }
 
 /** @ignore */

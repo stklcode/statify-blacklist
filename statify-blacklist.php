@@ -1,34 +1,42 @@
 <?php
-/*
-Plugin Name: Statify Blacklist
-Plugin URI:  https://de.wordpress.org/plugins/statify-blacklist/
-Description: Extension for the Statify plugin to add a customizable blacklists.
-Version:     1.4.0
-Author:      Stefan Kalscheuer (@stklcode)
-Author URI:  https://www.stklcode.de
-Plugin URI:  https://wordpress.org/plugins/statify-blacklist
-Text Domain: statify-blacklist
-Domain Path: /lang
-License:     GPLv2 or later
+/**
+ * Statify Blacklist
+ *
+ * @package     PluginPackage
+ * @author      Stefan Kalscheuer <stefan@stklcode.de>
+ * @license     GPL-2.0+
+ *
+ * @wordpress-plugin
+ *
+ * Plugin Name: Statify Blacklist
+ * Plugin URI:  https://de.wordpress.org/plugins/statify-blacklist/
+ * Description: Extension for the Statify plugin to add a customizable blacklists.
+ * Version:     1.4.0
+ * Author:      Stefan Kalscheuer (@stklcode)
+ * Author URI:  https://www.stklcode.de
+ * Plugin URI:  https://wordpress.org/plugins/statify-blacklist
+ * Text Domain: statify-blacklist
+ * Domain Path: /lang
+ * License:     GPLv2 or later
+ *
+ * Statify Blacklist is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * Statify Blacklist is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Statify Blacklist. If not, see http://www.gnu.org/licenses/gpl-2.0.html.
+ */
 
-Statify Blacklist is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-any later version.
+// Quit.
+defined( 'ABSPATH' ) or exit;
 
-Statify Blacklist is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Statify Blacklist. If not, see http://www.gnu.org/licenses/gpl-2.0.html.
-*/
-
-// Quit
-defined( 'ABSPATH' ) OR exit;
-
-//  Constants
+// Constants.
 define( 'STATIFYBLACKLIST_FILE', __FILE__ );
 define( 'STATIFYBLACKLIST_DIR', dirname( __FILE__ ) );
 define( 'STATIFYBLACKLIST_BASE', plugin_basename( __FILE__ ) );
@@ -40,27 +48,33 @@ register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System
 
 register_uninstall_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'uninstall' ) );
 
-// Upgrade hook
+// Upgrade hook.
 register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'upgrade' ) );
 
-// Autoload
-spl_autoload_register( 'statifyBlacklist_autoload' );
+// Autoload.
+spl_autoload_register( 'statify_blacklist_autoload' );
 
 /**
  * Autoloader for StatifyBlacklist classes.
  *
- * @param string $class Name of the class to load.
+ * @param string $class  Name of the class to load.
  *
  * @since 1.0.0
  */
-function statifyBlacklist_autoload( $class ) {
+function statify_blacklist_autoload( $class ) {
 	$plugin_classes = array(
 		'StatifyBlacklist',
 		'StatifyBlacklist_Admin',
-		'StatifyBlacklist_System'
+		'StatifyBlacklist_System',
 	);
 
 	if ( in_array( $class, $plugin_classes ) ) {
-		require_once( sprintf( '%s/inc/%s.class.php', STATIFYBLACKLIST_DIR, strtolower( $class ) ) );
+		require_once(
+			sprintf(
+				'%s/inc/%s.class.php',
+				STATIFYBLACKLIST_DIR,
+				strtolower( str_replace( '_', '-', $class ) )
+			)
+		);
 	}
 }

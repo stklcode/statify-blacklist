@@ -9,7 +9,7 @@
  */
 
 // Quit.
-defined( 'ABSPATH' ) OR exit;
+defined( 'ABSPATH' ) or exit;
 
 /**
  * Statify Blacklist.
@@ -58,7 +58,7 @@ class StatifyBlacklist {
 	 */
 	public function __construct() {
 		// Skip on autosave or AJAX.
-		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) OR ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) or ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return;
 		}
 
@@ -87,9 +87,11 @@ class StatifyBlacklist {
 				add_action( 'network_admin_menu', array( 'StatifyBlacklist_Admin', '_add_menu_page' ) );
 				add_filter(
 					'network_admin_plugin_action_links', array(
-					'StatifyBlacklist_Admin',
-					'plugin_actions_links'
-				), 10, 2
+						'StatifyBlacklist_Admin',
+						'plugin_actions_links',
+					),
+					10,
+					2
 				);
 			} else {
 				add_action( 'admin_menu', array( 'StatifyBlacklist_Admin', '_add_menu_page' ) );
@@ -112,12 +114,11 @@ class StatifyBlacklist {
 	 * @since 1.2.1 update_options($options = null) Parameter with default value introduced.
 	 *
 	 * @param array $options Optional. New options to save.
-	 *
 	 */
 	public static function update_options( $options = null ) {
 		self::$_options = wp_parse_args(
 			get_option( 'statify-blacklist' ),
-			self::defaultOptions()
+			self::default_options()
 		);
 	}
 
@@ -128,25 +129,25 @@ class StatifyBlacklist {
 	 *
 	 * @return array The options array.
 	 */
-	protected static function defaultOptions() {
+	protected static function default_options() {
 		return array(
 			'referer' => array(
 				'active'    => 0,
 				'cron'      => 0,
 				'regexp'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
 			'target'  => array(
 				'active'    => 0,
 				'cron'      => 0,
 				'regexp'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
 			'ip'      => array(
 				'active'    => 0,
-				'blacklist' => array()
+				'blacklist' => array(),
 			),
-			'version' => self::VERSION_MAIN
+			'version' => self::VERSION_MAIN,
 		);
 	}
 
@@ -163,62 +164,68 @@ class StatifyBlacklist {
 			// Regular Expression filtering since 1.3.0.
 			if ( isset( self::$_options['referer']['regexp'] ) && self::$_options['referer']['regexp'] > 0 ) {
 				// Get full referer string.
-				$referer = ( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' );
+				$referer = wp_get_raw_referer();
+				if ( ! $referer ) {
+					$referer = '';
+				}
 				// Merge given regular expressions into one.
-				$regexp = '/' . implode( "|", array_keys( self::$_options['referer']['blacklist'] ) ) . '/';
+				$regexp = '/' . implode( '|', array_keys( self::$_options['referer']['blacklist'] ) ) . '/';
 				if ( 2 === self::$_options['referer']['regexp'] ) {
 					$regexp .= 'i';
 				}
 
 				// Check blacklist (return NULL to continue filtering).
-
 				return ( 1 === preg_match( $regexp, $referer ) ) ? true : null;
 			} else {
 				// Extract relevant domain parts.
-				$referer = strtolower( ( isset( $_SERVER['HTTP_REFERER'] ) ? parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_HOST ) : '' ) );
+				$referer = wp_parse_url( wp_get_raw_referer() );
+				$referer = strtolower( ( isset( $referer['host'] ) ? $referer['host'] : '' ) );
 
 				// Get blacklist.
 				$blacklist = self::$_options['referer']['blacklist'];
 
 				// Check blacklist.
-				if ( isset( $blacklist[$referer] ) ) {
+				if ( isset( $blacklist[ $referer ] ) ) {
 					return true;
 				}
 			}
 		}
 
-		// Target blacklist (since 1.4.0)
+		// Target blacklist (since 1.4.0).
 		if ( isset( self::$_options['target']['active'] ) && 0 !== self::$_options['target']['active'] ) {
 			// Regular Expression filtering since 1.3.0.
 			if ( isset( self::$_options['target']['regexp'] ) && 0 < self::$_options['target']['regexp'] ) {
 				// Get full referer string.
-				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/' );
-				// Merge given regular expressions into one
-				$regexp = '/' . implode( "|", array_keys( self::$_options['target']['blacklist'] ) ) . '/';
+				// @codingStandardsIgnoreStart The globals are checked.
+				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '/' );
+				// @codingStandardsIgnoreEnd
+				// Merge given regular expressions into one.
+				$regexp = '/' . implode( '|', array_keys( self::$_options['target']['blacklist'] ) ) . '/';
 				if ( 2 === self::$_options['target']['regexp'] ) {
 					$regexp .= 'i';
 				}
 
 				// Check blacklist (return NULL to continue filtering).
-
 				return ( 1 === preg_match( $regexp, $target ) ) ? true : null;
 			} else {
 				// Extract target page.
-				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/' );
+				// @codingStandardsIgnoreStart The globals are checked.
+				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '/' );
+				// @codingStandardsIgnoreEnd
 				// Get blacklist.
 				$blacklist = self::$_options['target']['blacklist'];
 				// Check blacklist.
-				if ( isset( $blacklist[$target] ) ) {
+				if ( isset( $blacklist[ $target ] ) ) {
 					return true;
 				}
 			}
 		}
 
 		// IP blacklist (since 1.4.0).
-		if ( isset ( self::$_options['ip']['active'] ) && 0 !== self::$_options['ip']['active'] ) {
-			if ( false !== ( $ip = self::getIP() ) ) {
+		if ( isset( self::$_options['ip']['active'] ) && 0 !== self::$_options['ip']['active'] ) {
+			if ( false !== ( $ip = self::get_ip() ) ) {
 				foreach ( self::$_options['ip']['blacklist'] as $net ) {
-					if ( self::cidrMatch( $ip, $net ) ) {
+					if ( self::cidr_match( $ip, $net ) ) {
 						return true;
 					}
 				}
@@ -226,7 +233,6 @@ class StatifyBlacklist {
 		}
 
 		// Skip and continue (return NULL), if all blacklists are inactive.
-
 		return null;
 	}
 
@@ -239,7 +245,7 @@ class StatifyBlacklist {
 	 *
 	 * @return string|bool the client's IP address or FALSE, if none could be determined.
 	 */
-	private static function getIP() {
+	private static function get_ip() {
 		foreach (
 			array(
 				// 'HTTP_CLIENT_IP',
@@ -249,16 +255,18 @@ class StatifyBlacklist {
 				// 'HTTP_X_CLUSTER_CLIENT_IP',
 				// 'HTTP_FORWARDED_FOR',
 				// 'HTTP_FORWARDED',
-				'REMOTE_ADDR'
+				'REMOTE_ADDR',
 			) as $k
 		) {
-			if ( isset( $_SERVER[$k] ) ) {
-				foreach ( explode( ',', $_SERVER[$k] ) as $ip ) {
+			// @codingStandardsIgnoreStart The globals are checked.
+			if ( isset( $_SERVER[ $k ] ) ) {
+				foreach ( explode( ',', $_SERVER[ $k ] ) as $ip ) {
 					if ( false !== filter_var( $ip, FILTER_VALIDATE_IP ) ) {
 						return $ip;
 					}
 				}
 			}
+			// @codingStandardsIgnoreEnd
 		}
 
 		return false;
@@ -272,9 +280,9 @@ class StatifyBlacklist {
 	 *
 	 * @return bool TRUE, if the given IP addresses matches the given subnet.
 	 */
-	private static function cidrMatch( $ip, $net ) {
+	private static function cidr_match( $ip, $net ) {
 		if ( substr_count( $net, ':' ) > 1 ) {  // Check for IPv6.
-			if ( ! ( ( extension_loaded( 'sockets' ) && defined( 'AF_INET6' ) ) || @inet_pton( '::1' ) ) ) {
+			if ( ! ( ( extension_loaded( 'sockets' ) && defined( 'AF_INET6' ) ) || inet_pton( '::1' ) ) ) {
 				return false;
 			}
 
@@ -289,8 +297,8 @@ class StatifyBlacklist {
 				$mask = 128;
 			}
 
-			$bytesAddr = unpack( 'n*', @inet_pton( $base ) );
-			$bytesTest = unpack( 'n*', @inet_pton( $ip ) );
+			$bytesAddr = unpack( 'n*', inet_pton( $base ) );
+			$bytesTest = unpack( 'n*', inet_pton( $ip ) );
 
 			if ( ! $bytesAddr || ! $bytesTest ) {
 				return false;
@@ -300,7 +308,7 @@ class StatifyBlacklist {
 				$left  = $mask - 16 * ( $i - 1 );
 				$left  = ( $left <= 16 ) ? $left : 16;
 				$maskB = ~( 0xffff >> $left ) & 0xffff;
-				if ( ( $bytesAddr[$i] & $maskB ) !== ( $bytesTest[$i] & $maskB ) ) {
+				if ( ( $bytesAddr[ $i ] & $maskB ) !== ( $bytesTest[ $i ] & $maskB ) ) {
 					return false;
 				}
 			}
@@ -314,7 +322,7 @@ class StatifyBlacklist {
 			if ( false !== strpos( $net, '/' ) ) {  // Parse CIDR subnet.
 				list( $base, $mask ) = explode( '/', $net, 2 );
 
-				if ( $mask === '0' ) {
+				if ( '0' === $mask ) {
 					return filter_var( $base, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 );
 				}
 

@@ -10,7 +10,7 @@
  */
 
 // Quit.
-defined( 'ABSPATH' ) OR exit;
+defined( 'ABSPATH' ) or exit;
 
 /**
  * Statify Blacklist admin configuration.
@@ -72,14 +72,14 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			add_submenu_page(
 				'settings.php', $title, $title, 'manage_network_plugins', 'statify-blacklist-settings', array(
 					'StatifyBlacklist_Admin',
-					'settings_page'
+					'settings_page',
 				)
 			);
 		} else {
 			add_submenu_page(
 				'options-general.php', $title, $title, 'manage_options', 'statify-blacklist', array(
 					'StatifyBlacklist_Admin',
-					'settings_page'
+					'settings_page',
 				)
 			);
 		}
@@ -92,7 +92,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 * @since 1.0.0
 	 */
 	public static function settings_page() {
-		include STATIFYBLACKLIST_DIR . '/views/settings_page.php';
+		include STATIFYBLACKLIST_DIR . '/views/settings-page.php';
 	}
 
 	/**
@@ -104,10 +104,9 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 * @param string $file  The filename.
 	 *
 	 * @return array  Merged links.
-	 *
 	 */
 	public static function plugin_meta_link( $links, $file ) {
-		if ( $file === STATIFYBLACKLIST_BASE ) {
+		if ( STATIFYBLACKLIST_BASE === $file ) {
 			$links[] = '<a href="https://github.com/stklcode/statify-blacklist">GitHub</a>';
 		}
 
@@ -119,16 +118,15 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array  $links Registered links
-	 * @param string $file  The filename
+	 * @param array  $links Registered links.
+	 * @param string $file  The filename.
 	 *
 	 * @return array  Merged links.
-	 *
 	 */
 	public static function plugin_actions_links( $links, $file ) {
 		$base = self::$multisite ? network_admin_url( 'settings.php' ) : admin_url( 'options-general.php' );
 
-		if ( $file === STATIFYBLACKLIST_BASE && current_user_can( 'manage_options' ) ) {
+		if ( STATIFYBLACKLIST_BASE === $file && current_user_can( 'manage_options' ) ) {
 			array_unshift(
 				$links,
 				sprintf( '<a href="%s">%s</a>', esc_attr( add_query_arg( 'page', 'statify-blacklist', $base ) ), __( 'Settings' ) )
@@ -148,7 +146,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	public static function cleanup_database() {
 		// Check user permissions.
 		if ( ! current_user_can( 'manage_options' ) && ! ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
-			die( __( 'Are you sure you want to do this?' ) );
+			die( esc_html__( 'Are you sure you want to do this?' ) );
 		}
 
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
@@ -159,11 +157,10 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			$cleanTrg = true;
 		}
 
-
 		if ( $cleanRef ) {
 			if ( isset( self::$_options['referer']['regexp'] ) && self::$_options['referer']['regexp'] > 0 ) {
 				// Merge given regular expressions into one.
-				$refererRegexp = implode( "|", array_keys( self::$_options['referer']['blacklist'] ) );
+				$refererRegexp = implode( '|', array_keys( self::$_options['referer']['blacklist'] ) );
 			} else {
 				// Sanitize URLs.
 				$referer = self::sanitizeURLs( self::$_options['referer']['blacklist'] );
@@ -176,13 +173,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		if ( $cleanTrg ) {
 			if ( isset( self::$_options['target']['regexp'] ) && self::$_options['target']['regexp'] > 0 ) {
 				// Merge given regular expressions into one.
-				$targetRegexp = implode( "|", array_keys( self::$_options['target']['blacklist'] ) );
+				$targetRegexp = implode( '|', array_keys( self::$_options['target']['blacklist'] ) );
 			} else {
 				// Build filter regexp.
 				$targetRegexp = str_replace( '.', '\.', implode( '|', array_flip( self::$_options['target']['blacklist'] ) ) );
 			}
 		}
-
 
 		if ( ! empty( $refererRegexp ) || ! empty( $targetRegexp ) ) {
 			global $wpdb;
@@ -192,8 +188,8 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
-						. ( ( 1 === self::$_options['referer']['regexp'] ) ? " BINARY " : "" )
-						. "referrer REGEXP %s", $refererRegexp
+						. ( ( 1 === self::$_options['referer']['regexp'] ) ? ' BINARY ' : '' )
+						. 'referrer REGEXP %s', $refererRegexp
 					)
 				);
 			}
@@ -201,8 +197,8 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
-						. ( ( 1 === self::$_options['target']['regexp'] ) ? " BINARY " : "" )
-						. "target REGEXP %s", $targetRegexp
+						. ( ( 1 === self::$_options['target']['regexp'] ) ? ' BINARY ' : '' )
+						. 'target REGEXP %s', $targetRegexp
 					)
 				);
 			}
@@ -224,7 +220,6 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 * @param array $urls given array of URLs.
 	 *
 	 * @return array  sanitized array.
-	 *
 	 */
 	private static function sanitizeURLs( $urls ) {
 		return array_flip(
@@ -247,20 +242,17 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 * @param array $ips given array of URLs.
 	 *
 	 * @return array  sanitized array.
-	 *
 	 */
 	private static function sanitizeIPs( $ips ) {
 		return array_filter(
 			$ips, function ( $ip ) {
-			return preg_match(
-					'/^((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])' .
-					'(\/([0-9]|[1-2][0-9]|3[0-2]))?$/', $ip
+				return preg_match(
+					'/^((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])(\/([0-9]|[1-2][0-9]|3[0-2]))?$/', $ip
 				) ||
-				preg_match(
-					'/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))' .
-					'(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/', $ip
-				);
-		}
+					preg_match(
+						'/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/', $ip
+					);
+			}
 		);
 	}
 }

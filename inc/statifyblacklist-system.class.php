@@ -10,7 +10,7 @@
  */
 
 // Quit.
-defined( 'ABSPATH' ) OR exit;
+defined( 'ABSPATH' ) or exit;
 
 /**
  * Statify Blacklist system configuration.
@@ -32,7 +32,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
 			} elseif ( function_exists( 'wp_get_sites' ) ) {
-				$sites = wp_get_sites();    // legacy support for WP < 4.6.
+				$sites = wp_get_sites();    // Legacy support for WP < 4.6.
 			} else {
 				return;
 			}
@@ -41,7 +41,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 				switch_to_blog( $site['blog_id'] );
 				add_option(
 					'statify-blacklist',
-					self::defaultOptions()
+					self::default_options()
 				);
 			}
 
@@ -49,7 +49,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		} else {
 			add_option(
 				'statify-blacklist',
-				self::defaultOptions()
+				self::default_options()
 			);
 		}
 	}
@@ -67,7 +67,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
 			} elseif ( function_exists( 'wp_get_sites' ) ) {
-				$sites = wp_get_sites();    // legacy support for WP < 4.6.
+				$sites = wp_get_sites();    // Legacy support for WP < 4.6.
 			} else {
 				return;
 			}
@@ -111,19 +111,19 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 					'active'    => self::$_options['active_referer'],
 					'cron'      => self::$_options['cron_referer'],
 					'regexp'    => self::$_options['referer_regexp'],
-					'blacklist' => self::$_options['referer']
+					'blacklist' => self::$_options['referer'],
 				),
 				'target'  => array(
 					'active'    => 0,
 					'cron'      => 0,
 					'regexp'    => 0,
-					'blacklist' => array()
+					'blacklist' => array(),
 				),
 				'ip'      => array(
 					'active'    => 0,
-					'blacklist' => array()
+					'blacklist' => array(),
 				),
-				'version' => 1.4
+				'version' => 1.4,
 			);
 			if ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) {
 				update_site_option( 'statify-blacklist', $options );
@@ -136,7 +136,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		// Version older than current major release.
 		if ( self::VERSION_MAIN > self::$_options['version'] ) {
 			// Merge default options with current config, assuming only additive changes.
-			$options            = array_merge_recursive( self::defaultOptions(), self::$_options );
+			$options            = array_merge_recursive( self::default_options(), self::$_options );
 			$options['version'] = self::VERSION_MAIN;
 			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
 				update_site_option( 'statify-blacklist', $options );

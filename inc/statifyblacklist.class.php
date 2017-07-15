@@ -287,7 +287,13 @@ class StatifyBlacklist {
 			}
 
 			if ( false !== strpos( $net, '/' ) ) {   // Parse CIDR subnet.
-				list( $base, $mask ) = explode( '/', $net, 2 );
+				list( $base, $mask ) = explode( '/', trim( $net ), 2 );
+
+				if ( ! is_numeric( $mask ) ) {
+					return false;
+				} else {
+					$mask = (int) $mask;
+				}
 
 				if ( $mask < 1 || $mask > 128 ) {
 					return false;

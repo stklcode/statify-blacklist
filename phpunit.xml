@@ -2,8 +2,7 @@
 <phpunit bootstrap="./vendor/autoload.php">
 	<testsuites>
 		<testsuite name="Statify Blacklist TestSuite">
-			<directory>./test</directory>
+			<directory suffix="-test.php">./test/</directory>
 		</testsuite>
 	</testsuites>
-
 </phpunit>

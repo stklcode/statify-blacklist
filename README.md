@@ -83,6 +83,7 @@ Because of this, an IP blacklist can only be applied while processing the reques
 
 ### Work in Progress ###
 * Relicensed to GPLv2 or later
+* Fix problem with faulty IPv6 netmask in IP blacklist 
 * Minor changes for WP Coding Standard
 
 ### 1.4.0 / 10.06.2017 ###

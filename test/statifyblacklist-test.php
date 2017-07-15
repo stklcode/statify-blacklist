@@ -39,12 +39,12 @@ require_once( 'inc/statifyblacklist-admin.class.php' );
  *
  * @since 1.3.0
  */
-class StatifyBlacklistTest extends PHPUnit\Framework\TestCase {
+class StatifyBlacklist_Test extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Test simple referer filter.
 	 */
-	public function testRefererFilter() {
+	public function test_referer_filter() {
 		// Prepare Options: 2 blacklisted domains, disabled.
 		StatifyBlacklist::$_options = array(
 			'referer' => array(

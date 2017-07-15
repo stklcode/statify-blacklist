@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="StatifyBlacklist">
+	<description>Derived from WordPress</description>
+	<rule ref="WordPress">
+		<!-- Type hint checks mess up PHP 7 checks, while this plugin has compatibility level 5.5 and above. -->
+		<exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
+
+		<!-- The plugin uses switch_to_blog for multisite handling. -->
+		<exclude name="WordPress.VIP.RestrictedFunctions.switch_to_blog"/>
+
+		<!-- Direct queries used to clean up statify table. -->
+		<exclude name="WordPress.VIP.DirectDatabaseQuery.DirectQuery"/>
+		<exclude name="WordPress.VIP.DirectDatabaseQuery.NoCaching"/>
+	</rule>
+</ruleset>

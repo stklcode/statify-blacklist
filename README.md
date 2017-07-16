@@ -2,7 +2,7 @@
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 3.9
 * Tested up to:      4.8
-* Stable tag:        1.4.0
+* Stable tag:        1.4.1
 * License:           GPLv2 or later
 * License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,7 @@ This plugin requires Statify to be installed. The extension has been tested with
 The plugin is capable of handling multisite installations.
 
 ### Support & Contributions ###
-* If experience any issues, use the [support forums](https://wordpress.org/support/plugin/statify-blacklist).
+* If you experience any issues, use the [support forums](https://wordpress.org/support/plugin/statify-blacklist).
 * Latest sources and development are handled on [GitHub](https://github.com/stklcode/statify-blacklist). You might contribute there or file an issue for code related bugs.
 * If you want to translate this plugin you can do this on [WordPress Translate](https://translate.wordpress.org/projects/wp-plugins/statify-blacklist).
 
@@ -81,9 +81,10 @@ Because of this, an IP blacklist can only be applied while processing the reques
 
 ## Changelog ##
 
-### Work in Progress ###
+### 1.4.1 / 16.07.2017 ###
 * Relicensed to GPLv2 or later
-* Fix problem with faulty IPv6 netmask in IP blacklist 
+* Fix filter hook if referer is disabled (#9)
+* Fix problem with faulty IPv6 netmask in IP blacklist
 * Minor changes for WP Coding Standard
 
 ### 1.4.0 / 10.06.2017 ###

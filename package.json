@@ -1,6 +1,6 @@
 {
   "name": "statify-blacklist",
-  "version": "1.4.1-dev",
+  "version": "1.4.1",
   "description": "A blacklist extension for the famous Statify WordPress plugin",
   "author": "Stefan Kalscheuer",
   "license": "GPLv2 or later",

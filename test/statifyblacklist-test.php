@@ -39,7 +39,7 @@ require_once( 'inc/class-statifyblacklist-admin.php' );
  *
  * @since 1.3.0
  */
-class StatifyBlacklist_Test extends PHPUnit_Framework_TestCase {
+class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 
 	/**
 	 * Test simple referer filter.

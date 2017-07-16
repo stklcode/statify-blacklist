@@ -69,7 +69,7 @@ class StatifyBlacklist {
 		self::$multisite = ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) );
 
 		// Add Filter to statify hook if enabled.
-		if ( 0 !== self::$_options['referer']['active'] ) {
+		if ( 0 !== self::$_options['referer']['active'] || 0 !== self::$_options['target']['active'] || 0 !== self::$_options['ip']['active'] ) {
 			add_filter( 'statify__skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
 		}
 

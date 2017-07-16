@@ -10,7 +10,7 @@
  */
 
 // Quit.
-defined( 'ABSPATH' ) or exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Statify Blacklist admin configuration.
@@ -29,22 +29,26 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	public static function update_options( $options = null ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
 			// Sanitize URLs and remove empty inputs.
-			$givenReferer = $options['referer']['blacklist'];
+			$given_referer = $options['referer']['blacklist'];
 			if ( 0 === $options['referer']['regexp'] ) {
-				$sanitizedReferer = self::sanitizeURLs( $givenReferer );
+				$sanitized_referer = self::sanitizeURLs( $given_referer );
 			} else {
-				$sanitizedReferer = $givenReferer;
+				$sanitized_referer = $given_referer;
 			}
 
 			// Sanitize IPs and Subnets and remove empty inputs.
-			$givenIP     = $options['ip']['blacklist'];
-			$sanitizedIP = self::sanitizeIPs( $givenIP );
+			$given_ip     = $options['ip']['blacklist'];
+			$sanitized_ip = self::sanitizeIPs( $given_ip );
 
 			// Abort on errors.
-			if ( ! empty( array_diff( array_keys( $givenReferer ), array_keys( $sanitizedReferer ) ) ) ) {
-				return array( 'referer' => $sanitizedReferer );
-			} elseif ( ! empty( array_diff( $givenIP, $sanitizedIP ) ) ) {
-				return array( 'ip' => array_diff( $givenIP, $sanitizedIP ) );
+			if ( ! empty( array_diff( array_keys( $given_referer ), array_keys( $sanitized_referer ) ) ) ) {
+				return array(
+					'referer' => $sanitized_referer,
+				);
+			} elseif ( ! empty( array_diff( $given_ip, $sanitized_ip ) ) ) {
+				return array(
+					'ip' => array_diff( $given_ip, $sanitized_ip ),
+					);
 			}
 
 			// Update database on success.
@@ -150,58 +154,60 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		}
 
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			$cleanRef = ( 1 === self::$_options['referer']['cron'] );
-			$cleanTrg = ( 1 === self::$_options['target']['cron'] );
+			$clean_ref = ( 1 === self::$_options['referer']['cron'] );
+			$clean_trg = ( 1 === self::$_options['target']['cron'] );
 		} else {
-			$cleanRef = true;
-			$cleanTrg = true;
+			$clean_ref = true;
+			$clean_trg = true;
 		}
 
-		if ( $cleanRef ) {
+		if ( $clean_ref ) {
 			if ( isset( self::$_options['referer']['regexp'] ) && self::$_options['referer']['regexp'] > 0 ) {
 				// Merge given regular expressions into one.
-				$refererRegexp = implode( '|', array_keys( self::$_options['referer']['blacklist'] ) );
+				$referer_regexp = implode( '|', array_keys( self::$_options['referer']['blacklist'] ) );
 			} else {
 				// Sanitize URLs.
 				$referer = self::sanitizeURLs( self::$_options['referer']['blacklist'] );
 
 				// Build filter regexp.
-				$refererRegexp = str_replace( '.', '\.', implode( '|', array_flip( $referer ) ) );
+				$referer_regexp = str_replace( '.', '\.', implode( '|', array_flip( $referer ) ) );
 			}
 		}
 
-		if ( $cleanTrg ) {
+		if ( $clean_trg ) {
 			if ( isset( self::$_options['target']['regexp'] ) && self::$_options['target']['regexp'] > 0 ) {
 				// Merge given regular expressions into one.
-				$targetRegexp = implode( '|', array_keys( self::$_options['target']['blacklist'] ) );
+				$target_regexp = implode( '|', array_keys( self::$_options['target']['blacklist'] ) );
 			} else {
 				// Build filter regexp.
-				$targetRegexp = str_replace( '.', '\.', implode( '|', array_flip( self::$_options['target']['blacklist'] ) ) );
+				$target_regexp = str_replace( '.', '\.', implode( '|', array_flip( self::$_options['target']['blacklist'] ) ) );
 			}
 		}
 
-		if ( ! empty( $refererRegexp ) || ! empty( $targetRegexp ) ) {
+		if ( ! empty( $referer_regexp ) || ! empty( $target_regexp ) ) {
 			global $wpdb;
 
 			// Execute filter on database.
-			if ( ! empty( $refererRegexp ) ) {
+			// @codingStandardsIgnoreStart These statements prouce warnings, rework in future release (TODO).
+			if ( ! empty( $referer_regexp ) ) {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
 						. ( ( 1 === self::$_options['referer']['regexp'] ) ? ' BINARY ' : '' )
-						. 'referrer REGEXP %s', $refererRegexp
+						. 'referrer REGEXP %s', $referer_regexp
 					)
 				);
 			}
-			if ( ! empty( $targetRegexp ) ) {
+			if ( ! empty( $target_regexp ) ) {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
 						. ( ( 1 === self::$_options['target']['regexp'] ) ? ' BINARY ' : '' )
-						. 'target REGEXP %s', $targetRegexp
+						. 'target REGEXP %s', $target_regexp
 					)
 				);
 			}
+			// @codingStandardsIgnoreEnd
 
 			// Optimize DB.
 			$wpdb->query( "OPTIMIZE TABLE `$wpdb->statify`" );

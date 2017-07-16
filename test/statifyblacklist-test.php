@@ -20,17 +20,17 @@ const ABSPATH = false;
 /**
  * The StatifyBlacklist base class.
  */
-require_once( 'inc/statifyblacklist.class.php' );
+require_once( 'inc/class-statifyblacklist.php' );
 
 /**
  * The StatifyBlacklist system class.
  */
-require_once( 'inc/statifyblacklist-system.class.php' );
+require_once( 'inc/class-statifyblacklist-system.php' );
 
 /**
  * The StatifyBlacklist admin class.
  */
-require_once( 'inc/statifyblacklist-admin.class.php' );
+require_once( 'inc/class-statifyblacklist-admin.php' );
 
 /**
  * Class StatifyBlacklistTest.

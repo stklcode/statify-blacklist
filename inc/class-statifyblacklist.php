@@ -9,7 +9,7 @@
  */
 
 // Quit.
-defined( 'ABSPATH' ) or exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Statify Blacklist.
@@ -58,7 +58,7 @@ class StatifyBlacklist {
 	 */
 	public function __construct() {
 		// Skip on autosave or AJAX.
-		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) or ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return;
 		}
 
@@ -223,7 +223,8 @@ class StatifyBlacklist {
 
 		// IP blacklist (since 1.4.0).
 		if ( isset( self::$_options['ip']['active'] ) && 0 !== self::$_options['ip']['active'] ) {
-			if ( false !== ( $ip = self::get_ip() ) ) {
+			$ip = self::get_ip();
+			if ( false !== ( $ip ) ) {
 				foreach ( self::$_options['ip']['blacklist'] as $net ) {
 					if ( self::cidr_match( $ip, $net ) ) {
 						return true;
@@ -247,14 +248,15 @@ class StatifyBlacklist {
 	 */
 	private static function get_ip() {
 		foreach (
+
+			/*
+			 * There are more fields, that could possibly be checked, but we only consider the most common for now:
+			 * HTTP_CLIENT_IP, HTTP_X_REAL_IP, HTTP_X_FORWARDED_FOR, HTTP_X_FORWARDED,
+			 * HTTP_X_CLUSTER_CLIENT_IP, HTTP_FORWARDED_FOR, HTTP_FORWARDED, REMOTE_ADDR
+			 */
 			array(
-				// 'HTTP_CLIENT_IP',
 				'HTTP_X_REAL_IP',
 				'HTTP_X_FORWARDED_FOR',
-				// 'HTTP_X_FORWARDED',
-				// 'HTTP_X_CLUSTER_CLIENT_IP',
-				// 'HTTP_FORWARDED_FOR',
-				// 'HTTP_FORWARDED',
 				'REMOTE_ADDR',
 			) as $k
 		) {
@@ -303,18 +305,19 @@ class StatifyBlacklist {
 				$mask = 128;
 			}
 
-			$bytesAddr = unpack( 'n*', inet_pton( $base ) );
-			$bytesTest = unpack( 'n*', inet_pton( $ip ) );
+			$bytes_addr = unpack( 'n*', inet_pton( $base ) );
+			$bytes_est = unpack( 'n*', inet_pton( $ip ) );
 
-			if ( ! $bytesAddr || ! $bytesTest ) {
+			if ( ! $bytes_addr || ! $bytes_est ) {
 				return false;
 			}
 
-			for ( $i = 1, $ceil = ceil( $mask / 16 ); $i <= $ceil; ++ $i ) {
+			$ceil = ceil( $mask / 16 );
+			for ( $i = 1; $i <= $ceil; ++ $i ) {
 				$left  = $mask - 16 * ( $i - 1 );
 				$left  = ( $left <= 16 ) ? $left : 16;
-				$maskB = ~( 0xffff >> $left ) & 0xffff;
-				if ( ( $bytesAddr[ $i ] & $maskB ) !== ( $bytesTest[ $i ] & $maskB ) ) {
+				$mask_b = ~( 0xffff >> $left ) & 0xffff;
+				if ( ( $bytes_addr[ $i ] & $mask_b ) !== ( $bytes_est[ $i ] & $mask_b ) ) {
 					return false;
 				}
 			}
@@ -341,6 +344,6 @@ class StatifyBlacklist {
 			}
 
 			return ( 0 === substr_compare( sprintf( '%032b', ip2long( $ip ) ), sprintf( '%032b', ip2long( $base ) ), 0, $mask ) );
-		}
+		} // End if().
 	}
 }

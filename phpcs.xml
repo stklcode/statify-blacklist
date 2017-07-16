@@ -8,6 +8,7 @@
 
 		<!-- The plugin uses switch_to_blog for multisite handling. -->
 		<exclude name="WordPress.VIP.RestrictedFunctions.switch_to_blog"/>
+		<exclude name="WordPress.VIP.RestrictedFunctions.switch_to_blog_switch_to_blog"/>
 
 		<!-- Direct queries used to clean up statify table. -->
 		<exclude name="WordPress.VIP.DirectDatabaseQuery.DirectQuery"/>

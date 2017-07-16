@@ -10,7 +10,7 @@
  */
 
 // Quit.
-defined( 'ABSPATH' ) or exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Statify Blacklist system configuration.
@@ -32,7 +32,8 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
 			} elseif ( function_exists( 'wp_get_sites' ) ) {
-				$sites = wp_get_sites();    // Legacy support for WP < 4.6.
+				// @codingStandardsIgnoreLine Legacy support for WP < 4.6.
+				$sites = wp_get_sites();
 			} else {
 				return;
 			}
@@ -67,7 +68,8 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
 			} elseif ( function_exists( 'wp_get_sites' ) ) {
-				$sites = wp_get_sites();    // Legacy support for WP < 4.6.
+				// @codingStandardsIgnoreLine Legacy support for WP < 4.6.
+				$sites = wp_get_sites();
 			} else {
 				return;
 			}

@@ -33,7 +33,7 @@
  */
 
 // Quit.
-defined( 'ABSPATH' ) or exit;
+defined( 'ABSPATH' ) || exit;
 
 // Constants.
 define( 'STATIFYBLACKLIST_FILE', __FILE__ );
@@ -67,10 +67,10 @@ function statify_blacklist_autoload( $class ) {
 		'StatifyBlacklist_System',
 	);
 
-	if ( in_array( $class, $plugin_classes ) ) {
+	if ( in_array( $class, $plugin_classes, true ) ) {
 		require_once(
 			sprintf(
-				'%s/inc/%s.class.php',
+				'%s/inc/class-%s.php',
 				STATIFYBLACKLIST_DIR,
 				strtolower( str_replace( '_', '-', $class ) )
 			)

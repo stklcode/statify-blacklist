@@ -47,7 +47,7 @@ gulp.task('test-cs', function (cb) {
 gulp.task('bundle', ['clean'], function () {
 	console.log('Collecting files for package dist/' + config.name + config.version + ' ...');
 	return gulp.src(['**/*.php', '!test/**', '!vendor/**', 'README.md', 'LICENSE.md'], {base: './'})
-		.pipe(copy('./dist/' + config.name + '.' + config.version));
+		.pipe(copy('./dist/' + config.name + '.' + config.version + '/' + config.name));
 });
 
 // Create a ZIP package of the relevant files for plugin distribution.

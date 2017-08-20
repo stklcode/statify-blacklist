@@ -46,17 +46,28 @@ class StatifyBlacklist {
 	 * Class self initialize.
 	 *
 	 * @since 1.0.0
+	 * @deprecated 1.4.2 Replaced by init().
 	 */
 	public static function instance() {
-		new self();
+		self::init();
 	}
 
 	/**
 	 * Class constructor.
 	 *
 	 * @since 1.0.0
+	 * @deprecated 1.4.2 Replaced by init().
 	 */
 	public function __construct() {
+		self::init();
+	}
+
+	/**
+	 * Plugin initialization.
+	 *
+	 * @since 1.4.2
+	 */
+	public static function init() {
 		// Skip on autosave or AJAX.
 		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			return;

@@ -67,12 +67,10 @@ function statify_blacklist_autoload( $class ) {
 	);
 
 	if ( in_array( $class, $plugin_classes, true ) ) {
-		require_once(
-			sprintf(
-				'%s/inc/class-%s.php',
-				STATIFYBLACKLIST_DIR,
-				strtolower( str_replace( '_', '-', $class ) )
-			)
+		require_once sprintf(
+			'%s/inc/class-%s.php',
+			STATIFYBLACKLIST_DIR,
+			strtolower( str_replace( '_', '-', $class ) )
 		);
 	}
 }

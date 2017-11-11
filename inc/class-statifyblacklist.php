@@ -95,7 +95,7 @@ class StatifyBlacklist {
 			add_filter( 'plugin_row_meta', array( 'StatifyBlacklist_Admin', 'plugin_meta_link' ), 10, 2 );
 
 			if ( is_multisite() ) {
-				add_action( 'network_admin_menu', array( 'StatifyBlacklist_Admin', '_add_menu_page' ) );
+				add_action( 'network_admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
 				add_filter(
 					'network_admin_plugin_action_links', array(
 						'StatifyBlacklist_Admin',
@@ -105,7 +105,7 @@ class StatifyBlacklist {
 					2
 				);
 			} else {
-				add_action( 'admin_menu', array( 'StatifyBlacklist_Admin', '_add_menu_page' ) );
+				add_action( 'admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
 				add_filter( 'plugin_action_links', array( 'StatifyBlacklist_Admin', 'plugin_actions_links' ), 10, 2 );
 			}
 		}
@@ -317,7 +317,7 @@ class StatifyBlacklist {
 			}
 
 			$bytes_addr = unpack( 'n*', inet_pton( $base ) );
-			$bytes_est = unpack( 'n*', inet_pton( $ip ) );
+			$bytes_est  = unpack( 'n*', inet_pton( $ip ) );
 
 			if ( ! $bytes_addr || ! $bytes_est ) {
 				return false;
@@ -325,8 +325,8 @@ class StatifyBlacklist {
 
 			$ceil = ceil( $mask / 16 );
 			for ( $i = 1; $i <= $ceil; ++ $i ) {
-				$left  = $mask - 16 * ( $i - 1 );
-				$left  = ( $left <= 16 ) ? $left : 16;
+				$left   = $mask - 16 * ( $i - 1 );
+				$left   = ( $left <= 16 ) ? $left : 16;
 				$mask_b = ~( 0xffff >> $left ) & 0xffff;
 				if ( ( $bytes_addr[ $i ] & $mask_b ) !== ( $bytes_est[ $i ] & $mask_b ) ) {
 					return false;

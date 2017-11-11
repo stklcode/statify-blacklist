@@ -48,7 +48,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			} elseif ( ! empty( array_diff( $given_ip, $sanitized_ip ) ) ) {
 				return array(
 					'ip' => array_diff( $given_ip, $sanitized_ip ),
-					);
+				);
 			}
 
 			// Update database on success.
@@ -70,7 +70,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 *
 	 * @since 1.0.0
 	 */
-	public static function _add_menu_page() {
+	public static function add_menu_page() {
 		$title = __( 'Statify Blacklist', 'statify-blacklist' );
 		if ( self::$multisite ) {
 			add_submenu_page(

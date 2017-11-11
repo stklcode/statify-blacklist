@@ -24,6 +24,7 @@
   "require-dev": {
     "php": ">=5.5",
     "phpunit/phpunit": "*",
-    "wp-coding-standards/wpcs": "~0.11.0"
+    "phpunit/php-code-coverage": "*",
+    "wp-coding-standards/wpcs": "~0.14.0"
   }
 }

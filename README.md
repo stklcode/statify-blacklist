@@ -1,7 +1,7 @@
 # Statify Blacklist #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 4.4
-* Tested up to:      4.8
+* Tested up to:      4.9
 * Requires PHP:      5.5
 * Stable tag:        1.4.1
 * License:           GPLv2 or later
@@ -81,6 +81,9 @@ Because of this, an IP blacklist can only be applied while processing the reques
 1. Statify Blacklist settings page
 
 ## Changelog ##
+
+### 1.4.2 / unreleased ###
+* Minor code fixes
 
 ### 1.4.1 / 16.07.2017 ###
 * Relicensed to GPLv2 or later

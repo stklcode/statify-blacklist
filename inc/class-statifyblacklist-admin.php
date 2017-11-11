@@ -70,7 +70,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 *
 	 * @since 1.0.0
 	 */
-	public function _add_menu_page() {
+	public static function _add_menu_page() {
 		$title = __( 'Statify Blacklist', 'statify-blacklist' );
 		if ( self::$multisite ) {
 			add_submenu_page(

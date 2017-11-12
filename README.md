@@ -3,7 +3,7 @@
 * Requires at least: 4.4
 * Tested up to:      4.9
 * Requires PHP:      5.5
-* Stable tag:        1.4.1
+* Stable tag:        1.4.2
 * License:           GPLv2 or later
 * License URI:       http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,7 +82,7 @@ Because of this, an IP blacklist can only be applied while processing the reques
 
 ## Changelog ##
 
-### 1.4.2 / unreleased ###
+### 1.4.2 / 12.11.2017 ###
 * Minor code fixes
 
 ### 1.4.1 / 16.07.2017 ###

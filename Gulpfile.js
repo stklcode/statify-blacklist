@@ -30,11 +30,15 @@ gulp.task('test', ['compose'], function () {
 
 // Execute PHP Code Sniffer.
 gulp.task('test-cs', function (cb) {
-	return exec('./vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs', function (err, stdout, stderr) {
+	return exec('./vendor/bin/phpcs --config-set installed_paths vendor/wimg/php-compatibility,vendor/wp-coding-standards/wpcs', function (err, stdout, stderr) {
 		console.log(stdout);
 		console.log(stderr);
 		if (null === err) {
 			console.log('Running PHP Code Sniffer tests ...');
+			// exec('./vendor/bin/phpcs  --standard=phpcs.xml', function(err, stdout, stderr) {
+			// 	console.log(stdout);
+			// 	console.log(stderr);
+			// });
 			gulp.src(['statify-blacklist.php', 'inc/**/*.php'])
 				.pipe(phpcs({bin: './vendor/bin/phpcs', standard: 'phpcs.xml'}))
 				.pipe(phpcs.reporter('log'));

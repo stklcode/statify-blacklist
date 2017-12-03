@@ -2,10 +2,16 @@
 <ruleset name="StatifyBlacklist">
 	<description>Derived from WordPress Coding Standard</description>
 
-	<rule ref="WordPress">
-		<!-- Type hint checks mess up PHP 7 checks, while this plugin has compatibility level 5.5 and above. -->
-		<exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing"/>
+	<arg value="psvn"/>
+	<arg name="colors"/>
 
+	<!-- Files to sniff -->
+	<file>inc</file>
+	<file>statify-blacklist.php</file>
+
+	<!-- Compliance with WordPress Coding Standard -->
+	<config name="minimum_supported_wp_version" value="4.4"/>
+	<rule ref="WordPress">
 		<!-- The plugin uses switch_to_blog for multisite handling. -->
 		<exclude name="WordPress.VIP.RestrictedFunctions.switch_to_blog"/>
 		<exclude name="WordPress.VIP.RestrictedFunctions.switch_to_blog_switch_to_blog"/>
@@ -14,4 +20,8 @@
 		<exclude name="WordPress.VIP.DirectDatabaseQuery.DirectQuery"/>
 		<exclude name="WordPress.VIP.DirectDatabaseQuery.NoCaching"/>
 	</rule>
+
+	<!-- PHP compatibility level -->
+	<config name="testVersion" value="5.5-"/>
+	<rule ref="PHPCompatibility"/>
 </ruleset>

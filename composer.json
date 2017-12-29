@@ -24,6 +24,7 @@
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^0.4",
     "php": ">=5.5",
+    "consolidation/robo": "^1.0.0",
     "phpunit/phpunit": "*",
     "phpunit/php-code-coverage": "*",
     "slowprog/composer-copy-file": "~0.2",
@@ -32,6 +33,12 @@
     "wp-coding-standards/wpcs": "~0.14"
   },
   "scripts": {
+    "build": [
+      "robo build"
+    ],
+    "package": [
+      "robo package"
+    ],
     "test-all": [
       "@test",
       "@test-cs"

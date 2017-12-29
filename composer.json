@@ -39,6 +39,9 @@
     "package": [
       "robo package"
     ],
+    "deploy": [
+      "robo deploy:all"
+    ],
     "test-all": [
       "@test",
       "@test-cs"

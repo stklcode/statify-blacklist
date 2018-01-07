@@ -73,11 +73,11 @@ class StatifyBlacklist {
 			return;
 		}
 
-		// Plugin options.
-		self::update_options();
-
 		// Get multisite status.
 		self::$multisite = ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) );
+
+		// Plugin options.
+		self::update_options();
 
 		// Add Filter to statify hook if enabled.
 		if ( 0 !== self::$_options['referer']['active'] || 0 !== self::$_options['target']['active'] || 0 !== self::$_options['ip']['active'] ) {
@@ -127,10 +127,12 @@ class StatifyBlacklist {
 	 * @param array $options Optional. New options to save.
 	 */
 	public static function update_options( $options = null ) {
-		self::$_options = wp_parse_args(
-			get_option( 'statify-blacklist' ),
-			self::default_options()
-		);
+		if ( self::$multisite ) {
+			$o = get_site_option( 'statify-blacklist' );
+		} else {
+			$o = get_option( 'statify-blacklist' );
+		}
+		self::$_options = wp_parse_args( $o, self::default_options() );
 	}
 
 	/**

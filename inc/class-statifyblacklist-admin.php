@@ -52,7 +52,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			}
 
 			// Update database on success.
-			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
+			if ( self::$multisite ) {
 				update_site_option( 'statify-blacklist', $options );
 			} else {
 				update_option( 'statify-blacklist', $options );

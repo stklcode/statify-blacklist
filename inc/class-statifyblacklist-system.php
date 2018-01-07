@@ -132,7 +132,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			// Flip referer array to make domains keys.
 			$options            = self::$_options;
 			$options['referer'] = array_flip( self::$_options['referer'] );
-			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
+			if ( self::$multisite ) {
 				update_site_option( 'statify-blacklist', $options );
 			} else {
 				update_option( 'statify-blacklist', $options );
@@ -161,7 +161,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 				),
 				'version' => 1.4,
 			);
-			if ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) {
+			if ( self::$multisite ) {
 				update_site_option( 'statify-blacklist', $options );
 			} else {
 				update_option( 'statify-blacklist', $options );
@@ -174,7 +174,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			// Merge default options with current config, assuming only additive changes.
 			$options            = array_merge_recursive( self::default_options(), self::$_options );
 			$options['version'] = self::VERSION_MAIN;
-			if ( ( is_multisite() && array_key_exists( STATIFYBLACKLIST_BASE, (array) get_site_option( 'active_sitewide_plugins' ) ) ) ) {
+			if ( self::$multisite ) {
 				update_site_option( 'statify-blacklist', $options );
 			} else {
 				update_option( 'statify-blacklist', $options );

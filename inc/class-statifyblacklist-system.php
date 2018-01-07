@@ -28,7 +28,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 */
 	public static function install( $network_wide = false ) {
 		// Create tables for each site in a network.
-		if ( is_multisite() && $network_wide ) {
+		if ( $network_wide && is_multisite() ) {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
 			} elseif ( function_exists( 'wp_get_sites' ) ) {

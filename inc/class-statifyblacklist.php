@@ -94,7 +94,7 @@ class StatifyBlacklist {
 			add_action( 'delete_blog', array( 'StatifyBlacklist_System', 'uninstall_site' ) );
 			add_filter( 'plugin_row_meta', array( 'StatifyBlacklist_Admin', 'plugin_meta_link' ), 10, 2 );
 
-			if ( is_multisite() ) {
+			if ( self::$multisite ) {
 				add_action( 'network_admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
 				add_filter(
 					'network_admin_plugin_action_links', array(

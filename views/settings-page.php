@@ -51,19 +51,26 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		$statifyblacklist_update_result = StatifyBlacklist_Admin::update_options(
 			array(
 				'referer' => array(
-					'active'    => (int) $_POST['statifyblacklist']['referer']['active'],
-					'cron'      => (int) $_POST['statifyblacklist']['referer']['cron'],
-					'regexp'    => (int) $_POST['statifyblacklist']['referer']['regexp'],
+					'active'    => isset( $_POST['statifyblacklist']['referer']['active'] )
+						? (int) $_POST['statifyblacklist']['referer']['active'] : 0,
+					'cron'      => isset( $_POST['statifyblacklist']['referer']['cron'] )
+						? (int) $_POST['statifyblacklist']['referer']['cron'] : 0,
+					'regexp'    => isset( $_POST['statifyblacklist']['referer']['regexp'] )
+						? (int) $_POST['statifyblacklist']['referer']['regexp'] : 0,
 					'blacklist' => array_flip( $referer ),
 				),
 				'target'  => array(
-					'active'    => (int) $_POST['statifyblacklist']['target']['active'],
-					'cron'      => (int) $_POST['statifyblacklist']['target']['cron'],
-					'regexp'    => (int) $_POST['statifyblacklist']['target']['regexp'],
+					'active'    => isset( $_POST['statifyblacklist']['target']['active'] )
+						? (int) $_POST['statifyblacklist']['target']['active'] : 0,
+					'cron'      => isset( $_POST['statifyblacklist']['target']['cron'] )
+						? (int) $_POST['statifyblacklist']['target']['cron'] : 0,
+					'regexp'    => isset( $_POST['statifyblacklist']['target']['regexp'] )
+						? (int) $_POST['statifyblacklist']['target']['regexp'] : 0,
 					'blacklist' => array_flip( $target ),
 				),
 				'ip'      => array(
-					'active'    => (int) $_POST['statifyblacklist']['ip']['active'],
+					'active'    => isset( $_POST['statifyblacklist']['ip']['active'] )
+						? (int) $_POST['statifyblacklist']['ip']['active'] : 0,
 					'blacklist' => $ip,
 				),
 				'version' => StatifyBlacklist::VERSION_MAIN,
@@ -90,7 +97,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 	<?php
 	if ( is_plugin_inactive( 'statify/statify.php' ) ) {
 		print '<div class="notice notice-warning"><p>';
-		esc_html( 'Statify plugin is not active.' );
+		esc_html_e( 'Statify plugin is not active.', 'statify-blacklist' );
 		print '</p></div>';
 	}
 	if ( isset( $statifyblacklist_post_warning ) ) {

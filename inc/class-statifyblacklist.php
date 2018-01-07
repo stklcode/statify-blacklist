@@ -90,8 +90,8 @@ class StatifyBlacklist {
 			load_plugin_textdomain( 'statifyblacklist', false, STATIFYBLACKLIST_DIR . '/lang/' );
 
 			// Add actions.
-			add_action( 'wpmu_new_blog', array( 'StatifyBlacklist_Install', 'init_site' ) );
-			add_action( 'delete_blog', array( 'StatifyBlacklist_System', 'init_site' ) );
+			add_action( 'wpmu_new_blog', array( 'StatifyBlacklist_System', 'install_site' ) );
+			add_action( 'delete_blog', array( 'StatifyBlacklist_System', 'uninstall_site' ) );
 			add_filter( 'plugin_row_meta', array( 'StatifyBlacklist_Admin', 'plugin_meta_link' ), 10, 2 );
 
 			if ( is_multisite() ) {

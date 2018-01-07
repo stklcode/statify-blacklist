@@ -39,11 +39,12 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			}
 
 			foreach ( $sites as $site ) {
-				switch_to_blog( $site['blog_id'] );
-				add_option(
-					'statify-blacklist',
-					self::default_options()
-				);
+				if ( is_array( $site ) ) {
+					$site_id = $site['blog_id'];
+				} else {
+					$site_id = $site->blog_id;
+				}
+				self::install_site( $site_id );
 			}
 
 			restore_current_blog();
@@ -53,6 +54,22 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 				self::default_options()
 			);
 		}
+	}
+
+	/**
+	 * Set up the plugin for a single site on Multisite.
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param integer $site_id Site ID.
+	 */
+	public static function install_site( $site_id ) {
+		switch_to_blog( (int) $site_id );
+		add_option(
+			'statify-blacklist',
+			self::default_options()
+		);
+		restore_current_blog();
 	}
 
 
@@ -75,8 +92,12 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			}
 
 			foreach ( $sites as $site ) {
-				switch_to_blog( $site['blog_id'] );
-				delete_option( 'statify-blacklist' );
+				if ( is_array( $site ) ) {
+					$site_id = $site['blog_id'];
+				} else {
+					$site_id = $site->blog_id;
+				}
+				self::uninstall_site( $site_id );
 			}
 
 			switch_to_blog( $old );
@@ -85,6 +106,19 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		delete_option( 'statify-blacklist' );
 	}
 
+	/**
+	 * Remove the plugin for a single site on Multisite.
+	 *
+	 * @since 1.4.3
+	 *
+	 * @param integer $site_id Site ID.
+	 */
+	public static function uninstall_site( $site_id ) {
+		$old = get_current_blog_id();
+		switch_to_blog( (int) $site_id );
+		delete_option( 'statify-blacklist' );
+		switch_to_blog( $old );
+	}
 
 	/**
 	 * Upgrade plugin options.

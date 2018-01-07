@@ -47,7 +47,7 @@ The plugin is capable of handling multisite installations.
 ### Requirements ###
 * PHP 5.5 or above
 * WordPress 4.4 or above
-* Statify plugin installed and activated (tested up to 1.5.1)
+* Statify plugin installed and activated (tested up to 1.5.4)
 
 ## Frequently Asked Questions ##
 
@@ -81,6 +81,9 @@ Because of this, an IP blacklist can only be applied while processing the reques
 1. Statify Blacklist settings page
 
 ## Changelog ##
+
+### 1.4.3 / unreleased ###
+* Fix issues with multisite installation (#11)
 
 ### 1.4.2 / 12.11.2017 ###
 * Minor code fixes

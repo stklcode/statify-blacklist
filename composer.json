@@ -1,6 +1,6 @@
 {
   "name": "stklcode/statify-blacklist",
-  "version": "1.4.3-alpha",
+  "version": "1.4.3",
   "description": "A blacklist extension for the famous Statify WordPress plugin",
   "keywords": [
     "wordpress",

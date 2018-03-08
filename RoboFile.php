@@ -351,7 +351,7 @@ class RoboFile extends Tasks {
 	 */
 	private function updateVCSreadme() {
 		$trunk_dir = $this->target_dir . '/svn/statify-blacklist/trunk';
-		$this->_copy( $this->target_dir . '/' . $this->final_name . 'README.md', $trunk_dir . 'README.md' );
+		$this->_copy( $this->target_dir . '/' . $this->final_name . '/README.md', $trunk_dir . '/README.md' );
 	}
 
 	/**

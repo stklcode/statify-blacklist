@@ -47,7 +47,7 @@ The plugin is capable of handling multisite installations.
 ### Requirements ###
 * PHP 5.5 or above
 * WordPress 4.4 or above
-* Statify plugin installed and activated (tested up to 1.5.4)
+* Statify plugin installed and activated (1.5.0 or above)
 
 ## Frequently Asked Questions ##
 

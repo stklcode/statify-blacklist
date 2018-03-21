@@ -10,7 +10,7 @@
 	<file>statify-blacklist.php</file>
 
 	<!-- Compliance with WordPress Coding Standard -->
-	<config name="minimum_supported_wp_version" value="4.4"/>
+	<config name="minimum_supported_wp_version" value="4.7"/>
 	<rule ref="WordPress">
 		<!-- The plugin uses switch_to_blog for multisite handling. -->
 		<exclude name="WordPress.VIP.RestrictedFunctions.switch_to_blog"/>

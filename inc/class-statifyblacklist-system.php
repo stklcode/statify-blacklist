@@ -31,9 +31,6 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		if ( $network_wide && is_multisite() ) {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
-			} elseif ( function_exists( 'wp_get_sites' ) ) {
-				// @codingStandardsIgnoreLine Legacy support for WP < 4.6.
-				$sites = wp_get_sites();
 			} else {
 				return;
 			}

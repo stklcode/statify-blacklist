@@ -1,6 +1,6 @@
 # Statify Blacklist #
 * Contributors:      Stefan Kalscheuer
-* Requires at least: 4.4
+* Requires at least: 4.7
 * Tested up to:      4.9
 * Requires PHP:      5.5
 * Stable tag:        1.4.3
@@ -46,7 +46,7 @@ The plugin is capable of handling multisite installations.
 
 ### Requirements ###
 * PHP 5.5 or above
-* WordPress 4.4 or above
+* WordPress 4.7 or above
 * Statify plugin installed and activated (1.5.0 or above)
 
 ## Frequently Asked Questions ##
@@ -81,6 +81,9 @@ Because of this, an IP blacklist can only be applied while processing the reques
 1. Statify Blacklist settings page
 
 ## Changelog ##
+
+### 1.5.0 / unreleased ###
+* Minimum required WordPress version is 4.7
 
 ### 1.4.3 / 09.01.2018 ###
 * Fix issues with multisite installation (#11)

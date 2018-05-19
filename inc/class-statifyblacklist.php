@@ -187,8 +187,10 @@ class StatifyBlacklist {
 					$regexp .= 'i';
 				}
 
-				// Check blacklist (return NULL to continue filtering).
-				return ( 1 === preg_match( $regexp, $referer ) ) ? true : null;
+				// Check blacklist (no return to continue filtering #12).
+				if ( 1 === preg_match( $regexp, $referer ) ) {
+					return true;
+				}
 			} else {
 				// Extract relevant domain parts.
 				$referer = wp_parse_url( wp_get_raw_referer() );
@@ -218,8 +220,10 @@ class StatifyBlacklist {
 					$regexp .= 'i';
 				}
 
-				// Check blacklist (return NULL to continue filtering).
-				return ( 1 === preg_match( $regexp, $target ) ) ? true : null;
+				// Check blacklist (no return to continue filtering #12).
+				if ( 1 === preg_match( $regexp, $target ) ) {
+					return true;
+				}
 			} else {
 				// Extract target page.
 				// @codingStandardsIgnoreStart The globals are checked.

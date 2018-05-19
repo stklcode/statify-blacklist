@@ -86,9 +86,6 @@ class StatifyBlacklist {
 
 		// Admin only filters.
 		if ( is_admin() ) {
-			// Load Textdomain (only needed for backend.
-			load_plugin_textdomain( 'statifyblacklist', false, STATIFYBLACKLIST_DIR . '/lang/' );
-
 			// Add actions.
 			add_action( 'wpmu_new_blog', array( 'StatifyBlacklist_System', 'install_site' ) );
 			add_action( 'delete_blog', array( 'StatifyBlacklist_System', 'uninstall_site' ) );

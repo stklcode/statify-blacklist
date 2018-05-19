@@ -14,7 +14,6 @@
  * Author:      Stefan Kalscheuer (@stklcode)
  * Author URI:  https://www.stklcode.de
  * Text Domain: statify-blacklist
- * Domain Path: /lang
  * License:     GPLv2 or later
  *
  * Statify Blacklist is free software: you can redistribute it and/or modify

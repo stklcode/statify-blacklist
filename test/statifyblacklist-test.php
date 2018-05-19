@@ -472,6 +472,86 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	}
 
 	// TODO: Test target regex filter.
+
+
+	/**
+	 * Test combined filters.
+	 *
+	 * @since 1.4.4
+	 *
+	 * @return void
+	 */
+	public function test_combined_filters() {
+		// Prepare Options: simple referer + simple target + ip.
+		StatifyBlacklist::$_options = array(
+			'referer' => array(
+				'active'    => 1,
+				'cron'      => 0,
+				'regexp'    => 0,
+				'blacklist' => array(
+					'example.com' => 0,
+				),
+			),
+			'target'  => array(
+				'active'    => 1,
+				'cron'      => 0,
+				'regexp'    => 0,
+				'blacklist' => array(
+					'/excluded/page/' => 0
+				),
+			),
+			'ip'      => array(
+				'active'    => 1,
+				'blacklist' => array(
+					'192.0.2.123'
+				),
+			),
+			'version' => StatifyBlacklist::VERSION_MAIN,
+		);
+
+		// No multisite.
+		StatifyBlacklist::$multisite = false;
+
+		// No match.
+		$_SERVER['HTTP_REFERER'] = 'https://example.net';
+		$_SERVER['REQUEST_URI'] = '/normal/page/';
+		$_SERVER['REMOTE_ADDR'] = '192.0.2.234';
+		unset( $_SERVER['HTTP_X_FORWARDED_FOR'] );
+		unset( $_SERVER['HTTP_X_REAL_IP'] );
+
+		// Matching Referer.
+		$_SERVER['HTTP_REFERER'] = 'https://example.com';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+
+		// Matching target.
+		$_SERVER['HTTP_REFERER'] = 'https://example.net';
+		$_SERVER['REQUEST_URI'] = '/excluded/page/';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+
+		// Matching IP.
+		$_SERVER['REQUEST_URI'] = '/normal/page/';
+		$_SERVER['REMOTE_ADDR'] = '192.0.2.123';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['REMOTE_ADDR'] = '192.0.2.234';
+
+		// Same for RegExp filters.
+		StatifyBlacklist::$_options['referer']['regexp'] = 1;
+		StatifyBlacklist::$_options['referer']['blacklist'] = array( 'example\.com' => 0 );
+		StatifyBlacklist::$_options['target']['regexp'] = 1;
+		StatifyBlacklist::$_options['target']['blacklist'] = array( '\/excluded\/.*' => 0 );
+
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['HTTP_REFERER'] = 'https://example.com';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['HTTP_REFERER'] = 'https://example.net';
+		$_SERVER['REQUEST_URI'] = '/excluded/page/';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['REQUEST_URI'] = '/normal/page/';
+		$_SERVER['REMOTE_ADDR'] = '192.0.2.123';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['REMOTE_ADDR'] = '192.0.2.234';
+
+	}
 }
 
 

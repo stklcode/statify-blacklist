@@ -82,6 +82,9 @@ Because of this, an IP blacklist can only be applied while processing the reques
 
 ## Changelog ##
 
+### 1.4.4 / 19.05.2018 ###
+* Fix live filter chain when regular expressions are active (#12)
+
 ### 1.4.3 / 09.01.2018 ###
 * Fix issues with multisite installation (#11)
 

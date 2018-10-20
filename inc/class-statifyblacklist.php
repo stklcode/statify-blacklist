@@ -94,7 +94,8 @@ class StatifyBlacklist {
 			if ( self::$multisite ) {
 				add_action( 'network_admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
 				add_filter(
-					'network_admin_plugin_action_links', array(
+					'network_admin_plugin_action_links',
+					array(
 						'StatifyBlacklist_Admin',
 						'plugin_actions_links',
 					),

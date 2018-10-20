@@ -1,6 +1,6 @@
 <?php
 /**
- * Statify Blacklist: StatifyBlacklist_Syste, class
+ * Statify Blacklist: StatifyBlacklist_System class
  *
  * This file contains the derived class for the plugin's system operations.
  *

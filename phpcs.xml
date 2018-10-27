@@ -6,8 +6,9 @@
 	<arg name="colors"/>
 
 	<!-- Files to sniff -->
-	<file>inc</file>
 	<file>statify-blacklist.php</file>
+	<file>inc</file>
+	<file>views</file>
 
 	<!-- Compliance with WordPress Coding Standard -->
 	<config name="minimum_supported_wp_version" value="4.7"/>

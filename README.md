@@ -85,6 +85,7 @@ Because of this, an IP blacklist can only be applied while processing the reques
 ### 1.5.0 / unreleased ###
 * Minimum required WordPress version is 4.7
 * Removed `load_plugin_textdomain()` and `Domain Path` header
+* Added automatic compatibility check for WP and PHP version (#17)
 
 ### 1.4.4 / 19.05.2018 ###
 * Fix live filter chain when regular expressions are active (#12)

@@ -38,18 +38,24 @@ define( 'STATIFYBLACKLIST_FILE', __FILE__ );
 define( 'STATIFYBLACKLIST_DIR', dirname( __FILE__ ) );
 define( 'STATIFYBLACKLIST_BASE', plugin_basename( __FILE__ ) );
 
-// System Hooks.
-add_action( 'plugins_loaded', array( 'StatifyBlacklist', 'init' ) );
+// Check for compatibility.
+if ( statify_blacklist_compatibility_check() ) {
+	// System Hooks.
+	add_action( 'plugins_loaded', array( 'StatifyBlacklist', 'init' ) );
 
-register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'install' ) );
+	register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'install' ) );
 
-register_uninstall_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'uninstall' ) );
+	register_uninstall_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'uninstall' ) );
 
-// Upgrade hook.
-register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'upgrade' ) );
+	// Upgrade hook.
+	register_activation_hook( STATIFYBLACKLIST_FILE, array( 'StatifyBlacklist_System', 'upgrade' ) );
 
-// Autoload.
-spl_autoload_register( 'statify_blacklist_autoload' );
+	// Autoload.
+	spl_autoload_register( 'statify_blacklist_autoload' );
+} else {
+	// Disbale plugin, if active.
+	add_action( 'admin_init', 'statify_blacklist_disable' );
+}
 
 /**
  * Autoloader for StatifyBlacklist classes.
@@ -72,4 +78,54 @@ function statify_blacklist_autoload( $class ) {
 			strtolower( str_replace( '_', '-', $class ) )
 		);
 	}
+}
+
+/**
+ * Check for compatibility with PHP and WP version.
+ *
+ * @since 1.5.0
+ *
+ * @return boolean Whether minimum WP and PHP versions are met.
+ */
+function statify_blacklist_compatibility_check() {
+	return version_compare( $GLOBALS['wp_version'], '4.7', '>=' ) &&
+		version_compare( phpversion(), '5.5', '>=' );
+}
+
+/**
+ * Disable plugin if active and incompatible.
+ *
+ * @return void
+ */
+function statify_blacklist_disable() {
+	if ( is_plugin_active( STATIFYBLACKLIST_BASE ) ) {
+		deactivate_plugins( STATIFYBLACKLIST_BASE );
+		add_action( 'admin_notices', 'statify_blacklist_disabled_notice' );
+		if ( isset( $_GET['activate'] ) ) {
+			unset( $_GET['activate'] );
+		}
+	}
+}
+
+/**
+ * Admin notification for unmet requirements.
+ *
+ * @return void
+ */
+function statify_blacklist_disabled_notice() {
+	echo '<div class="notice notice-error is-dismissible"><p><strong>';
+	printf(
+		/* translators: minimum version numbers for WordPress and PHP inserted at placeholders */
+		esc_html__( 'Statify Blacklist requires at least WordPress %1$s and PHP %2$s.', 'my-plugin' ),
+		'4.7',
+		'5.5'
+	);
+	echo '<br>';
+	printf(
+		/* translators: current version numbers for WordPress and PHP inserted at placeholders */
+		esc_html__( 'Your site is running WordPress %1$s on PHP %2$s, thus the plugin has been disabled.', 'my-plugin' ),
+		esc_html( $GLOBALS['wp_version'] ),
+		esc_html( phpversion() )
+	);
+	echo '</strong></p></div>';
 }

@@ -9,8 +9,10 @@
  * @since     1.0.0
  */
 
-// Quit.
-defined( 'ABSPATH' ) || exit;
+// Quit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Statify Blacklist admin configuration.

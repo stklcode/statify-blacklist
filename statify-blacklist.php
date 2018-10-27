@@ -10,7 +10,7 @@
  * Plugin Name: Statify Blacklist
  * Plugin URI:  https://wordpress.org/plugins/statify-blacklist/
  * Description: Extension for the Statify plugin to add a customizable blacklists.
- * Version:     1.4.4
+ * Version:     1.5.0-alpha
  * Author:      Stefan Kalscheuer (@stklcode)
  * Author URI:  https://www.stklcode.de
  * Text Domain: statify-blacklist
@@ -30,8 +30,10 @@
  * along with Statify Blacklist. If not, see http://www.gnu.org/licenses/gpl-2.0.html.
  */
 
-// Quit.
-defined( 'ABSPATH' ) || exit;
+// Quit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 // Constants.
 define( 'STATIFYBLACKLIST_FILE', __FILE__ );
@@ -95,6 +97,8 @@ function statify_blacklist_compatibility_check() {
 /**
  * Disable plugin if active and incompatible.
  *
+ * @since 1.5.0
+ *
  * @return void
  */
 function statify_blacklist_disable() {
@@ -109,6 +113,8 @@ function statify_blacklist_disable() {
 
 /**
  * Admin notification for unmet requirements.
+ *
+ * @since 1.5.0
  *
  * @return void
  */

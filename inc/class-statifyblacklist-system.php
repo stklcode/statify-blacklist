@@ -9,8 +9,10 @@
  * @since     1.0.0
  */
 
-// Quit.
-defined( 'ABSPATH' ) || exit;
+// Quit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Statify Blacklist system configuration.
@@ -25,6 +27,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @since 1.0.0
 	 *
 	 * @param bool $network_wide Whether the plugin was activated network-wide or not.
+	 * @return void
 	 */
 	public static function install( $network_wide = false ) {
 		// Create tables for each site in a network.
@@ -59,6 +62,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @since 1.4.3
 	 *
 	 * @param integer $site_id Site ID.
+	 * @return void
 	 */
 	public static function install_site( $site_id ) {
 		switch_to_blog( (int) $site_id );
@@ -74,6 +78,8 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * Plugin uninstall handler.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public static function uninstall() {
 		if ( is_multisite() ) {
@@ -109,6 +115,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @since 1.4.3
 	 *
 	 * @param integer $site_id Site ID.
+	 * @return void
 	 */
 	public static function uninstall_site( $site_id ) {
 		$old = get_current_blog_id();
@@ -121,6 +128,8 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * Upgrade plugin options.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @return void
 	 */
 	public static function upgrade() {
 		self::update_options();

@@ -8,8 +8,10 @@
  * @since   1.0.0
  */
 
-// Quit.
-defined( 'ABSPATH' ) || exit;
+// Quit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Statify Blacklist.
@@ -43,29 +45,11 @@ class StatifyBlacklist {
 	public static $multisite;
 
 	/**
-	 * Class self initialize.
-	 *
-	 * @since 1.0.0
-	 * @deprecated 1.4.2 Replaced by init().
-	 */
-	public static function instance() {
-		self::init();
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @since 1.0.0
-	 * @deprecated 1.4.2 Replaced by init().
-	 */
-	public function __construct() {
-		self::init();
-	}
-
-	/**
 	 * Plugin initialization.
 	 *
 	 * @since 1.4.2
+	 *
+	 * @return void
 	 */
 	public static function init() {
 		// Skip on autosave or AJAX.
@@ -103,6 +87,7 @@ class StatifyBlacklist {
 	 * @since 1.2.1 update_options($options = null) Parameter with default value introduced.
 	 *
 	 * @param array $options Optional. New options to save.
+	 * @return void
 	 */
 	public static function update_options( $options = null ) {
 		if ( self::$multisite ) {

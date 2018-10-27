@@ -109,10 +109,9 @@ class StatifyBlacklist {
 		}
 
 		// CronJob to clean up database.
-		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			if ( 1 === self::$_options['referer']['cron'] || 1 === self::$_options['target']['cron'] ) {
-				add_action( 'statify_cleanup', array( 'StatifyBlacklist_Admin', 'cleanup_database' ) );
-			}
+		if ( defined( 'DOING_CRON' ) && DOING_CRON &&
+			( 1 === self::$_options['referer']['cron'] || 1 === self::$_options['target']['cron'] ) ) {
+			add_action( 'statify_cleanup', array( 'StatifyBlacklist_Admin', 'cleanup_database' ) );
 		}
 	}
 

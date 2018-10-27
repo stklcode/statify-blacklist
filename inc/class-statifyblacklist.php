@@ -86,26 +86,7 @@ class StatifyBlacklist {
 
 		// Admin only filters.
 		if ( is_admin() ) {
-			// Add actions.
-			add_action( 'wpmu_new_blog', array( 'StatifyBlacklist_System', 'install_site' ) );
-			add_action( 'delete_blog', array( 'StatifyBlacklist_System', 'uninstall_site' ) );
-			add_filter( 'plugin_row_meta', array( 'StatifyBlacklist_Admin', 'plugin_meta_link' ), 10, 2 );
-
-			if ( self::$multisite ) {
-				add_action( 'network_admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
-				add_filter(
-					'network_admin_plugin_action_links',
-					array(
-						'StatifyBlacklist_Admin',
-						'plugin_actions_links',
-					),
-					10,
-					2
-				);
-			} else {
-				add_action( 'admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
-				add_filter( 'plugin_action_links', array( 'StatifyBlacklist_Admin', 'plugin_actions_links' ), 10, 2 );
-			}
+			StatifyBlacklist_Admin::init();
 		}
 
 		// CronJob to clean up database.

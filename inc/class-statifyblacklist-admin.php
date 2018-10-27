@@ -18,6 +18,37 @@ defined( 'ABSPATH' ) || exit;
  * @since   1.0.0
  */
 class StatifyBlacklist_Admin extends StatifyBlacklist {
+
+	/**
+	 * Initialize admin-only components of the plugin.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		// Add actions.
+		add_action( 'wpmu_new_blog', array( 'StatifyBlacklist_System', 'install_site' ) );
+		add_action( 'delete_blog', array( 'StatifyBlacklist_System', 'uninstall_site' ) );
+		add_filter( 'plugin_row_meta', array( 'StatifyBlacklist_Admin', 'plugin_meta_link' ), 10, 2 );
+
+		if ( self::$multisite ) {
+			add_action( 'network_admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
+			add_filter(
+				'network_admin_plugin_action_links',
+				array(
+					'StatifyBlacklist_Admin',
+					'plugin_actions_links',
+				),
+				10,
+				2
+			);
+		} else {
+			add_action( 'admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
+			add_filter( 'plugin_action_links', array( 'StatifyBlacklist_Admin', 'plugin_actions_links' ), 10, 2 );
+		}
+	}
+
 	/**
 	 * Update options.
 	 *

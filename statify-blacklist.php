@@ -122,14 +122,14 @@ function statify_blacklist_disabled_notice() {
 	echo '<div class="notice notice-error is-dismissible"><p><strong>';
 	printf(
 		/* translators: minimum version numbers for WordPress and PHP inserted at placeholders */
-		esc_html__( 'Statify Blacklist requires at least WordPress %1$s and PHP %2$s.', 'my-plugin' ),
+		esc_html__( 'Statify Blacklist requires at least WordPress %1$s and PHP %2$s.', 'statify-blacklist' ),
 		'4.7',
 		'5.5'
 	);
 	echo '<br>';
 	printf(
 		/* translators: current version numbers for WordPress and PHP inserted at placeholders */
-		esc_html__( 'Your site is running WordPress %1$s on PHP %2$s, thus the plugin has been disabled.', 'my-plugin' ),
+		esc_html__( 'Your site is running WordPress %1$s on PHP %2$s, thus the plugin has been disabled.', 'statify-blacklist' ),
 		esc_html( $GLOBALS['wp_version'] ),
 		esc_html( phpversion() )
 	);

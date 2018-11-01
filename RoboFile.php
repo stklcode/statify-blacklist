@@ -139,8 +139,14 @@ class RoboFile extends Tasks {
 			'views' => $this->target_dir . '/' . $this->final_name . '/views',
 		] )->run();
 		$this->_copy( 'statify-blacklist.php', $this->target_dir . '/' . $this->final_name . '/statify-blacklist.php' );
-		$this->_copy( 'README.md', $this->target_dir . '/' . $this->final_name . '/README.md' );
 		$this->_copy( 'LICENSE.md', $this->target_dir . '/' . $this->final_name . '/LICENSE.md' );
+		$this->_copy( 'README.md', $this->target_dir . '/' . $this->final_name . '/README.md' );
+
+		// Remove content before title (e.g. badges) from README file.
+		$this->taskReplaceInFile( $this->target_dir . '/' . $this->final_name . '/README.md' )
+			->regex( '/^[^\\#]*/' )
+			->to( '' )
+			->run();
 	}
 
 	/**

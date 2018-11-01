@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/stklcode/statify-blacklist.svg?branch=master)](https://travis-ci.org/stklcode/statify-blacklist)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=de.stklcode.web.wordpress.plugins%3Astatify-blacklist&metric=alert_status)](https://sonarcloud.io/dashboard?id=de.stklcode.web.wordpress.plugins%3Astatify-blacklist)
-[![Packagist Version](https://img.shields.io/packagist/v/stklcode/statify-blacklist.svg)](https://packagist.org/packages/pluginkollektiv/statify)
-[![License](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://github.com/stklcode/statify-blacklist/blob/master/LICENSE.txt)
+[![Packagist Version](https://img.shields.io/packagist/v/stklcode/statify-blacklist.svg)](https://packagist.org/packages/stklcode/statify-blacklist)
+[![License](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://github.com/stklcode/statify-blacklist/blob/master/LICENSE.md)
 
 # Statify Blacklist #
 * Contributors:      Stefan Kalscheuer

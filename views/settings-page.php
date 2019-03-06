@@ -124,159 +124,208 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 	}
 	?>
 	<form action="" method="post" id="statify-blacklist-settings">
-		<fieldset>
-			<h2><?php esc_html_e( 'Referer blacklist', 'statify-blacklist' ); ?></h2>
-			<ul style="list-style: none;">
-				<li>
-					<label for="statify-blacklist_active_referer">
-						<input type="checkbox" name="statifyblacklist[referer][active]"
-							   id="statify-blacklist_active_referer"
-							   value="1" <?php checked( StatifyBlacklist::$_options['referer']['active'], 1 ); ?>>
-						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
-					</label>
-				</li>
-				<li>
-					<label for="statify-blacklist_cron_referer">
-						<input type="checkbox" name="statifyblacklist[referer][cron]" id="statify-blacklist_cron_referer"
-							   value="1" <?php checked( StatifyBlacklist::$_options['referer']['cron'], 1 ); ?>>
-						<?php esc_html_e( 'CronJob execution', 'statify-blacklist' ); ?>
-					</label>
-					<small>(<?php esc_html_e( 'Clean database periodically in background', 'statify-blacklist' ); ?>)</small>
-				</li>
-				<li>
-					<label for="statify-blacklist_referer_regexp">
-						<?php esc_html_e( 'Use regular expressions', 'statify-blacklist' ); ?>:
-						<br>
-						<select name="statifyblacklist[referer][regexp]" id="statify-blacklist_referer_regexp">
-							<option value="0" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 0 ); ?>>
-								<?php esc_html_e( 'Disabled', 'statify-blacklist' ); ?>
-							</option>
-							<option value="1" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 1 ); ?>>
-								<?php esc_html_e( 'Case-sensitive', 'statify-blacklist' ); ?>
-							</option>
-							<option value="2" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 2 ); ?>>
-								<?php esc_html_e( 'Case-insensitive', 'statify-blacklist' ); ?>
-							</option>
-						</select>
-					</label>
-					<small>(<?php esc_html_e( 'Performance slower than standard filter. Recommended for cron or manual execition only.', 'statify-blacklist' ); ?>)</small>
-				</li>
-				<li>
-					<label for="statify-blacklist_referer">
-						<?php esc_html_e( 'Referer blacklist', 'statify-blacklist' ); ?>:<br>
-						<textarea cols="40" rows="5" name="statifyblacklist[referer][blacklist]" id="statify-blacklist_referer"><?php
-						if ( isset( $statifyblacklist_update_result['referer'] ) ) {
-							print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['referer'] ) ) );
-						} else {
-							print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['referer']['blacklist'] ) ) );
-						}
-						?></textarea>
-					</label>
-					<br>
-					<small> (<?php esc_html_e( 'Add one domain (without subdomains) each line, e.g. example.com', 'statify-blacklist' ); ?>)</small>
-				</li>
-			</ul>
-		</fieldset>
-
-		<fieldset>
-			<h2><?php esc_html_e( 'Target blacklist', 'statify-blacklist' ); ?></h2>
-			<ul style="list-style: none;">
-				<li>
-					<label for="statify-blacklist_active_target">
-						<input type="checkbox" name="statifyblacklist[target][active]"
-							   id="statify-blacklist_active_target"
-							   value="1" <?php checked( StatifyBlacklist::$_options['target']['active'], 1 ); ?>>
-						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
-					</label>
-				</li>
-				<li>
-					<label for="statify-blacklist_cron_target">
-						<input type="checkbox" name="statifyblacklist[target][cron]" id="statify-blacklist_cron_target"
-							   value="1" <?php checked( StatifyBlacklist::$_options['target']['cron'], 1 ); ?>>
-						<?php esc_html_e( 'CronJob execution', 'statify-blacklist' ); ?>
-					</label>
-					<small>(<?php esc_html_e( 'Clean database periodically in background', 'statify-blacklist' ); ?>)</small>
-				</li>
-				<li>
-					<label for="statify-blacklist_target_regexp">
-						<?php esc_html_e( 'Use regular expressions', 'statify-blacklist' ); ?>:
-						<br>
-						<select name="statifyblacklist[target][regexp]" id="statify-blacklist_target_regexp">
-							<option value="0" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 0 ); ?>>
-								<?php esc_html_e( 'Disabled', 'statify-blacklist' ); ?>
-							</option>
-							<option value="1" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 1 ); ?>>
-								<?php esc_html_e( 'Case-sensitive', 'statify-blacklist' ); ?>
-							</option>
-							<option value="2" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 2 ); ?>>
-								<?php esc_html_e( 'Case-insensitive', 'statify-blacklist' ); ?>
-							</option>
-						</select>
-					</label>
-					<small>(<?php esc_html_e( 'Performance slower than standard filter. Recommended for cron or manual execition only.', 'statify-blacklist' ); ?>)</small>
-				</li>
-				<li>
-					<label for="statify-blacklist_target">
-						<?php esc_html_e( 'Target blacklist', 'statify-blacklist' ); ?>:<br>
-						<textarea cols="40" rows="5" name="statifyblacklist[target][blacklist]" id="statify-blacklist_target"><?php
-						if ( isset( $statifyblacklist_update_result['target'] ) ) {
-							print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['target'] ) ) );
-						} else {
-							print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['target']['blacklist'] ) ) );
-						}
-						?></textarea>
-					</label>
-					<br>
-					<small>
-						(
-						<?php
-						esc_html_e( 'Add one target URL each line, e.g.', 'statify-blacklist' );
-						print ' /, /test/page/, /?page_id=123';
-						?>
-						)
-					</small>
-				</li>
-			</ul>
-		</fieldset>
-
-		<fieldset>
-			<h2><?php esc_html_e( 'IP blacklist', 'statify-blacklist' ); ?></h2>
-			<ul style="list-style: none;">
-				<li>
-					<label for="statify-blacklist_active_ip">
-						<input type="checkbox" name="statifyblacklist[ip][active]" id="statify-blacklist_active_ip"
-							   value="1" <?php checked( StatifyBlacklist::$_options['ip']['active'], 1 ); ?>>
-						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
-					</label>
-				</li>
-				<li>
-					<small>
-						(<?php esc_html_e( 'Cron execution is not possible for IP filter, because IP addresses are not stored.', 'statify-blacklist' ); ?>
-						)
-					</small>
-				</li>
-				<li>
-					<label for="statify-blacklist_ip">
-						<?php esc_html_e( 'IP blacklist', 'statify-blacklist' ); ?>:<br>
-						<textarea cols="40" rows="5" name="statifyblacklist[ip][blacklist]" id="statify-blacklist_ip"><?php
-						if ( isset( $statifyblacklist_update_result['ip'] ) ) {
-							print esc_html( implode( "\r\n", $statifyblacklist_update_result['ip'] ) );
-						} else {
-							print esc_html( implode( "\r\n", StatifyBlacklist::$_options['ip']['blacklist'] ) );
-						}
-						?></textarea>
-					</label>
-					<br>
-					<small>
-						(<?php esc_html_e( 'Add one IP address or range per line, e.g.', 'statify-blacklist' ); ?>
-						127.0.0.1, 192.168.123.0/24, 2001:db8:a0b:12f0::1/64
-						)
-					</small>
-				</li>
-			</ul>
-		</fieldset>
-
 		<?php wp_nonce_field( 'statify-blacklist-settings' ); ?>
+
+		<h2><?php esc_html_e( 'Referer blacklist', 'statify-blacklist' ); ?></h2>
+
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_active_referer">
+						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="checkbox" name="statifyblacklist[referer][active]"
+						   id="statify-blacklist_active_referer"
+						   value="1" <?php checked( StatifyBlacklist::$_options['referer']['active'], 1 ); ?>>
+					<p class="description">
+						<?php esc_html_e( 'Filter at time of tracking, before anything is stored', 'statify-blacklist' ); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_cron_referer">
+						<?php esc_html_e( 'CronJob execution', 'statify-blacklist' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="checkbox" name="statifyblacklist[referer][cron]" id="statify-blacklist_cron_referer"
+						   value="1" <?php checked( StatifyBlacklist::$_options['referer']['cron'], 1 ); ?>>
+					<p class="description"><?php esc_html_e( 'Clean database periodically in background', 'statify-blacklist' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_referer_regexp"><?php esc_html_e( 'Matching method', 'statify-blacklist' ); ?></label>
+				</th>
+				<td>
+					<select name="statifyblacklist[referer][regexp]" id="statify-blacklist_referer_regexp">
+						<option value="0" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 0 ); ?>>
+							<?php esc_html_e( 'Domain', 'statify-blacklist' ); ?>
+						</option>
+						<option value="1" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 1 ); ?>>
+							<?php esc_html_e( 'RegEx case-sensitive', 'statify-blacklist' ); ?>
+						</option>
+						<option value="2" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 2 ); ?>>
+							<?php esc_html_e( 'RegEx case-insensitive', 'statify-blacklist' ); ?>
+						</option>
+					</select>
+
+					<p class="description">
+						<?php esc_html_e( 'Domain', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match given domain including subdomains', 'statify-blacklist' ); ?>
+						<br>
+						<?php esc_html_e( 'RegEx', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match referer by regular expression', 'statify-blacklist' ); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_referer"><?php esc_html_e( 'Referer blacklist', 'statify-blacklist' ); ?></label>
+				</th>
+				<td>
+					<textarea cols="40" rows="5" name="statifyblacklist[referer][blacklist]" id="statify-blacklist_referer"><?php
+					if ( isset( $statifyblacklist_update_result['referer'] ) ) {
+						print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['referer'] ) ) );
+					} else {
+						print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['referer']['blacklist'] ) ) );
+					}
+					?></textarea>
+					<p class="description">
+						<?php esc_html_e( 'Add one domain (without subdomains) each line, e.g. example.com', 'statify-blacklist' ); ?>
+					</p>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h2><?php esc_html_e( 'Target blacklist', 'statify-blacklist' ); ?></h2>
+
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_active_target">
+						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="checkbox" name="statifyblacklist[target][active]"
+						   id="statify-blacklist_active_target"
+						   value="1" <?php checked( StatifyBlacklist::$_options['target']['active'], 1 ); ?>>
+					<p class="description">
+						<?php esc_html_e( 'Filter at time of tracking, before anything is stored', 'statify-blacklist' ); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_cron_target">
+						<?php esc_html_e( 'CronJob execution', 'statify-blacklist' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="checkbox" name="statifyblacklist[target][cron]" id="statify-blacklist_cron_target"
+						   value="1" <?php checked( StatifyBlacklist::$_options['target']['cron'], 1 ); ?>>
+					<p class="description">
+						<?php esc_html_e( 'Clean database periodically in background', 'statify-blacklist' ); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_target_regexp">
+						<?php esc_html_e( 'Matching method', 'statify-blacklist' ); ?>
+					</label>
+				</th>
+				<td>
+					<select name="statifyblacklist[referer][regexp]" id="statify-blacklist_referer_regexp">
+						<option value="0" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 0 ); ?>>
+							<?php esc_html_e( 'Exact', 'statify-blacklist' ); ?>
+						</option>
+						<option value="1" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 1 ); ?>>
+							<?php esc_html_e( 'RegEx case-sensitive', 'statify-blacklist' ); ?>
+						</option>
+						<option value="2" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 2 ); ?>>
+							<?php esc_html_e( 'RegEx case-insensitive', 'statify-blacklist' ); ?>
+						</option>
+					</select>
+
+					<p class="description">
+						<?php esc_html_e( 'Exact', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match only given targets', 'statify-blacklist' ); ?>
+						<br>
+						<?php esc_html_e( 'Keyword', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match every referer that contains one of the keywords', 'statify-blacklist' ); ?>
+						<br>
+						<?php esc_html_e( 'RegEx', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match referer by regular expression', 'statify-blacklist' ); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_target">
+						<?php esc_html_e( 'Target blacklist', 'statify-blacklist' ); ?>
+					</label>
+				</th>
+				<td>
+					<textarea cols="40" rows="5" name="statifyblacklist[target][blacklist]" id="statify-blacklist_target"><?php
+					if ( isset( $statifyblacklist_update_result['target'] ) ) {
+						print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['target'] ) ) );
+					} else {
+						print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['target']['blacklist'] ) ) );
+					}
+					?></textarea>
+
+					<p class="description">
+						(<?php esc_html_e( 'Add one target URL each line, e.g.', 'statify-blacklist' ); ?> /, /test/page/, /?page_id=123)
+					</p>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h2><?php esc_html_e( 'IP blacklist', 'statify-blacklist' ); ?></h2>
+
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_active_ip">
+						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="checkbox" name="statifyblacklist[ip][active]" id="statify-blacklist_active_ip"
+						   value="1" <?php checked( StatifyBlacklist::$_options['ip']['active'], 1 ); ?>>
+					<p class="description">
+						<?php esc_html_e( 'Filter at time of tracking, before anything is stored', 'statify-blacklist' ); ?>
+						<br>
+						<?php esc_html_e( 'Cron execution is not possible for IP filter, because IP addresses are not stored.', 'statify-blacklist' ); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_ip"><?php esc_html_e( 'IP blacklist', 'statify-blacklist' ); ?></label>:
+				</th>
+				<td>
+					<textarea cols="40" rows="5" name="statifyblacklist[ip][blacklist]" id="statify-blacklist_ip"><?php
+					if ( isset( $statifyblacklist_update_result['ip'] ) ) {
+						print esc_html( implode( "\r\n", $statifyblacklist_update_result['ip'] ) );
+					} else {
+						print esc_html( implode( "\r\n", StatifyBlacklist::$_options['ip']['blacklist'] ) );
+					}
+					?></textarea>
+
+					<p class="description">
+						<?php esc_html_e( 'Add one IP address or range per line, e.g.', 'statify-blacklist' ); ?>
+						127.0.0.1, 192.168.123.0/24, 2001:db8:a0b:12f0::1/64
+					</p>
+				</td>
+			</tr>
+			</tbody>
+		</table>
 
 		<p class="submit">
 			<input class="button-primary" type="submit" name="submit" value="<?php esc_html_e( 'Save Changes' ); ?>">
@@ -285,10 +334,10 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				   value="<?php esc_html_e( 'CleanUp Database', 'statify-blacklist' ); ?>"
 				   onclick="return confirm('Do you really want to apply filters to database? This cannot be undone.');">
 			<br>
-			<small>
+			<p class="description">
 				<?php esc_html_e( 'Applies referer and target filter (even if disabled) to data stored in database.', 'statify-blacklist' ); ?>
 				<em><?php esc_html_e( 'This cannot be undone!', 'statify-blacklist' ); ?></em>
-			</small>
+			</p>
 		</p>
 	</form>
 </div>

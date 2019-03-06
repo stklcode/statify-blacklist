@@ -29,31 +29,61 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		// Extract referer array.
 		$referer_str = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['referer']['blacklist'] ) );
 		if ( empty( trim( $referer_str ) ) ) {
-			$referer = array();
+			$referer = [];
 		} else {
-			$referer = explode( "\r\n", $referer_str );
+			$referer = array_filter(
+				array_map(
+					function ( $a ) {
+						return trim( $a );
+					},
+					explode( "\r\n", $referer_str )
+				),
+				function ( $a ) {
+					return ! empty( $a );
+				}
+			);
 		}
 
 		// Extract target array.
 		$target_str = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['target']['blacklist'] ) );
 		if ( empty( trim( $target_str ) ) ) {
-			$target = array();
+			$target = [];
 		} else {
-			$target = explode( "\r\n", str_replace( '\\\\', '\\', $target_str ) );
+			$target = array_filter(
+				array_map(
+					function ( $a ) {
+						return trim( $a );
+					},
+					explode( "\r\n", str_replace( '\\\\', '\\', $target_str ) )
+				),
+				function ( $a ) {
+					return ! empty( $a );
+				}
+			);
 		}
 
 		// Extract IP array.
 		$ip_str = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['ip']['blacklist'] ) );
 		if ( empty( trim( $ip_str ) ) ) {
-			$ip = array();
+			$ip = [];
 		} else {
-			$ip = explode( "\r\n", $ip_str );
+			$ip = array_filter(
+				array_map(
+					function ( $a ) {
+						return trim( $a );
+					},
+					explode( "\r\n", $ip_str )
+				),
+				function ( $a ) {
+					return ! empty( $a );
+				}
+			);
 		}
 
 		// Update options (data will be sanitized).
 		$statifyblacklist_update_result = StatifyBlacklist_Admin::update_options(
-			array(
-				'referer' => array(
+			[
+				'referer' => [
 					'active'    => isset( $_POST['statifyblacklist']['referer']['active'] )
 						? (int) $_POST['statifyblacklist']['referer']['active'] : 0,
 					'cron'      => isset( $_POST['statifyblacklist']['referer']['cron'] )
@@ -61,8 +91,8 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 					'regexp'    => isset( $_POST['statifyblacklist']['referer']['regexp'] )
 						? (int) $_POST['statifyblacklist']['referer']['regexp'] : 0,
 					'blacklist' => array_flip( $referer ),
-				),
-				'target'  => array(
+				],
+				'target'  => [
 					'active'    => isset( $_POST['statifyblacklist']['target']['active'] )
 						? (int) $_POST['statifyblacklist']['target']['active'] : 0,
 					'cron'      => isset( $_POST['statifyblacklist']['target']['cron'] )
@@ -70,23 +100,25 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 					'regexp'    => isset( $_POST['statifyblacklist']['target']['regexp'] )
 						? (int) $_POST['statifyblacklist']['target']['regexp'] : 0,
 					'blacklist' => array_flip( $target ),
-				),
-				'ip'      => array(
+				],
+				'ip'      => [
 					'active'    => isset( $_POST['statifyblacklist']['ip']['active'] )
 						? (int) $_POST['statifyblacklist']['ip']['active'] : 0,
 					'blacklist' => $ip,
-				),
+				],
 				'version' => StatifyBlacklist::VERSION_MAIN,
-			)
+			]
 		);
 
 		// Generate messages.
 		if ( false !== $statifyblacklist_update_result ) {
-			if ( array_key_exists( 'referer', $statifyblacklist_update_result ) ) {
-				$statifyblacklist_post_warning = __( 'Some URLs are invalid and have been sanitized.', 'statify-blacklist' );
-			} elseif ( array_key_exists( 'ip', $statifyblacklist_update_result ) ) {
+			$statifyblacklist_post_warning = [];
+			if ( ! empty( $statifyblacklist_update_result['referer']['diff'] ) ) {
+				$statifyblacklist_post_warning[] = __( 'Some URLs are invalid and have been sanitized.', 'statify-blacklist' );
+			}
+			if ( ! empty( $statifyblacklist_update_result['ip']['diff'] ) ) {
 				// translators: List of invalid IP addresses (comma separated).
-				$statifyblacklist_post_warning = sprintf( __( 'Some IPs are invalid : %s', 'statify-blacklist' ), implode( ', ', $statifyblacklist_update_result['ip'] ) );
+				$statifyblacklist_post_warning[] = sprintf( __( 'Some IPs are invalid: %s', 'statify-blacklist' ), implode( ', ', $statifyblacklist_update_result['ip']['diff'] ) );
 			}
 		} else {
 			$statifyblacklist_post_success = __( 'Settings updated successfully.', 'statify-blacklist' );
@@ -111,11 +143,10 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		print '</p></div>';
 	}
 	if ( isset( $statifyblacklist_post_warning ) ) {
-		print '<div class="notice notice-warning"><p>' .
-			esc_html( $statifyblacklist_post_warning );
-		print '<br>';
-		esc_html_e( 'Settings have not been saved yet.', 'statify-blacklist' );
-		print '</p></div>';
+		foreach ( $statifyblacklist_post_warning as $w ) {
+			print '<div class="notice notice-warning"><p>' . esc_html( $w ) . '</p></div>';
+		}
+		print '<div class="notice notice-warning"><p>' . esc_html( 'Settings have not been saved yet.', 'statify-blacklist' ) . '</p></div>';
 	}
 	if ( isset( $statifyblacklist_post_success ) ) {
 		print '<div class="notice notice-success"><p>' .
@@ -187,10 +218,10 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</th>
 				<td>
 					<textarea cols="40" rows="5" name="statifyblacklist[referer][blacklist]" id="statify-blacklist_referer"><?php
-					if ( isset( $statifyblacklist_update_result['referer'] ) ) {
-						print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['referer'] ) ) );
-					} else {
+					if ( empty( $statifyblacklist_update_result['referer'] ) ) {
 						print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['referer']['blacklist'] ) ) );
+					} else {
+						print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['referer']['sanitized'] ) ) );
 					}
 					?></textarea>
 					<p class="description">
@@ -270,10 +301,10 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</th>
 				<td>
 					<textarea cols="40" rows="5" name="statifyblacklist[target][blacklist]" id="statify-blacklist_target"><?php
-					if ( isset( $statifyblacklist_update_result['target'] ) ) {
-						print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['target'] ) ) );
-					} else {
+					if ( empty( $statifyblacklist_update_result['target'] ) ) {
 						print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['target']['blacklist'] ) ) );
+					} else {
+						print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['target']['sanitized'] ) ) );
 					}
 					?></textarea>
 
@@ -311,10 +342,10 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</th>
 				<td>
 					<textarea cols="40" rows="5" name="statifyblacklist[ip][blacklist]" id="statify-blacklist_ip"><?php
-					if ( isset( $statifyblacklist_update_result['ip'] ) ) {
-						print esc_html( implode( "\r\n", $statifyblacklist_update_result['ip'] ) );
-					} else {
+					if ( empty( $statifyblacklist_update_result['ip'] ) ) {
 						print esc_html( implode( "\r\n", StatifyBlacklist::$_options['ip']['blacklist'] ) );
+					} else {
+						print esc_html( implode( "\r\n", $statifyblacklist_update_result['ip']['sanitized'] ) );
 					}
 					?></textarea>
 

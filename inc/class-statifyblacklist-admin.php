@@ -20,6 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  */
 class StatifyBlacklist_Admin extends StatifyBlacklist {
+	const MODE_NORMAL   = 0;
+	const MODE_REGEX    = 1;
+	const MODE_REGEX_CI = 2;
 
 	/**
 	 * Initialize admin-only components of the plugin.
@@ -61,27 +64,51 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 */
 	public static function update_options( $options = null ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
-			// Sanitize URLs and remove empty inputs.
+
+			// Sanitize referer list.
 			$given_referer = $options['referer']['blacklist'];
-			if ( 0 === $options['referer']['regexp'] ) {
+			if ( self::MODE_NORMAL === $options['referer']['regexp'] ) {
+				// Sanitize URLs and remove empty inputs.
 				$sanitized_referer = self::sanitizeURLs( $given_referer );
+			} elseif ( self::MODE_REGEX === $options['referer']['regexp'] || self::MODE_REGEX_CI === $options['referer']['regexp'] ) {
+				// TODO Check regular expressions.
+				$sanitized_referer = $given_referer;
 			} else {
 				$sanitized_referer = $given_referer;
 			}
 
-			// Sanitize IPs and Subnets and remove empty inputs.
+			// Sanitize target list.
+			$given_target = $options['target']['blacklist'];
+			if ( self::MODE_REGEX === $options['target']['regexp'] || self::MODE_REGEX_CI === $options['target']['regexp'] ) {
+				// TODO Check regular expressions.
+				$sanitized_target = $given_target;
+			} else {
+				$sanitized_target = $given_target;
+			}
+
+			// Sanitize IPs and subnets and remove empty inputs.
 			$given_ip     = $options['ip']['blacklist'];
 			$sanitized_ip = self::sanitizeIPs( $given_ip );
 
 			// Abort on errors.
-			if ( ! empty( array_diff( array_keys( $given_referer ), array_keys( $sanitized_referer ) ) ) ) {
-				return array(
-					'referer' => $sanitized_referer,
-				);
-			} elseif ( ! empty( array_diff( $given_ip, $sanitized_ip ) ) ) {
-				return array(
-					'ip' => array_diff( $given_ip, $sanitized_ip ),
-				);
+			$errors = [
+				'referer' => [
+					'sanitized' => $sanitized_referer,
+					'diff'      => array_diff( $given_referer, $sanitized_referer ),
+				],
+				'target' => [
+					'sanitized' => $sanitized_target,
+					'diff'      => array_diff( $given_target, $sanitized_target ),
+				],
+				'ip'      => [
+					'sanitized' => $sanitized_ip,
+					'diff'      => array_diff( $given_ip, $sanitized_ip ),
+				],
+			];
+			if ( ! empty( $errors['referer']['diff'] )
+				|| ! empty( $errors['target']['diff'] )
+				|| ! empty( $errors['ip']['diff'] ) ) {
+				return $errors;
 			}
 
 			// Update database on success.
@@ -300,10 +327,10 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 					'/^((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])(\/([0-9]|[1-2][0-9]|3[0-2]))?$/',
 					$ip
 				) ||
-					preg_match(
-						'/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/',
-						$ip
-					);
+				preg_match(
+					'/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/',
+					$ip
+				);
 			}
 		);
 	}

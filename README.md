@@ -6,7 +6,7 @@
 # Statify Blacklist #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 4.7
-* Tested up to:      4.9
+* Tested up to:      4.1
 * Requires PHP:      5.5
 * Stable tag:        1.4.4
 * License:           GPLv2 or later

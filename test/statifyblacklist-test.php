@@ -320,7 +320,15 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$invalid = array( '12.34.56.789', '192.0.2.123/33', '192.0.2.123/-1' );
 		$result  = invoke_static( StatifyBlacklist_Admin::class, 'sanitizeIPs', array( array_merge( $valid, $invalid ) ) );
 		$this->assertNotFalse( $result );
-		$this->assertInternalType( 'array', $result );
+		/*
+		 * Unfortunately this is nencessary as long as we run PHP 5 tests, because "assertInternalType" is deprecated
+		 * as of PHPUnit 8, but "assertIsArray" has been introduces in PHPUnit 7.5 which requires PHP >= 7.1.
+		 */
+		if ( method_exists( $this, 'assertIsArray' ) ) {
+			$this->assertIsArray( $result );
+		} else {
+			$this->assertInternalType( 'array', $result );
+		}
 		$this->assertEquals( $valid, $result );
 
 		// IPv6 tests.
@@ -339,7 +347,11 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		);
 		$result  = invoke_static( StatifyBlacklist_Admin::class, 'sanitizeIPs', array( array_merge( $valid, $invalid ) ) );
 		$this->assertNotFalse( $result );
-		$this->assertInternalType( 'array', $result );
+		if ( method_exists( $this, 'assertIsArray' ) ) {
+			$this->assertIsArray( $result );
+		} else {
+			$this->assertInternalType( 'array', $result );
+		}
 		$this->assertEquals( $valid, $result );
 	}
 

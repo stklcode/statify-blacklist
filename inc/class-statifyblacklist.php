@@ -29,6 +29,35 @@ class StatifyBlacklist {
 	const VERSION_MAIN = 1.4;
 
 	/**
+	 * Operation mode "normal".
+	 *
+	 * @var integer MODE_NORMAL
+	 */
+	const MODE_NORMAL = 0;
+
+	/**
+	 * Operation mode "regular expression".
+	 *
+	 * @var integer MODE_REGEX
+	 */
+	const MODE_REGEX = 1;
+
+	/**
+	 * Operation mode "regular expression case insensitive".
+	 *
+	 * @var integer MODE_REGEX_CI
+	 */
+	const MODE_REGEX_CI = 2;
+
+	/**
+	 * Operation mode "keyword".
+	 *
+	 * @since 1.5.0
+	 * @var integer MODE_KEYWORD
+	 */
+	const MODE_KEYWORD = 3;
+
+	/**
 	 * Plugin options.
 	 *
 	 * @since 1.0.0
@@ -137,35 +166,57 @@ class StatifyBlacklist {
 	public static function apply_blacklist_filter() {
 		// Referer blacklist.
 		if ( isset( self::$_options['referer']['active'] ) && 0 !== self::$_options['referer']['active'] ) {
-			// Regular Expression filtering since 1.3.0.
-			if ( isset( self::$_options['referer']['regexp'] ) && self::$_options['referer']['regexp'] > 0 ) {
-				// Get full referer string.
-				$referer = wp_get_raw_referer();
-				if ( ! $referer ) {
-					$referer = '';
-				}
-				// Merge given regular expressions into one.
-				$regexp = '/' . implode( '|', array_keys( self::$_options['referer']['blacklist'] ) ) . '/';
-				if ( 2 === self::$_options['referer']['regexp'] ) {
-					$regexp .= 'i';
-				}
+			// Determine filter mode.
+			$mode = isset( self::$_options['referer']['regexp'] ) ? intval( self::$_options['referer']['regexp'] ) : 0;
 
-				// Check blacklist (no return to continue filtering #12).
-				if ( 1 === preg_match( $regexp, $referer ) ) {
-					return true;
-				}
-			} else {
-				// Extract relevant domain parts.
-				$referer = wp_parse_url( wp_get_raw_referer() );
-				$referer = strtolower( ( isset( $referer['host'] ) ? $referer['host'] : '' ) );
+			// Get full referer string.
+			$referer = wp_get_raw_referer();
+			if ( ! $referer ) {
+				$referer = '';
+			}
 
-				// Get blacklist.
-				$blacklist = self::$_options['referer']['blacklist'];
+			switch ( $mode ) {
 
-				// Check blacklist.
-				if ( isset( $blacklist[ $referer ] ) ) {
-					return true;
-				}
+				// Regular Expression filtering since 1.3.0.
+				case self::MODE_REGEX:
+				case self::MODE_REGEX_CI:
+					// Merge given regular expressions into one.
+					$regexp = '/' . implode( '|', array_keys( self::$_options['referer']['blacklist'] ) ) . '/';
+					if ( self::MODE_REGEX_CI === self::$_options['referer']['regexp'] ) {
+						$regexp .= 'i';
+					}
+
+					// Check blacklist (no return to continue filtering #12).
+					if ( 1 === preg_match( $regexp, $referer ) ) {
+						return true;
+					}
+					break;
+
+				// Keyword filter since 1.5.0 (#15).
+				case self::MODE_KEYWORD:
+					// Get blacklist.
+					$blacklist = self::$_options['referer']['blacklist'];
+
+					foreach ( array_keys( $blacklist ) as $keyword ) {
+						if ( false !== strpos( strtolower( $referer ), strtolower( $keyword ) ) ) {
+							return true;
+						}
+					}
+					break;
+
+				// Standard domain filter.
+				default:
+					// Extract relevant domain parts.
+					$referer = wp_parse_url( $referer );
+					$referer = strtolower( ( isset( $referer['host'] ) ? $referer['host'] : '' ) );
+
+					// Get blacklist.
+					$blacklist = self::$_options['referer']['blacklist'];
+
+					// Check blacklist.
+					if ( isset( $blacklist[ $referer ] ) ) {
+						return true;
+					}
 			}
 		}
 
@@ -324,6 +375,6 @@ class StatifyBlacklist {
 			}
 
 			return ( 0 === substr_compare( sprintf( '%032b', ip2long( $ip ) ), sprintf( '%032b', ip2long( $base ) ), 0, $mask ) );
-		} // End if().
+		}
 	}
 }

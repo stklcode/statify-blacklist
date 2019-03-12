@@ -20,9 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   1.0.0
  */
 class StatifyBlacklist_Admin extends StatifyBlacklist {
-	const MODE_NORMAL   = 0;
-	const MODE_REGEX    = 1;
-	const MODE_REGEX_CI = 2;
 
 	/**
 	 * Initialize admin-only components of the plugin.
@@ -96,7 +93,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 					'sanitized' => $sanitized_referer,
 					'diff'      => array_diff( $given_referer, $sanitized_referer ),
 				],
-				'target' => [
+				'target'  => [
 					'sanitized' => $sanitized_target,
 					'diff'      => array_diff( $given_target, $sanitized_target ),
 				],
@@ -331,6 +328,25 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 					'/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/',
 					$ip
 				);
+			}
+		);
+	}
+
+	/**
+	 * Validate regular expressions, i.e. remove duplicates and empty values and validate others.
+	 *
+	 * @since 1.5.0 #13
+	 *
+	 * @param array $expressions Given pre-sanitized array of regular expressions.
+	 *
+	 * @return array Array of invalid expressions.
+	 */
+	private static function sanitize_regex( $expressions ) {
+		return array_filter(
+			$expressions,
+			function ( $re ) {
+				// Check of preg_match() fails (warnings suppressed).
+				return false === @preg_match( $re, null );
 			}
 		);
 	}

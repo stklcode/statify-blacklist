@@ -91,6 +91,8 @@ Because of this, an IP blacklist can only be applied while processing the reques
 * Minimum required WordPress version is 4.7
 * Removed `load_plugin_textdomain()` and `Domain Path` header
 * Added automatic compatibility check for WP and PHP version (#17)
+* Added keyword filter mode for referer blacklist (#15)
+* Layout adjustments on settings page
 
 ### 1.4.4 / 19.05.2018 ###
 * Fix live filter chain when regular expressions are active (#12)

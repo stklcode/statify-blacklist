@@ -194,19 +194,24 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</th>
 				<td>
 					<select name="statifyblacklist[referer][regexp]" id="statify-blacklist_referer_regexp">
-						<option value="0" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 0 ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_NORMAL ); ?>" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], StatifyBlacklist::MODE_NORMAL ); ?>>
 							<?php esc_html_e( 'Domain', 'statify-blacklist' ); ?>
 						</option>
-						<option value="1" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 1 ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_KEYWORD ); ?>" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], StatifyBlacklist::MODE_KEYWORD ); ?>>
+							<?php esc_html_e( 'Keyword', 'statify-blacklist' ); ?>
+						</option>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX ); ?>" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], StatifyBlacklist::MODE_REGEX ); ?>>
 							<?php esc_html_e( 'RegEx case-sensitive', 'statify-blacklist' ); ?>
 						</option>
-						<option value="2" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], 2 ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX_CI ); ?>" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], StatifyBlacklist::MODE_REGEX_CI ); ?>>
 							<?php esc_html_e( 'RegEx case-insensitive', 'statify-blacklist' ); ?>
 						</option>
 					</select>
 
 					<p class="description">
 						<?php esc_html_e( 'Domain', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match given domain including subdomains', 'statify-blacklist' ); ?>
+						<br>
+						<?php esc_html_e( 'Keyword', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match every referer that contains one of the keywords', 'statify-blacklist' ); ?>
 						<br>
 						<?php esc_html_e( 'RegEx', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match referer by regular expression', 'statify-blacklist' ); ?>
 					</p>
@@ -272,14 +277,14 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 					</label>
 				</th>
 				<td>
-					<select name="statifyblacklist[referer][regexp]" id="statify-blacklist_referer_regexp">
-						<option value="0" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 0 ); ?>>
+					<select name="statifyblacklist[target][regexp]" id="statify-blacklist_referer_regexp">
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_NORMAL ); ?>" <?php selected( StatifyBlacklist::$_options['target']['regexp'], StatifyBlacklist::MODE_NORMAL ); ?>>
 							<?php esc_html_e( 'Exact', 'statify-blacklist' ); ?>
 						</option>
-						<option value="1" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 1 ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX ); ?>" <?php selected( StatifyBlacklist::$_options['target']['regexp'], StatifyBlacklist::MODE_REGEX ); ?>>
 							<?php esc_html_e( 'RegEx case-sensitive', 'statify-blacklist' ); ?>
 						</option>
-						<option value="2" <?php selected( StatifyBlacklist::$_options['target']['regexp'], 2 ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX_CI ); ?>" <?php selected( StatifyBlacklist::$_options['target']['regexp'], StatifyBlacklist::MODE_REGEX_CI ); ?>>
 							<?php esc_html_e( 'RegEx case-insensitive', 'statify-blacklist' ); ?>
 						</option>
 					</select>

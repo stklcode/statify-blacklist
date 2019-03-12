@@ -151,12 +151,65 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		// Matching both.
 		$_SERVER['HTTP_REFERER'] = 'http://example.net/test/me';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
-		// Mathinc with wrong case.
+		// Matching with wrong case.
 		$_SERVER['HTTP_REFERER'] = 'http://eXaMpLe.NeT/tEsT/mE';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		// Set RegExp filter to case insensitive.
 		StatifyBlacklist::$_options['referer']['regexp'] = 2;
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+	}
+
+	/**
+	 * Test referer filter using keywords.
+	 *
+	 * @return void
+	 */
+	public function test_referer_keyword_filter() {
+		// Prepare Options: 2 regular expressions.
+		StatifyBlacklist::$_options = array(
+			'referer' => array(
+				'active'    => 1,
+				'cron'      => 0,
+				'regexp'    => StatifyBlacklist::MODE_KEYWORD,
+				'blacklist' => array(
+					'example' => 0,
+					'test'    => 1,
+				),
+			),
+			'target'  => array(
+				'active'    => 0,
+				'cron'      => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
+				'blacklist' => array(),
+			),
+			'ip'      => array(
+				'active'    => 0,
+				'blacklist' => array(),
+			),
+			'version' => StatifyBlacklist::VERSION_MAIN,
+		);
+
+		// No multisite.
+		StatifyBlacklist::$multisite = false;
+
+		// No referer.
+		unset( $_SERVER['HTTP_REFERER'] );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		// Non-blacklisted referer.
+		$_SERVER['HTTP_REFERER'] = 'http://not.evil';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		// Blacklisted referer.
+		$_SERVER['HTTP_REFERER'] = 'http://example.com';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		// Blacklisted referer with path.
+		$_SERVER['HTTP_REFERER'] = 'http://foobar.net/test/me';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		// Matching both.
+		$_SERVER['HTTP_REFERER'] = 'http://example.net/test/me';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		// Matching with wrong case.
+		$_SERVER['HTTP_REFERER'] = 'http://eXaMpLe.NeT/tEsT/mE';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 	}
 
@@ -366,13 +419,13 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 			'referer' => array(
 				'active'    => 0,
 				'cron'      => 0,
-				'regexp'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
 				'blacklist' => array(),
 			),
 			'target'  => array(
 				'active'    => 0,
 				'cron'      => 0,
-				'regexp'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
 				'blacklist' => array(),
 			),
 			'ip'      => array(
@@ -438,13 +491,13 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 			'referer' => array(
 				'active'    => 0,
 				'cron'      => 0,
-				'regexp'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
 				'blacklist' => array(),
 			),
 			'target'  => array(
 				'active'    => 0,
 				'cron'      => 0,
-				'regexp'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
 				'blacklist' => array(
 					'/excluded/page/' => 0,
 					'/?page_id=3'     => 1,
@@ -513,7 +566,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 			'referer' => array(
 				'active'    => 1,
 				'cron'      => 0,
-				'regexp'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
 				'blacklist' => array(
 					'example.com' => 0,
 				),
@@ -521,7 +574,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 			'target'  => array(
 				'active'    => 1,
 				'cron'      => 0,
-				'regexp'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
 				'blacklist' => array(
 					'/excluded/page/' => 0
 				),
@@ -561,9 +614,9 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$_SERVER['REMOTE_ADDR'] = '192.0.2.234';
 
 		// Same for RegExp filters.
-		StatifyBlacklist::$_options['referer']['regexp'] = 1;
+		StatifyBlacklist::$_options['referer']['regexp'] = StatifyBlacklist::MODE_REGEX;
 		StatifyBlacklist::$_options['referer']['blacklist'] = array( 'example\.com' => 0 );
-		StatifyBlacklist::$_options['target']['regexp'] = 1;
+		StatifyBlacklist::$_options['target']['regexp'] = StatifyBlacklist::MODE_REGEX;
 		StatifyBlacklist::$_options['target']['blacklist'] = array( '\/excluded\/.*' => 0 );
 
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );

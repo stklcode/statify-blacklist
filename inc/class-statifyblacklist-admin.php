@@ -63,22 +63,26 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
 
 			// Sanitize referer list.
-			$given_referer = $options['referer']['blacklist'];
+			$given_referer   = $options['referer']['blacklist'];
+			$invalid_referer = [];
 			if ( self::MODE_NORMAL === $options['referer']['regexp'] ) {
 				// Sanitize URLs and remove empty inputs.
 				$sanitized_referer = self::sanitize_urls( $given_referer );
 			} elseif ( self::MODE_REGEX === $options['referer']['regexp'] || self::MODE_REGEX_CI === $options['referer']['regexp'] ) {
-				// TODO Check regular expressions.
 				$sanitized_referer = $given_referer;
+				// Check regular expressions.
+				$invalid_referer = self::sanitize_regex( $given_referer );
 			} else {
 				$sanitized_referer = $given_referer;
 			}
 
 			// Sanitize target list.
-			$given_target = $options['target']['blacklist'];
+			$given_target   = $options['target']['blacklist'];
+			$invalid_target = [];
 			if ( self::MODE_REGEX === $options['target']['regexp'] || self::MODE_REGEX_CI === $options['target']['regexp'] ) {
-				// TODO Check regular expressions.
 				$sanitized_target = $given_target;
+				// Check regular expressions.
+				$invalid_target = self::sanitize_regex( $given_target );
 			} else {
 				$sanitized_target = $given_target;
 			}
@@ -92,10 +96,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				'referer' => [
 					'sanitized' => $sanitized_referer,
 					'diff'      => array_diff( $given_referer, $sanitized_referer ),
+					'invalid'   => $invalid_referer,
 				],
 				'target'  => [
 					'sanitized' => $sanitized_target,
 					'diff'      => array_diff( $given_target, $sanitized_target ),
+					'invalid'   => $invalid_target,
 				],
 				'ip'      => [
 					'sanitized' => $sanitized_ip,
@@ -103,7 +109,9 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				],
 			];
 			if ( ! empty( $errors['referer']['diff'] )
+				|| ! empty( $errors['referer']['invalid'] )
 				|| ! empty( $errors['target']['diff'] )
+				|| ! empty( $errors['target']['invalid'] )
 				|| ! empty( $errors['ip']['diff'] ) ) {
 				return $errors;
 			}
@@ -343,10 +351,10 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 */
 	private static function sanitize_regex( $expressions ) {
 		return array_filter(
-			$expressions,
+			array_flip( $expressions ),
 			function ( $re ) {
 				// Check of preg_match() fails (warnings suppressed).
-				return false === @preg_match( $re, null );
+				return false === @preg_match( StatifyBlacklist::regex( $re, false ), null );
 			}
 		);
 	}

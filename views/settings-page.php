@@ -116,6 +116,9 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			if ( ! empty( $statifyblacklist_update_result['referer']['diff'] ) ) {
 				$statifyblacklist_post_warning[] = __( 'Some URLs are invalid and have been sanitized.', 'statify-blacklist' );
 			}
+			if ( ! empty( $statifyblacklist_update_result['referer']['invalid'] ) ) {
+				$statifyblacklist_post_warning[] = __( 'Some regular expressions are invalid:', 'statify-blacklist' ) . '<br>' . implode( '<br>', $statifyblacklist_update_result['referer']['invalid'] );
+			}
 			if ( ! empty( $statifyblacklist_update_result['ip']['diff'] ) ) {
 				// translators: List of invalid IP addresses (comma separated).
 				$statifyblacklist_post_warning[] = sprintf( __( 'Some IPs are invalid: %s', 'statify-blacklist' ), implode( ', ', $statifyblacklist_update_result['ip']['diff'] ) );
@@ -144,7 +147,9 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 	}
 	if ( isset( $statifyblacklist_post_warning ) ) {
 		foreach ( $statifyblacklist_post_warning as $w ) {
-			print '<div class="notice notice-warning"><p>' . esc_html( $w ) . '</p></div>';
+			print '<div class="notice notice-warning"><p>' .
+				wp_kses( $w, [ 'br' => [] ] ) .
+				'</p></div>';
 		}
 		print '<div class="notice notice-warning"><p>' . esc_html( 'Settings have not been saved yet.', 'statify-blacklist' ) . '</p></div>';
 	}

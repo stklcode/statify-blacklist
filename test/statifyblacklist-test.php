@@ -617,10 +617,15 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		StatifyBlacklist::$_options['referer']['regexp'] = StatifyBlacklist::MODE_REGEX;
 		StatifyBlacklist::$_options['referer']['blacklist'] = array( 'example\.com' => 0 );
 		StatifyBlacklist::$_options['target']['regexp'] = StatifyBlacklist::MODE_REGEX;
-		StatifyBlacklist::$_options['target']['blacklist'] = array( '\/excluded\/.*' => 0 );
+		StatifyBlacklist::$_options['target']['blacklist'] = array( '/excluded/.*' => 0 );
 
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		$_SERVER['HTTP_REFERER'] = 'https://example.com';
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		// Check case-insensitive match.
+		$_SERVER['HTTP_REFERER'] = 'https://eXaMpLe.com';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		StatifyBlacklist::$_options['referer']['regexp'] = StatifyBlacklist::MODE_REGEX_CI;
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		$_SERVER['HTTP_REFERER'] = 'https://example.net';
 		$_SERVER['REQUEST_URI'] = '/excluded/page/';

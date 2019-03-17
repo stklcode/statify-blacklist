@@ -116,6 +116,7 @@ class StatifyBlacklist {
 	 * @since 1.2.1 update_options($options = null) Parameter with default value introduced.
 	 *
 	 * @param array $options Optional. New options to save.
+	 *
 	 * @return void
 	 */
 	public static function update_options( $options = null ) {
@@ -181,10 +182,10 @@ class StatifyBlacklist {
 				case self::MODE_REGEX:
 				case self::MODE_REGEX_CI:
 					// Merge given regular expressions into one.
-					$regexp = '/' . implode( '|', array_keys( self::$_options['referer']['blacklist'] ) ) . '/';
-					if ( self::MODE_REGEX_CI === self::$_options['referer']['regexp'] ) {
-						$regexp .= 'i';
-					}
+					$regexp = self::regex(
+						array_keys( self::$_options['referer']['blacklist'] ),
+						self::MODE_REGEX_CI === self::$_options['referer']['regexp']
+					);
 
 					// Check blacklist (no return to continue filtering #12).
 					if ( 1 === preg_match( $regexp, $referer ) ) {
@@ -229,10 +230,10 @@ class StatifyBlacklist {
 				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '/' );
 				// @codingStandardsIgnoreEnd
 				// Merge given regular expressions into one.
-				$regexp = '/' . implode( '|', array_keys( self::$_options['target']['blacklist'] ) ) . '/';
-				if ( 2 === self::$_options['target']['regexp'] ) {
-					$regexp .= 'i';
-				}
+				$regexp = self::regex(
+					array_keys( self::$_options['target']['blacklist'] ),
+					self::MODE_REGEX_CI === self::$_options['target']['regexp']
+				);
 
 				// Check blacklist (no return to continue filtering #12).
 				if ( 1 === preg_match( $regexp, $target ) ) {
@@ -266,6 +267,37 @@ class StatifyBlacklist {
 
 		// Skip and continue (return NULL), if all blacklists are inactive.
 		return null;
+	}
+
+	/**
+	 * Preprocess regular expression provided by the user, i.e. add delimiters and optional ci flag.
+	 *
+	 * @param string|array $expression       Original expression string or array of expressions.
+	 * @param string|array $case_insensitive Make expression match case-insensitive.
+	 *
+	 * @return string Preprocessed expression ready for preg_match().
+	 */
+	protected static function regex( $expression, $case_insensitive ) {
+		$res = '/';
+		if ( is_string( $expression ) ) {
+			$res .= str_replace( '/', '\/', $expression );
+		} elseif ( is_array( $expression ) ) {
+			$res .= implode(
+				'|',
+				array_map(
+					function ( $e ) {
+						return str_replace( '/', '\/', $e );
+					},
+					$expression
+				)
+			);
+		}
+		$res .= '/';
+		if ( $case_insensitive ) {
+			$res .= 'i';
+		}
+
+		return $res;
 	}
 
 	/**

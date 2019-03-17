@@ -33,17 +33,19 @@ If the changes introduce new functionality or affect major parts of existing cod
 
 For adding new functionality a new test case the corresponding PHPUnit test would be nice (no hard criterion though).
 
+The `master` branch should also be target for most pull requests.
+However it it features new functionality you might want to target the `develop` branch instead (see next section for details on branches).
+
 ### Branches
 
 The `master` branch represents the current state of development.
 Please ensure your initial code is up to date with it at the time you start development.
-The `master` should also be target for most pull requests.
 
 In addition, this project features a `develop` branch, which holds bleeding edge developments, not necessarily considered stable or even compatible.
 Do not expect this code to run smoothly, but you might have a look into the history to see if some work on an issue has already been started there.
 
-For fixes and features, there might be additional branches, likely prefixed by `ft-` (feature) or `hf-` (hotfix) followed by an issue number (if applicable) and/or a title.
-Feel free to adapt these naming scheme to your forks.
+For fixes and features, there might be additional branches, likely prefixed by `hotfix/` or `feature/` followed by an issue number (if applicable) and/or a title.
+Feel free to adapt this naming scheme to your forks.
 
 ### Merge Requirements
 

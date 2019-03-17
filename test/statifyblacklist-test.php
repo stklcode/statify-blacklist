@@ -371,7 +371,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		// IPv4 tests.
 		$valid   = array( '192.0.2.123', '192.0.2.123/32', '192.0.2.0/24', '192.0.2.128/25' );
 		$invalid = array( '12.34.56.789', '192.0.2.123/33', '192.0.2.123/-1' );
-		$result  = invoke_static( StatifyBlacklist_Admin::class, 'sanitizeIPs', array( array_merge( $valid, $invalid ) ) );
+		$result  = invoke_static( StatifyBlacklist_Admin::class, 'sanitize_ips', array( array_merge( $valid, $invalid ) ) );
 		$this->assertNotFalse( $result );
 		/*
 		 * Unfortunately this is nencessary as long as we run PHP 5 tests, because "assertInternalType" is deprecated
@@ -398,7 +398,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 			'2001:db8:a0b:12f0::/129',
 			'1:2:3:4:5:6:7:8:9',
 		);
-		$result  = invoke_static( StatifyBlacklist_Admin::class, 'sanitizeIPs', array( array_merge( $valid, $invalid ) ) );
+		$result  = invoke_static( StatifyBlacklist_Admin::class, 'sanitize_ips', array( array_merge( $valid, $invalid ) ) );
 		$this->assertNotFalse( $result );
 		if ( method_exists( $this, 'assertIsArray' ) ) {
 			$this->assertIsArray( $result );

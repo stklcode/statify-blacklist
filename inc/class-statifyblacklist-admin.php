@@ -66,7 +66,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			$given_referer = $options['referer']['blacklist'];
 			if ( self::MODE_NORMAL === $options['referer']['regexp'] ) {
 				// Sanitize URLs and remove empty inputs.
-				$sanitized_referer = self::sanitizeURLs( $given_referer );
+				$sanitized_referer = self::sanitize_urls( $given_referer );
 			} elseif ( self::MODE_REGEX === $options['referer']['regexp'] || self::MODE_REGEX_CI === $options['referer']['regexp'] ) {
 				// TODO Check regular expressions.
 				$sanitized_referer = $given_referer;
@@ -85,7 +85,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 
 			// Sanitize IPs and subnets and remove empty inputs.
 			$given_ip     = $options['ip']['blacklist'];
-			$sanitized_ip = self::sanitizeIPs( $given_ip );
+			$sanitized_ip = self::sanitize_ips( $given_ip );
 
 			// Abort on errors.
 			$errors = [
@@ -234,7 +234,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				$referer_regexp = implode( '|', array_keys( self::$_options['referer']['blacklist'] ) );
 			} else {
 				// Sanitize URLs.
-				$referer = self::sanitizeURLs( self::$_options['referer']['blacklist'] );
+				$referer = self::sanitize_urls( self::$_options['referer']['blacklist'] );
 
 				// Build filter regexp.
 				$referer_regexp = str_replace( '.', '\.', implode( '|', array_flip( $referer ) ) );
@@ -294,7 +294,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 *
 	 * @return array  sanitized array.
 	 */
-	private static function sanitizeURLs( $urls ) {
+	private static function sanitize_urls( $urls ) {
 		return array_flip(
 			array_filter(
 				array_map(
@@ -316,7 +316,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 *
 	 * @return array  sanitized array.
 	 */
-	private static function sanitizeIPs( $ips ) {
+	private static function sanitize_ips( $ips ) {
 		return array_filter(
 			$ips,
 			function ( $ip ) {

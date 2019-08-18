@@ -27,7 +27,9 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		StatifyBlacklist_Admin::cleanup_database();
 	} else {
 		// Extract referer array.
-		$referer_str = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['referer']['blacklist'] ) );
+		if ( isset( $_POST['statifyblacklist']['referer']['blacklist'] ) ) {
+			$referer_str = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['referer']['blacklist'] ) );
+		}
 		if ( empty( trim( $referer_str ) ) ) {
 			$referer = [];
 		} else {
@@ -45,7 +47,9 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		}
 
 		// Extract target array.
-		$target_str = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['target']['blacklist'] ) );
+		if ( isset( $_POST['statifyblacklist']['target']['blacklist'] ) ) {
+			$target_str = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['target']['blacklist'] ) );
+		}
 		if ( empty( trim( $target_str ) ) ) {
 			$target = [];
 		} else {
@@ -63,7 +67,9 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		}
 
 		// Extract IP array.
-		$ip_str = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['ip']['blacklist'] ) );
+		if ( isset( $_POST['statifyblacklist']['ip']['blacklist'] ) ) {
+			$ip_str = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['ip']['blacklist'] ) );
+		}
 		if ( empty( trim( $ip_str ) ) ) {
 			$ip = [];
 		} else {

@@ -27,7 +27,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Statify Blacklist. If not, see http://www.gnu.org/licenses/gpl-2.0.html.
+ * along with Statify Blacklist. If not, see https://www.gnu.org/licenses/gpl-2.0.html.
  */
 
 // Quit if accessed directly.

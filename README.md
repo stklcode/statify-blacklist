@@ -10,7 +10,7 @@
 * Requires PHP:      5.5
 * Stable tag:        1.4.4
 * License:           GPLv2 or later
-* License URI:       http://www.gnu.org/licenses/gpl-2.0.html
+* License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
 ## Description ##
 A blacklist extension for the famous [Statify](https://wordpress.org/plugins/statify/) Wordpress plugin.
@@ -45,7 +45,7 @@ The plugin is capable of handling multisite installations.
 * Special Thanks to [pluginkollektiv](https://github.com/pluginkollektiv) for maintaining _Statify_
 
 ## Installation ##
-* If you don’t know how to install a plugin for WordPress, [here’s how](http://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
+* If you don’t know how to install a plugin for WordPress, [here’s how](https://wordpress.org/support/article/managing-plugins/#installing-plugins).
 * Make sure _Statify_ plugin is installed and active 
 * Goto _Settings_ -> _Statify Blacklist_ to configure the plugin
 

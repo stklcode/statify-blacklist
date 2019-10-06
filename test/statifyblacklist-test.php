@@ -275,59 +275,52 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$this->assertTrue( invoke_static( StatifyBlacklist::class, 'cidr_match', array( '127.0.0.1', '127.0.0.1/32' ) ) );
 		$this->assertFalse(
 			invoke_static(
-				StatifyBlacklist::class, 'cidr_match', array(
-					'127.0.0.1',
-					'127.0.0.1/33',
-				)
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '127.0.0.1', '127.0.0.1/33' )
 			)
 		);
 		$this->assertFalse(
 			invoke_static(
-				StatifyBlacklist::class, 'cidr_match', array(
-					'127.0.0.1',
-					'127.0.0.1/-1',
-				)
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '127.0.0.1', '127.0.0.1/-1' )
 			)
 		);
 		$this->assertTrue(
 			invoke_static(
-				StatifyBlacklist::class, 'cidr_match', array(
-					'192.0.2.123',
-					'192.0.2.0/24',
-				)
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '192.0.2.123', '192.0.2.0/24' )
 			)
 		);
 		$this->assertFalse(
 			invoke_static(
-				StatifyBlacklist::class, 'cidr_match', array(
-					'192.0.3.123',
-					'192.0.2.0/24',
-				)
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '192.0.3.123', '192.0.2.0/24' )
 			)
 		);
 		$this->assertTrue(
 			invoke_static(
-				StatifyBlacklist::class, 'cidr_match', array(
-					'192.0.2.123',
-					'192.0.2.120/29',
-				)
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '192.0.2.123', '192.0.2.120/29' )
 			)
 		);
 		$this->assertFalse(
 			invoke_static(
-				StatifyBlacklist::class, 'cidr_match', array(
-					'192.0.2.128',
-					'192.0.2.120/29',
-				)
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '192.0.2.128', '192.0.2.120/29' )
 			)
 		);
 		$this->assertTrue( invoke_static( StatifyBlacklist::class, 'cidr_match', array( '10.11.12.13', '10.0.0.0/8' ) ) );
 		$this->assertFalse(
 			invoke_static(
-				StatifyBlacklist::class, 'cidr_match', array(
-					'10.11.12.345',
-					'10.0.0.0/8',
-				)
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '10.11.12.345', '10.0.0.0/8' )
 			)
 		);
 
@@ -338,26 +331,23 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$this->assertFalse( invoke_static( StatifyBlacklist::class, 'cidr_match', array( '::1', '::1/-1' ) ) );
 		$this->assertTrue(
 			invoke_static(
-				StatifyBlacklist::class, 'cidr_match', array(
-					'2001:db8:a0b:12f0:1:2:3:4',
-					'2001:db8:a0b:12f0::1/64 ',
-				)
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '2001:db8:a0b:12f0:1:2:3:4', '2001:db8:a0b:12f0::1/64 ' )
 			)
 		);
 		$this->assertTrue(
 			invoke_static(
-				StatifyBlacklist::class, 'cidr_match', array(
-					'2001:db8:a0b:12f0::123:456',
-					'2001:db8:a0b:12f0::1/96 ',
-				)
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '2001:db8:a0b:12f0::123:456', '2001:db8:a0b:12f0::1/96 ' )
 			)
 		);
 		$this->assertFalse(
 			invoke_static(
-				StatifyBlacklist::class, 'cidr_match', array(
-					'2001:db8:a0b:12f0::1:132:465',
-					'2001:db8:a0b:12f0::1/96 ',
-				)
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '2001:db8:a0b:12f0::1:132:465', '2001:db8:a0b:12f0::1/96 ' )
 			)
 		);
 	}
@@ -373,6 +363,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$invalid = array( '12.34.56.789', '192.0.2.123/33', '192.0.2.123/-1' );
 		$result  = invoke_static( StatifyBlacklist_Admin::class, 'sanitize_ips', array( array_merge( $valid, $invalid ) ) );
 		$this->assertNotFalse( $result );
+
 		/*
 		 * Unfortunately this is nencessary as long as we run PHP 5 tests, because "assertInternalType" is deprecated
 		 * as of PHPUnit 8, but "assertIsArray" has been introduces in PHPUnit 7.5 which requires PHP >= 7.1.
@@ -576,13 +567,13 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 				'cron'      => 0,
 				'regexp'    => StatifyBlacklist::MODE_NORMAL,
 				'blacklist' => array(
-					'/excluded/page/' => 0
+					'/excluded/page/' => 0,
 				),
 			),
 			'ip'      => array(
 				'active'    => 1,
 				'blacklist' => array(
-					'192.0.2.123'
+					'192.0.2.123',
 				),
 			),
 			'version' => StatifyBlacklist::VERSION_MAIN,
@@ -593,8 +584,8 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 
 		// No match.
 		$_SERVER['HTTP_REFERER'] = 'https://example.net';
-		$_SERVER['REQUEST_URI'] = '/normal/page/';
-		$_SERVER['REMOTE_ADDR'] = '192.0.2.234';
+		$_SERVER['REQUEST_URI']  = '/normal/page/';
+		$_SERVER['REMOTE_ADDR']  = '192.0.2.234';
 		unset( $_SERVER['HTTP_X_FORWARDED_FOR'] );
 		unset( $_SERVER['HTTP_X_REAL_IP'] );
 
@@ -604,7 +595,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 
 		// Matching target.
 		$_SERVER['HTTP_REFERER'] = 'https://example.net';
-		$_SERVER['REQUEST_URI'] = '/excluded/page/';
+		$_SERVER['REQUEST_URI']  = '/excluded/page/';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 
 		// Matching IP.
@@ -628,7 +619,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		StatifyBlacklist::$options['referer']['regexp'] = StatifyBlacklist::MODE_REGEX_CI;
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		$_SERVER['HTTP_REFERER'] = 'https://example.net';
-		$_SERVER['REQUEST_URI'] = '/excluded/page/';
+		$_SERVER['REQUEST_URI']  = '/excluded/page/';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		$_SERVER['REQUEST_URI'] = '/normal/page/';
 		$_SERVER['REMOTE_ADDR'] = '192.0.2.123';

@@ -354,6 +354,8 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			array_flip( $expressions ),
 			function ( $re ) {
 				// Check of preg_match() fails (warnings suppressed).
+
+				// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 				return false === @preg_match( StatifyBlacklist::regex( $re, false ), null );
 			}
 		);

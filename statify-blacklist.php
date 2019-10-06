@@ -105,9 +105,11 @@ function statify_blacklist_disable() {
 	if ( is_plugin_active( STATIFYBLACKLIST_BASE ) ) {
 		deactivate_plugins( STATIFYBLACKLIST_BASE );
 		add_action( 'admin_notices', 'statify_blacklist_disabled_notice' );
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
 		if ( isset( $_GET['activate'] ) ) {
 			unset( $_GET['activate'] );
 		}
+		// phpcs:enable
 	}
 }
 

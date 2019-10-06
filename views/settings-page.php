@@ -9,6 +9,8 @@
  * @since      1.0.0
  */
 
+// phpcs:disable WordPress.WhiteSpace.PrecisionAlignment.Found
+
 // Quit.
 defined( 'ABSPATH' ) || exit;
 
@@ -132,8 +134,8 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		} else {
 			$statifyblacklist_post_success = __( 'Settings updated successfully.', 'statify-blacklist' );
 		}
-	} // End if().
-} // End if().
+	}
+}
 
 /*
  * Disable some code style rules that are impractical for textarea content:

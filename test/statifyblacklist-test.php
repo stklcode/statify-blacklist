@@ -48,7 +48,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 */
 	public function test_referer_filter() {
 		// Prepare Options: 2 blacklisted domains, disabled.
-		StatifyBlacklist::$_options = array(
+		StatifyBlacklist::$options = array(
 			'referer' => array(
 				'active'    => 0,
 				'cron'      => 0,
@@ -88,7 +88,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		// Activate filter and run tests again.
-		StatifyBlacklist::$_options['referer']['active'] = 1;
+		StatifyBlacklist::$options['referer']['active'] = 1;
 
 		unset( $_SERVER['HTTP_REFERER'] );
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
@@ -110,7 +110,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 */
 	public function test_referer_regex_filter() {
 		// Prepare Options: 2 regular expressions.
-		StatifyBlacklist::$_options = array(
+		StatifyBlacklist::$options = array(
 			'referer' => array(
 				'active'    => 1,
 				'cron'      => 0,
@@ -156,7 +156,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		// Set RegExp filter to case insensitive.
-		StatifyBlacklist::$_options['referer']['regexp'] = 2;
+		StatifyBlacklist::$options['referer']['regexp'] = 2;
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 	}
 
@@ -167,7 +167,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 */
 	public function test_referer_keyword_filter() {
 		// Prepare Options: 2 regular expressions.
-		StatifyBlacklist::$_options = array(
+		StatifyBlacklist::$options = array(
 			'referer' => array(
 				'active'    => 1,
 				'cron'      => 0,
@@ -415,7 +415,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 */
 	public function test_ip_filter() {
 		// Prepare Options: 2 blacklisted IPs, disabled.
-		StatifyBlacklist::$_options = array(
+		StatifyBlacklist::$options = array(
 			'referer' => array(
 				'active'    => 0,
 				'cron'      => 0,
@@ -445,7 +445,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$_SERVER['REMOTE_ADDR'] = '192.0.2.123';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		// Activate filter.
-		StatifyBlacklist::$_options['ip']['active'] = 1;
+		StatifyBlacklist::$options['ip']['active'] = 1;
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		// Try matching v6 address.
 		$_SERVER['REMOTE_ADDR'] = '2001:db8:a0b:12f0::1';
@@ -456,11 +456,11 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$_SERVER['REMOTE_ADDR'] = '2001:db8:a0b:12f0::2';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		// Subnet matching.
-		StatifyBlacklist::$_options['ip']['blacklist'] = array(
+		StatifyBlacklist::$options['ip']['blacklist'] = array(
 			'192.0.2.0/25',
 			'2001:db8:a0b:12f0::/96',
 		);
-		$_SERVER['REMOTE_ADDR']                        = '192.0.2.123';
+		$_SERVER['REMOTE_ADDR']                       = '192.0.2.123';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		$_SERVER['REMOTE_ADDR'] = '192.0.2.234';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
@@ -487,7 +487,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 */
 	public function test_target_filter() {
 		// Prepare Options: 2 blacklisted domains, disabled.
-		StatifyBlacklist::$_options = array(
+		StatifyBlacklist::$options = array(
 			'referer' => array(
 				'active'    => 0,
 				'cron'      => 0,
@@ -530,7 +530,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
 		// Activate filter and run tests again.
-		StatifyBlacklist::$_options['target']['active'] = 1;
+		StatifyBlacklist::$options['target']['active'] = 1;
 
 		unset( $_SERVER['REQUEST_URI'] );
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
@@ -562,7 +562,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 */
 	public function test_combined_filters() {
 		// Prepare Options: simple referer + simple target + ip.
-		StatifyBlacklist::$_options = array(
+		StatifyBlacklist::$options = array(
 			'referer' => array(
 				'active'    => 1,
 				'cron'      => 0,
@@ -614,10 +614,10 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$_SERVER['REMOTE_ADDR'] = '192.0.2.234';
 
 		// Same for RegExp filters.
-		StatifyBlacklist::$_options['referer']['regexp'] = StatifyBlacklist::MODE_REGEX;
-		StatifyBlacklist::$_options['referer']['blacklist'] = array( 'example\.com' => 0 );
-		StatifyBlacklist::$_options['target']['regexp'] = StatifyBlacklist::MODE_REGEX;
-		StatifyBlacklist::$_options['target']['blacklist'] = array( '/excluded/.*' => 0 );
+		StatifyBlacklist::$options['referer']['regexp']    = StatifyBlacklist::MODE_REGEX;
+		StatifyBlacklist::$options['referer']['blacklist'] = array( 'example\.com' => 0 );
+		StatifyBlacklist::$options['target']['regexp']     = StatifyBlacklist::MODE_REGEX;
+		StatifyBlacklist::$options['target']['blacklist']  = array( '/excluded/.*' => 0 );
 
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		$_SERVER['HTTP_REFERER'] = 'https://example.com';
@@ -625,7 +625,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		// Check case-insensitive match.
 		$_SERVER['HTTP_REFERER'] = 'https://eXaMpLe.com';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		StatifyBlacklist::$_options['referer']['regexp'] = StatifyBlacklist::MODE_REGEX_CI;
+		StatifyBlacklist::$options['referer']['regexp'] = StatifyBlacklist::MODE_REGEX_CI;
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		$_SERVER['HTTP_REFERER'] = 'https://example.net';
 		$_SERVER['REQUEST_URI'] = '/excluded/page/';

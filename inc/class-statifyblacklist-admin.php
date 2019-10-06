@@ -229,20 +229,20 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		}
 
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			$clean_ref = ( 1 === self::$_options['referer']['cron'] );
-			$clean_trg = ( 1 === self::$_options['target']['cron'] );
+			$clean_ref = ( 1 === self::$options['referer']['cron'] );
+			$clean_trg = ( 1 === self::$options['target']['cron'] );
 		} else {
 			$clean_ref = true;
 			$clean_trg = true;
 		}
 
 		if ( $clean_ref ) {
-			if ( isset( self::$_options['referer']['regexp'] ) && self::$_options['referer']['regexp'] > 0 ) {
+			if ( isset( self::$options['referer']['regexp'] ) && self::$options['referer']['regexp'] > 0 ) {
 				// Merge given regular expressions into one.
-				$referer_regexp = implode( '|', array_keys( self::$_options['referer']['blacklist'] ) );
+				$referer_regexp = implode( '|', array_keys( self::$options['referer']['blacklist'] ) );
 			} else {
 				// Sanitize URLs.
-				$referer = self::sanitize_urls( self::$_options['referer']['blacklist'] );
+				$referer = self::sanitize_urls( self::$options['referer']['blacklist'] );
 
 				// Build filter regexp.
 				$referer_regexp = str_replace( '.', '\.', implode( '|', array_flip( $referer ) ) );
@@ -250,12 +250,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		}
 
 		if ( $clean_trg ) {
-			if ( isset( self::$_options['target']['regexp'] ) && self::$_options['target']['regexp'] > 0 ) {
+			if ( isset( self::$options['target']['regexp'] ) && self::$options['target']['regexp'] > 0 ) {
 				// Merge given regular expressions into one.
-				$target_regexp = implode( '|', array_keys( self::$_options['target']['blacklist'] ) );
+				$target_regexp = implode( '|', array_keys( self::$options['target']['blacklist'] ) );
 			} else {
 				// Build filter regexp.
-				$target_regexp = str_replace( '.', '\.', implode( '|', array_flip( self::$_options['target']['blacklist'] ) ) );
+				$target_regexp = str_replace( '.', '\.', implode( '|', array_flip( self::$options['target']['blacklist'] ) ) );
 			}
 		}
 
@@ -268,7 +268,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
-						. ( ( 1 === self::$_options['referer']['regexp'] ) ? ' BINARY ' : '' )
+						. ( ( 1 === self::$options['referer']['regexp'] ) ? ' BINARY ' : '' )
 						. 'referrer REGEXP %s', $referer_regexp
 					)
 				);
@@ -277,7 +277,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
-						. ( ( 1 === self::$_options['target']['regexp'] ) ? ' BINARY ' : '' )
+						. ( ( 1 === self::$options['target']['regexp'] ) ? ' BINARY ' : '' )
 						. 'target REGEXP %s', $target_regexp
 					)
 				);

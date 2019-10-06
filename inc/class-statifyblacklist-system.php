@@ -134,10 +134,10 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	public static function upgrade() {
 		self::update_options();
 		// Check if config array is not associative (pre 1.2.0).
-		if ( array_keys( self::$_options['referer'] ) === range( 0, count( self::$_options['referer'] ) - 1 ) ) {
+		if ( array_keys( self::$options['referer'] ) === range( 0, count( self::$options['referer'] ) - 1 ) ) {
 			// Flip referer array to make domains keys.
-			$options            = self::$_options;
-			$options['referer'] = array_flip( self::$_options['referer'] );
+			$options            = self::$options;
+			$options['referer'] = array_flip( self::$options['referer'] );
 			if ( self::$multisite ) {
 				update_site_option( 'statify-blacklist', $options );
 			} else {
@@ -146,14 +146,14 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		}
 
 		// Version not set (pre 1.3.0) or older than 1.4.
-		if ( ! isset( self::$_options['version'] ) || self::$_options['version'] < 1.4 ) {
+		if ( ! isset( self::$options['version'] ) || self::$options['version'] < 1.4 ) {
 			// Upgrade options to new schema.
 			$options = array(
 				'referer' => array(
-					'active'    => self::$_options['active_referer'],
-					'cron'      => self::$_options['cron_referer'],
-					'regexp'    => self::$_options['referer_regexp'],
-					'blacklist' => self::$_options['referer'],
+					'active'    => self::$options['active_referer'],
+					'cron'      => self::$options['cron_referer'],
+					'regexp'    => self::$options['referer_regexp'],
+					'blacklist' => self::$options['referer'],
 				),
 				'target'  => array(
 					'active'    => 0,
@@ -176,9 +176,9 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		}
 
 		// Version older than current major release.
-		if ( self::VERSION_MAIN > self::$_options['version'] ) {
+		if ( self::VERSION_MAIN > self::$options['version'] ) {
 			// Merge default options with current config, assuming only additive changes.
-			$options            = array_merge_recursive( self::default_options(), self::$_options );
+			$options            = array_merge_recursive( self::default_options(), self::$options );
 			$options['version'] = self::VERSION_MAIN;
 			if ( self::$multisite ) {
 				update_site_option( 'statify-blacklist', $options );

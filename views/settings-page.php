@@ -159,7 +159,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				wp_kses( $w, array( 'br' => array() ) ) .
 				'</p></div>';
 		}
-		print '<div class="notice notice-warning"><p>' . esc_html( 'Settings have not been saved yet.', 'statify-blacklist' ) . '</p></div>';
+		print '<div class="notice notice-warning"><p>' . esc_html__( 'Settings have not been saved yet.', 'statify-blacklist' ) . '</p></div>';
 	}
 	if ( isset( $statifyblacklist_post_success ) ) {
 		print '<div class="notice notice-success"><p>' .

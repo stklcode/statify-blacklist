@@ -64,7 +64,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 
 			// Sanitize referer list.
 			$given_referer   = $options['referer']['blacklist'];
-			$invalid_referer = [];
+			$invalid_referer = array();
 			if ( self::MODE_NORMAL === $options['referer']['regexp'] ) {
 				// Sanitize URLs and remove empty inputs.
 				$sanitized_referer = self::sanitize_urls( $given_referer );
@@ -78,7 +78,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 
 			// Sanitize target list.
 			$given_target   = $options['target']['blacklist'];
-			$invalid_target = [];
+			$invalid_target = array();
 			if ( self::MODE_REGEX === $options['target']['regexp'] || self::MODE_REGEX_CI === $options['target']['regexp'] ) {
 				$sanitized_target = $given_target;
 				// Check regular expressions.
@@ -92,22 +92,22 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			$sanitized_ip = self::sanitize_ips( $given_ip );
 
 			// Abort on errors.
-			$errors = [
-				'referer' => [
+			$errors = array(
+				'referer' => array(
 					'sanitized' => $sanitized_referer,
 					'diff'      => array_diff( $given_referer, $sanitized_referer ),
 					'invalid'   => $invalid_referer,
-				],
-				'target'  => [
+				),
+				'target'  => array(
 					'sanitized' => $sanitized_target,
 					'diff'      => array_diff( $given_target, $sanitized_target ),
 					'invalid'   => $invalid_target,
-				],
-				'ip'      => [
+				),
+				'ip'      => array(
 					'sanitized' => $sanitized_ip,
 					'diff'      => array_diff( $given_ip, $sanitized_ip ),
-				],
-			];
+				),
+			);
 			if ( ! empty( $errors['referer']['diff'] )
 				|| ! empty( $errors['referer']['invalid'] )
 				|| ! empty( $errors['target']['diff'] )

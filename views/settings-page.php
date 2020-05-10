@@ -183,7 +183,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				<td>
 					<input type="checkbox" name="statifyblacklist[referer][active]"
 						   id="statify-blacklist_active_referer"
-						   value="1" <?php checked( StatifyBlacklist::$_options['referer']['active'], 1 ); ?>>
+						   value="1" <?php checked( StatifyBlacklist::$options['referer']['active'], 1 ); ?>>
 					<p class="description">
 						<?php esc_html_e( 'Filter at time of tracking, before anything is stored', 'statify-blacklist' ); ?>
 					</p>
@@ -197,7 +197,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</th>
 				<td>
 					<input type="checkbox" name="statifyblacklist[referer][cron]" id="statify-blacklist_cron_referer"
-						   value="1" <?php checked( StatifyBlacklist::$_options['referer']['cron'], 1 ); ?>>
+						   value="1" <?php checked( StatifyBlacklist::$options['referer']['cron'], 1 ); ?>>
 					<p class="description"><?php esc_html_e( 'Clean database periodically in background', 'statify-blacklist' ); ?></p>
 				</td>
 			</tr>
@@ -207,16 +207,16 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</th>
 				<td>
 					<select name="statifyblacklist[referer][regexp]" id="statify-blacklist_referer_regexp">
-						<option value="<?php print esc_attr( StatifyBlacklist::MODE_NORMAL ); ?>" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], StatifyBlacklist::MODE_NORMAL ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_NORMAL ); ?>" <?php selected( StatifyBlacklist::$options['referer']['regexp'], StatifyBlacklist::MODE_NORMAL ); ?>>
 							<?php esc_html_e( 'Domain', 'statify-blacklist' ); ?>
 						</option>
-						<option value="<?php print esc_attr( StatifyBlacklist::MODE_KEYWORD ); ?>" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], StatifyBlacklist::MODE_KEYWORD ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_KEYWORD ); ?>" <?php selected( StatifyBlacklist::$options['referer']['regexp'], StatifyBlacklist::MODE_KEYWORD ); ?>>
 							<?php esc_html_e( 'Keyword', 'statify-blacklist' ); ?>
 						</option>
-						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX ); ?>" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], StatifyBlacklist::MODE_REGEX ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX ); ?>" <?php selected( StatifyBlacklist::$options['referer']['regexp'], StatifyBlacklist::MODE_REGEX ); ?>>
 							<?php esc_html_e( 'RegEx case-sensitive', 'statify-blacklist' ); ?>
 						</option>
-						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX_CI ); ?>" <?php selected( StatifyBlacklist::$_options['referer']['regexp'], StatifyBlacklist::MODE_REGEX_CI ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX_CI ); ?>" <?php selected( StatifyBlacklist::$options['referer']['regexp'], StatifyBlacklist::MODE_REGEX_CI ); ?>>
 							<?php esc_html_e( 'RegEx case-insensitive', 'statify-blacklist' ); ?>
 						</option>
 					</select>
@@ -237,7 +237,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				<td>
 					<textarea cols="40" rows="5" name="statifyblacklist[referer][blacklist]" id="statify-blacklist_referer"><?php
 					if ( empty( $statifyblacklist_update_result['referer'] ) ) {
-						print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['referer']['blacklist'] ) ) );
+						print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$options['referer']['blacklist'] ) ) );
 					} else {
 						print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['referer']['sanitized'] ) ) );
 					}
@@ -263,7 +263,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				<td>
 					<input type="checkbox" name="statifyblacklist[target][active]"
 						   id="statify-blacklist_active_target"
-						   value="1" <?php checked( StatifyBlacklist::$_options['target']['active'], 1 ); ?>>
+						   value="1" <?php checked( StatifyBlacklist::$options['target']['active'], 1 ); ?>>
 					<p class="description">
 						<?php esc_html_e( 'Filter at time of tracking, before anything is stored', 'statify-blacklist' ); ?>
 					</p>
@@ -277,7 +277,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</th>
 				<td>
 					<input type="checkbox" name="statifyblacklist[target][cron]" id="statify-blacklist_cron_target"
-						   value="1" <?php checked( StatifyBlacklist::$_options['target']['cron'], 1 ); ?>>
+						   value="1" <?php checked( StatifyBlacklist::$options['target']['cron'], 1 ); ?>>
 					<p class="description">
 						<?php esc_html_e( 'Clean database periodically in background', 'statify-blacklist' ); ?>
 					</p>
@@ -291,13 +291,13 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</th>
 				<td>
 					<select name="statifyblacklist[target][regexp]" id="statify-blacklist_referer_regexp">
-						<option value="<?php print esc_attr( StatifyBlacklist::MODE_NORMAL ); ?>" <?php selected( StatifyBlacklist::$_options['target']['regexp'], StatifyBlacklist::MODE_NORMAL ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_NORMAL ); ?>" <?php selected( StatifyBlacklist::$options['target']['regexp'], StatifyBlacklist::MODE_NORMAL ); ?>>
 							<?php esc_html_e( 'Exact', 'statify-blacklist' ); ?>
 						</option>
-						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX ); ?>" <?php selected( StatifyBlacklist::$_options['target']['regexp'], StatifyBlacklist::MODE_REGEX ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX ); ?>" <?php selected( StatifyBlacklist::$options['target']['regexp'], StatifyBlacklist::MODE_REGEX ); ?>>
 							<?php esc_html_e( 'RegEx case-sensitive', 'statify-blacklist' ); ?>
 						</option>
-						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX_CI ); ?>" <?php selected( StatifyBlacklist::$_options['target']['regexp'], StatifyBlacklist::MODE_REGEX_CI ); ?>>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX_CI ); ?>" <?php selected( StatifyBlacklist::$options['target']['regexp'], StatifyBlacklist::MODE_REGEX_CI ); ?>>
 							<?php esc_html_e( 'RegEx case-insensitive', 'statify-blacklist' ); ?>
 						</option>
 					</select>
@@ -320,7 +320,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				<td>
 					<textarea cols="40" rows="5" name="statifyblacklist[target][blacklist]" id="statify-blacklist_target"><?php
 					if ( empty( $statifyblacklist_update_result['target'] ) ) {
-						print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$_options['target']['blacklist'] ) ) );
+						print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$options['target']['blacklist'] ) ) );
 					} else {
 						print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['target']['sanitized'] ) ) );
 					}
@@ -346,7 +346,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				</th>
 				<td>
 					<input type="checkbox" name="statifyblacklist[ip][active]" id="statify-blacklist_active_ip"
-						   value="1" <?php checked( StatifyBlacklist::$_options['ip']['active'], 1 ); ?>>
+						   value="1" <?php checked( StatifyBlacklist::$options['ip']['active'], 1 ); ?>>
 					<p class="description">
 						<?php esc_html_e( 'Filter at time of tracking, before anything is stored', 'statify-blacklist' ); ?>
 						<br>
@@ -361,7 +361,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				<td>
 					<textarea cols="40" rows="5" name="statifyblacklist[ip][blacklist]" id="statify-blacklist_ip"><?php
 					if ( empty( $statifyblacklist_update_result['ip'] ) ) {
-						print esc_html( implode( "\r\n", StatifyBlacklist::$_options['ip']['blacklist'] ) );
+						print esc_html( implode( "\r\n", StatifyBlacklist::$options['ip']['blacklist'] ) );
 					} else {
 						print esc_html( implode( "\r\n", $statifyblacklist_update_result['ip']['sanitized'] ) );
 					}

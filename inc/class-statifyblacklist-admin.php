@@ -263,7 +263,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			global $wpdb;
 
 			// Execute filter on database.
-			// @codingStandardsIgnoreStart These statements prouce warnings, rework in future release (TODO).
+			// @codingStandardsIgnoreStart These statements produce warnings, rework in future release (TODO).
 			if ( ! empty( $referer_regexp ) ) {
 				$wpdb->query(
 					$wpdb->prepare(

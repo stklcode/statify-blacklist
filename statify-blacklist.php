@@ -55,7 +55,7 @@ if ( statify_blacklist_compatibility_check() ) {
 	// Autoload.
 	spl_autoload_register( 'statify_blacklist_autoload' );
 } else {
-	// Disbale plugin, if active.
+	// Disable plugin, if active.
 	add_action( 'admin_init', 'statify_blacklist_disable' );
 }
 

@@ -177,7 +177,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			<tr>
 				<th scope="row">
 					<label for="statify-blacklist_active_referer">
-						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
+						<?php esc_html_e( 'Activate live filter', 'statify-blacklist' ); ?>
 					</label>
 				</th>
 				<td>
@@ -257,7 +257,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			<tr>
 				<th scope="row">
 					<label for="statify-blacklist_active_target">
-						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
+						<?php esc_html_e( 'Activate live filter', 'statify-blacklist' ); ?>
 					</label>
 				</th>
 				<td>
@@ -341,7 +341,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			<tr>
 				<th scope="row">
 					<label for="statify-blacklist_active_ip">
-						<?php esc_html_e( 'Activate live fiter', 'statify-blacklist' ); ?>
+						<?php esc_html_e( 'Activate live filter', 'statify-blacklist' ); ?>
 					</label>
 				</th>
 				<td>

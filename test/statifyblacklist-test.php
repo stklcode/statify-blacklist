@@ -365,7 +365,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$this->assertNotFalse( $result );
 
 		/*
-		 * Unfortunately this is nencessary as long as we run PHP 5 tests, because "assertInternalType" is deprecated
+		 * Unfortunately this is necessary as long as we run PHP 5 tests, because "assertInternalType" is deprecated
 		 * as of PHPUnit 8, but "assertIsArray" has been introduces in PHPUnit 7.5 which requires PHP >= 7.1.
 		 */
 		if ( method_exists( $this, 'assertIsArray' ) ) {

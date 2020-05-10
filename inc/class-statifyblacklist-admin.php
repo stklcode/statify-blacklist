@@ -54,10 +54,11 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Update options.
 	 *
+	 * @since 1.1.1
+	 *
 	 * @param  array $options Optional. New options to save.
 	 *
 	 * @return array|bool  array of sanitized array on errors, FALSE if there were none.
-	 * @since 1.1.1
 	 */
 	public static function update_options( $options = null ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
@@ -263,13 +264,14 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			global $wpdb;
 
 			// Execute filter on database.
-			// @codingStandardsIgnoreStart These statements produce warnings, rework in future release (TODO).
+			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- These statements produce warnings, rework in future release (TODO).
 			if ( ! empty( $referer_regexp ) ) {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
 						. ( ( 1 === self::$options['referer']['regexp'] ) ? ' BINARY ' : '' )
-						. 'referrer REGEXP %s', $referer_regexp
+						. 'referrer REGEXP %s',
+						$referer_regexp
 					)
 				);
 			}
@@ -278,11 +280,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
 						. ( ( 1 === self::$options['target']['regexp'] ) ? ' BINARY ' : '' )
-						. 'target REGEXP %s', $target_regexp
+						. 'target REGEXP %s',
+						$target_regexp
 					)
 				);
 			}
-			// @codingStandardsIgnoreEnd
+			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 			// Optimize DB.
 			$wpdb->query( "OPTIMIZE TABLE `$wpdb->statify`" );
@@ -355,7 +358,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			function ( $re ) {
 				// Check of preg_match() fails (warnings suppressed).
 
-				// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
 				return false === @preg_match( StatifyBlacklist::regex( $re, false ), null );
 			}
 		);

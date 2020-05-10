@@ -27,6 +27,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @since 1.0.0
 	 *
 	 * @param bool $network_wide Whether the plugin was activated network-wide or not.
+	 *
 	 * @return void
 	 */
 	public static function install( $network_wide = false ) {
@@ -62,6 +63,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @since 1.4.3
 	 *
 	 * @param integer $site_id Site ID.
+	 *
 	 * @return void
 	 */
 	public static function install_site( $site_id ) {
@@ -88,7 +90,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
 			} elseif ( function_exists( 'wp_get_sites' ) ) {
-				// @codingStandardsIgnoreLine Legacy support for WP < 4.6.
+				// phpcs:ignore WordPress.WP.DeprecatedFunctions.wp_get_sitesFound -- Legacy support for WP < 4.6.
 				$sites = wp_get_sites();
 			} else {
 				return;
@@ -115,6 +117,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @since 1.4.3
 	 *
 	 * @param integer $site_id Site ID.
+	 *
 	 * @return void
 	 */
 	public static function uninstall_site( $site_id ) {

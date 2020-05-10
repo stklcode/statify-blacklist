@@ -319,15 +319,14 @@ class StatifyBlacklist {
 				'REMOTE_ADDR',
 			) as $k
 		) {
-			// @codingStandardsIgnoreStart The globals are checked.
 			if ( isset( $_SERVER[ $k ] ) ) {
+				// phpcs:ignore
 				foreach ( explode( ',', $_SERVER[ $k ] ) as $ip ) {
 					if ( false !== filter_var( $ip, FILTER_VALIDATE_IP ) ) {
 						return $ip;
 					}
 				}
 			}
-			// @codingStandardsIgnoreEnd
 		}
 
 		return false;

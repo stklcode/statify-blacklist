@@ -62,7 +62,7 @@ if ( statify_blacklist_compatibility_check() ) {
 /**
  * Autoloader for StatifyBlacklist classes.
  *
- * @param string $class  Name of the class to load.
+ * @param string $class Name of the class to load.
  *
  * @since 1.0.0
  */

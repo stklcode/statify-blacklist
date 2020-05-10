@@ -226,9 +226,7 @@ class StatifyBlacklist {
 			// Regular Expression filtering since 1.3.0.
 			if ( isset( self::$options['target']['regexp'] ) && 0 < self::$options['target']['regexp'] ) {
 				// Get full referer string.
-				// @codingStandardsIgnoreStart The globals are checked.
-				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '/' );
-				// @codingStandardsIgnoreEnd
+				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL ) : '/' );
 				// Merge given regular expressions into one.
 				$regexp = self::regex(
 					array_keys( self::$options['target']['blacklist'] ),
@@ -241,9 +239,7 @@ class StatifyBlacklist {
 				}
 			} else {
 				// Extract target page.
-				// @codingStandardsIgnoreStart The globals are checked.
-				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '/' );
-				// @codingStandardsIgnoreEnd
+				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL ) : '/' );
 				// Get blacklist.
 				$blacklist = self::$options['target']['blacklist'];
 				// Check blacklist.

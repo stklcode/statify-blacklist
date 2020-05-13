@@ -2,23 +2,20 @@
 <ruleset name="StatifyBlacklist">
 	<description>Derived from WordPress Coding Standard</description>
 
-	<arg value="psvn"/>
+	<arg value="psv"/>
 	<arg name="colors"/>
 
 	<!-- Files to sniff -->
-	<file>inc</file>
 	<file>statify-blacklist.php</file>
+	<file>inc</file>
+	<file>views</file>
 
 	<!-- Compliance with WordPress Coding Standard -->
-	<config name="minimum_supported_wp_version" value="4.4"/>
+	<config name="minimum_supported_wp_version" value="4.7"/>
 	<rule ref="WordPress">
-		<!-- The plugin uses switch_to_blog for multisite handling. -->
-		<exclude name="WordPress.VIP.RestrictedFunctions.switch_to_blog"/>
-		<exclude name="WordPress.VIP.RestrictedFunctions.switch_to_blog_switch_to_blog"/>
-
 		<!-- Direct queries used to clean up statify table. -->
-		<exclude name="WordPress.VIP.DirectDatabaseQuery.DirectQuery"/>
-		<exclude name="WordPress.VIP.DirectDatabaseQuery.NoCaching"/>
+		<exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery"/>
+		<exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching"/>
 	</rule>
 
 	<!-- PHP compatibility level -->

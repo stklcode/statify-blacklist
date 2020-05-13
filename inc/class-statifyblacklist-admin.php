@@ -9,8 +9,10 @@
  * @since     1.0.0
  */
 
-// Quit.
-defined( 'ABSPATH' ) || exit;
+// Quit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Statify Blacklist admin configuration.
@@ -18,37 +20,101 @@ defined( 'ABSPATH' ) || exit;
  * @since   1.0.0
  */
 class StatifyBlacklist_Admin extends StatifyBlacklist {
+
+	/**
+	 * Initialize admin-only components of the plugin.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		// Add actions.
+		add_action( 'wpmu_new_blog', array( 'StatifyBlacklist_System', 'install_site' ) );
+		add_action( 'delete_blog', array( 'StatifyBlacklist_System', 'uninstall_site' ) );
+		add_filter( 'plugin_row_meta', array( 'StatifyBlacklist_Admin', 'plugin_meta_link' ), 10, 2 );
+
+		if ( self::$multisite ) {
+			add_action( 'network_admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
+			add_filter(
+				'network_admin_plugin_action_links',
+				array(
+					'StatifyBlacklist_Admin',
+					'plugin_actions_links',
+				),
+				10,
+				2
+			);
+		} else {
+			add_action( 'admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
+			add_filter( 'plugin_action_links', array( 'StatifyBlacklist_Admin', 'plugin_actions_links' ), 10, 2 );
+		}
+	}
+
 	/**
 	 * Update options.
+	 *
+	 * @since 1.1.1
 	 *
 	 * @param  array $options Optional. New options to save.
 	 *
 	 * @return array|bool  array of sanitized array on errors, FALSE if there were none.
-	 * @since 1.1.1
 	 */
 	public static function update_options( $options = null ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
-			// Sanitize URLs and remove empty inputs.
-			$given_referer = $options['referer']['blacklist'];
-			if ( 0 === $options['referer']['regexp'] ) {
-				$sanitized_referer = self::sanitizeURLs( $given_referer );
+
+			// Sanitize referer list.
+			$given_referer   = $options['referer']['blacklist'];
+			$invalid_referer = array();
+			if ( self::MODE_NORMAL === $options['referer']['regexp'] ) {
+				// Sanitize URLs and remove empty inputs.
+				$sanitized_referer = self::sanitize_urls( $given_referer );
+			} elseif ( self::MODE_REGEX === $options['referer']['regexp'] || self::MODE_REGEX_CI === $options['referer']['regexp'] ) {
+				$sanitized_referer = $given_referer;
+				// Check regular expressions.
+				$invalid_referer = self::sanitize_regex( $given_referer );
 			} else {
 				$sanitized_referer = $given_referer;
 			}
 
-			// Sanitize IPs and Subnets and remove empty inputs.
+			// Sanitize target list.
+			$given_target   = $options['target']['blacklist'];
+			$invalid_target = array();
+			if ( self::MODE_REGEX === $options['target']['regexp'] || self::MODE_REGEX_CI === $options['target']['regexp'] ) {
+				$sanitized_target = $given_target;
+				// Check regular expressions.
+				$invalid_target = self::sanitize_regex( $given_target );
+			} else {
+				$sanitized_target = $given_target;
+			}
+
+			// Sanitize IPs and subnets and remove empty inputs.
 			$given_ip     = $options['ip']['blacklist'];
-			$sanitized_ip = self::sanitizeIPs( $given_ip );
+			$sanitized_ip = self::sanitize_ips( $given_ip );
 
 			// Abort on errors.
-			if ( ! empty( array_diff( array_keys( $given_referer ), array_keys( $sanitized_referer ) ) ) ) {
-				return array(
-					'referer' => $sanitized_referer,
-				);
-			} elseif ( ! empty( array_diff( $given_ip, $sanitized_ip ) ) ) {
-				return array(
-					'ip' => array_diff( $given_ip, $sanitized_ip ),
-				);
+			$errors = array(
+				'referer' => array(
+					'sanitized' => $sanitized_referer,
+					'diff'      => array_diff( $given_referer, $sanitized_referer ),
+					'invalid'   => $invalid_referer,
+				),
+				'target'  => array(
+					'sanitized' => $sanitized_target,
+					'diff'      => array_diff( $given_target, $sanitized_target ),
+					'invalid'   => $invalid_target,
+				),
+				'ip'      => array(
+					'sanitized' => $sanitized_ip,
+					'diff'      => array_diff( $given_ip, $sanitized_ip ),
+				),
+			);
+			if ( ! empty( $errors['referer']['diff'] )
+				|| ! empty( $errors['referer']['invalid'] )
+				|| ! empty( $errors['target']['diff'] )
+				|| ! empty( $errors['target']['invalid'] )
+				|| ! empty( $errors['ip']['diff'] ) ) {
+				return $errors;
 			}
 
 			// Update database on success.
@@ -74,14 +140,24 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		$title = __( 'Statify Blacklist', 'statify-blacklist' );
 		if ( self::$multisite ) {
 			add_submenu_page(
-				'settings.php', $title, $title, 'manage_network_plugins', 'statify-blacklist-settings', array(
+				'settings.php',
+				$title,
+				$title,
+				'manage_network_plugins',
+				'statify-blacklist-settings',
+				array(
 					'StatifyBlacklist_Admin',
 					'settings_page',
 				)
 			);
 		} else {
 			add_submenu_page(
-				'options-general.php', $title, $title, 'manage_options', 'statify-blacklist', array(
+				'options-general.php',
+				$title,
+				$title,
+				'manage_options',
+				'statify-blacklist',
+				array(
 					'StatifyBlacklist_Admin',
 					'settings_page',
 				)
@@ -154,20 +230,20 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		}
 
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			$clean_ref = ( 1 === self::$_options['referer']['cron'] );
-			$clean_trg = ( 1 === self::$_options['target']['cron'] );
+			$clean_ref = ( 1 === self::$options['referer']['cron'] );
+			$clean_trg = ( 1 === self::$options['target']['cron'] );
 		} else {
 			$clean_ref = true;
 			$clean_trg = true;
 		}
 
 		if ( $clean_ref ) {
-			if ( isset( self::$_options['referer']['regexp'] ) && self::$_options['referer']['regexp'] > 0 ) {
+			if ( isset( self::$options['referer']['regexp'] ) && self::$options['referer']['regexp'] > 0 ) {
 				// Merge given regular expressions into one.
-				$referer_regexp = implode( '|', array_keys( self::$_options['referer']['blacklist'] ) );
+				$referer_regexp = implode( '|', array_keys( self::$options['referer']['blacklist'] ) );
 			} else {
 				// Sanitize URLs.
-				$referer = self::sanitizeURLs( self::$_options['referer']['blacklist'] );
+				$referer = self::sanitize_urls( self::$options['referer']['blacklist'] );
 
 				// Build filter regexp.
 				$referer_regexp = str_replace( '.', '\.', implode( '|', array_flip( $referer ) ) );
@@ -175,12 +251,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		}
 
 		if ( $clean_trg ) {
-			if ( isset( self::$_options['target']['regexp'] ) && self::$_options['target']['regexp'] > 0 ) {
+			if ( isset( self::$options['target']['regexp'] ) && self::$options['target']['regexp'] > 0 ) {
 				// Merge given regular expressions into one.
-				$target_regexp = implode( '|', array_keys( self::$_options['target']['blacklist'] ) );
+				$target_regexp = implode( '|', array_keys( self::$options['target']['blacklist'] ) );
 			} else {
 				// Build filter regexp.
-				$target_regexp = str_replace( '.', '\.', implode( '|', array_flip( self::$_options['target']['blacklist'] ) ) );
+				$target_regexp = str_replace( '.', '\.', implode( '|', array_flip( self::$options['target']['blacklist'] ) ) );
 			}
 		}
 
@@ -188,13 +264,14 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			global $wpdb;
 
 			// Execute filter on database.
-			// @codingStandardsIgnoreStart These statements prouce warnings, rework in future release (TODO).
+			// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- These statements produce warnings, rework in future release (TODO).
 			if ( ! empty( $referer_regexp ) ) {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
-						. ( ( 1 === self::$_options['referer']['regexp'] ) ? ' BINARY ' : '' )
-						. 'referrer REGEXP %s', $referer_regexp
+						. ( ( 1 === self::$options['referer']['regexp'] ) ? ' BINARY ' : '' )
+						. 'referrer REGEXP %s',
+						$referer_regexp
 					)
 				);
 			}
@@ -202,12 +279,13 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				$wpdb->query(
 					$wpdb->prepare(
 						"DELETE FROM `$wpdb->statify` WHERE "
-						. ( ( 1 === self::$_options['target']['regexp'] ) ? ' BINARY ' : '' )
-						. 'target REGEXP %s', $target_regexp
+						. ( ( 1 === self::$options['target']['regexp'] ) ? ' BINARY ' : '' )
+						. 'target REGEXP %s',
+						$target_regexp
 					)
 				);
 			}
-			// @codingStandardsIgnoreEnd
+			// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 
 			// Optimize DB.
 			$wpdb->query( "OPTIMIZE TABLE `$wpdb->statify`" );
@@ -227,7 +305,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 *
 	 * @return array  sanitized array.
 	 */
-	private static function sanitizeURLs( $urls ) {
+	private static function sanitize_urls( $urls ) {
 		return array_flip(
 			array_filter(
 				array_map(
@@ -249,15 +327,39 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 *
 	 * @return array  sanitized array.
 	 */
-	private static function sanitizeIPs( $ips ) {
+	private static function sanitize_ips( $ips ) {
 		return array_filter(
-			$ips, function ( $ip ) {
+			$ips,
+			function ( $ip ) {
 				return preg_match(
-					'/^((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])(\/([0-9]|[1-2][0-9]|3[0-2]))?$/', $ip
+					'/^((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])(\/([0-9]|[1-2][0-9]|3[0-2]))?$/',
+					$ip
 				) ||
-					preg_match(
-						'/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/', $ip
-					);
+				preg_match(
+					'/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))(\/([0-9]|[1-9][0-9]|1[0-1][0-9]|12[0-8]))?$/',
+					$ip
+				);
+			}
+		);
+	}
+
+	/**
+	 * Validate regular expressions, i.e. remove duplicates and empty values and validate others.
+	 *
+	 * @since 1.5.0 #13
+	 *
+	 * @param array $expressions Given pre-sanitized array of regular expressions.
+	 *
+	 * @return array Array of invalid expressions.
+	 */
+	private static function sanitize_regex( $expressions ) {
+		return array_filter(
+			array_flip( $expressions ),
+			function ( $re ) {
+				// Check of preg_match() fails (warnings suppressed).
+
+				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+				return false === @preg_match( StatifyBlacklist::regex( $re, false ), null );
 			}
 		);
 	}

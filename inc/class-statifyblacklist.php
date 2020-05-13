@@ -8,8 +8,10 @@
  * @since   1.0.0
  */
 
-// Quit.
-defined( 'ABSPATH' ) || exit;
+// Quit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Statify Blacklist.
@@ -27,12 +29,41 @@ class StatifyBlacklist {
 	const VERSION_MAIN = 1.4;
 
 	/**
+	 * Operation mode "normal".
+	 *
+	 * @var integer MODE_NORMAL
+	 */
+	const MODE_NORMAL = 0;
+
+	/**
+	 * Operation mode "regular expression".
+	 *
+	 * @var integer MODE_REGEX
+	 */
+	const MODE_REGEX = 1;
+
+	/**
+	 * Operation mode "regular expression case insensitive".
+	 *
+	 * @var integer MODE_REGEX_CI
+	 */
+	const MODE_REGEX_CI = 2;
+
+	/**
+	 * Operation mode "keyword".
+	 *
+	 * @since 1.5.0
+	 * @var integer MODE_KEYWORD
+	 */
+	const MODE_KEYWORD = 3;
+
+	/**
 	 * Plugin options.
 	 *
 	 * @since 1.0.0
-	 * @var array $_options
+	 * @var array $options
 	 */
-	public static $_options;
+	public static $options;
 
 	/**
 	 * Multisite Status.
@@ -43,29 +74,11 @@ class StatifyBlacklist {
 	public static $multisite;
 
 	/**
-	 * Class self initialize.
-	 *
-	 * @since 1.0.0
-	 * @deprecated 1.4.2 Replaced by init().
-	 */
-	public static function instance() {
-		self::init();
-	}
-
-	/**
-	 * Class constructor.
-	 *
-	 * @since 1.0.0
-	 * @deprecated 1.4.2 Replaced by init().
-	 */
-	public function __construct() {
-		self::init();
-	}
-
-	/**
 	 * Plugin initialization.
 	 *
 	 * @since 1.4.2
+	 *
+	 * @return void
 	 */
 	public static function init() {
 		// Skip on autosave or AJAX.
@@ -80,41 +93,19 @@ class StatifyBlacklist {
 		self::update_options();
 
 		// Add Filter to statify hook if enabled.
-		if ( 0 !== self::$_options['referer']['active'] || 0 !== self::$_options['target']['active'] || 0 !== self::$_options['ip']['active'] ) {
+		if ( 0 !== self::$options['referer']['active'] || 0 !== self::$options['target']['active'] || 0 !== self::$options['ip']['active'] ) {
 			add_filter( 'statify__skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
 		}
 
 		// Admin only filters.
 		if ( is_admin() ) {
-			// Load Textdomain (only needed for backend.
-			load_plugin_textdomain( 'statifyblacklist', false, STATIFYBLACKLIST_DIR . '/lang/' );
-
-			// Add actions.
-			add_action( 'wpmu_new_blog', array( 'StatifyBlacklist_System', 'install_site' ) );
-			add_action( 'delete_blog', array( 'StatifyBlacklist_System', 'uninstall_site' ) );
-			add_filter( 'plugin_row_meta', array( 'StatifyBlacklist_Admin', 'plugin_meta_link' ), 10, 2 );
-
-			if ( self::$multisite ) {
-				add_action( 'network_admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
-				add_filter(
-					'network_admin_plugin_action_links', array(
-						'StatifyBlacklist_Admin',
-						'plugin_actions_links',
-					),
-					10,
-					2
-				);
-			} else {
-				add_action( 'admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
-				add_filter( 'plugin_action_links', array( 'StatifyBlacklist_Admin', 'plugin_actions_links' ), 10, 2 );
-			}
+			StatifyBlacklist_Admin::init();
 		}
 
 		// CronJob to clean up database.
-		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
-			if ( 1 === self::$_options['referer']['cron'] || 1 === self::$_options['target']['cron'] ) {
-				add_action( 'statify_cleanup', array( 'StatifyBlacklist_Admin', 'cleanup_database' ) );
-			}
+		if ( defined( 'DOING_CRON' ) && DOING_CRON &&
+			( 1 === self::$options['referer']['cron'] || 1 === self::$options['target']['cron'] ) ) {
+			add_action( 'statify_cleanup', array( 'StatifyBlacklist_Admin', 'cleanup_database' ) );
 		}
 	}
 
@@ -125,6 +116,8 @@ class StatifyBlacklist {
 	 * @since 1.2.1 update_options($options = null) Parameter with default value introduced.
 	 *
 	 * @param array $options Optional. New options to save.
+	 *
+	 * @return void
 	 */
 	public static function update_options( $options = null ) {
 		if ( self::$multisite ) {
@@ -132,7 +125,7 @@ class StatifyBlacklist {
 		} else {
 			$o = get_option( 'statify-blacklist' );
 		}
-		self::$_options = wp_parse_args( $o, self::default_options() );
+		self::$options = wp_parse_args( $o, self::default_options() );
 	}
 
 	/**
@@ -173,52 +166,72 @@ class StatifyBlacklist {
 	 */
 	public static function apply_blacklist_filter() {
 		// Referer blacklist.
-		if ( isset( self::$_options['referer']['active'] ) && 0 !== self::$_options['referer']['active'] ) {
-			// Regular Expression filtering since 1.3.0.
-			if ( isset( self::$_options['referer']['regexp'] ) && self::$_options['referer']['regexp'] > 0 ) {
-				// Get full referer string.
-				$referer = wp_get_raw_referer();
-				if ( ! $referer ) {
-					$referer = '';
-				}
-				// Merge given regular expressions into one.
-				$regexp = '/' . implode( '|', array_keys( self::$_options['referer']['blacklist'] ) ) . '/';
-				if ( 2 === self::$_options['referer']['regexp'] ) {
-					$regexp .= 'i';
-				}
+		if ( isset( self::$options['referer']['active'] ) && 0 !== self::$options['referer']['active'] ) {
+			// Determine filter mode.
+			$mode = isset( self::$options['referer']['regexp'] ) ? intval( self::$options['referer']['regexp'] ) : 0;
 
-				// Check blacklist (no return to continue filtering #12).
-				if ( 1 === preg_match( $regexp, $referer ) ) {
-					return true;
-				}
-			} else {
-				// Extract relevant domain parts.
-				$referer = wp_parse_url( wp_get_raw_referer() );
-				$referer = strtolower( ( isset( $referer['host'] ) ? $referer['host'] : '' ) );
+			// Get full referer string.
+			$referer = wp_get_raw_referer();
+			if ( ! $referer ) {
+				$referer = '';
+			}
 
-				// Get blacklist.
-				$blacklist = self::$_options['referer']['blacklist'];
+			switch ( $mode ) {
 
-				// Check blacklist.
-				if ( isset( $blacklist[ $referer ] ) ) {
-					return true;
-				}
+				// Regular Expression filtering since 1.3.0.
+				case self::MODE_REGEX:
+				case self::MODE_REGEX_CI:
+					// Merge given regular expressions into one.
+					$regexp = self::regex(
+						array_keys( self::$options['referer']['blacklist'] ),
+						self::MODE_REGEX_CI === self::$options['referer']['regexp']
+					);
+
+					// Check blacklist (no return to continue filtering #12).
+					if ( 1 === preg_match( $regexp, $referer ) ) {
+						return true;
+					}
+					break;
+
+				// Keyword filter since 1.5.0 (#15).
+				case self::MODE_KEYWORD:
+					// Get blacklist.
+					$blacklist = self::$options['referer']['blacklist'];
+
+					foreach ( array_keys( $blacklist ) as $keyword ) {
+						if ( false !== strpos( strtolower( $referer ), strtolower( $keyword ) ) ) {
+							return true;
+						}
+					}
+					break;
+
+				// Standard domain filter.
+				default:
+					// Extract relevant domain parts.
+					$referer = wp_parse_url( $referer );
+					$referer = strtolower( ( isset( $referer['host'] ) ? $referer['host'] : '' ) );
+
+					// Get blacklist.
+					$blacklist = self::$options['referer']['blacklist'];
+
+					// Check blacklist.
+					if ( isset( $blacklist[ $referer ] ) ) {
+						return true;
+					}
 			}
 		}
 
 		// Target blacklist (since 1.4.0).
-		if ( isset( self::$_options['target']['active'] ) && 0 !== self::$_options['target']['active'] ) {
+		if ( isset( self::$options['target']['active'] ) && 0 !== self::$options['target']['active'] ) {
 			// Regular Expression filtering since 1.3.0.
-			if ( isset( self::$_options['target']['regexp'] ) && 0 < self::$_options['target']['regexp'] ) {
+			if ( isset( self::$options['target']['regexp'] ) && 0 < self::$options['target']['regexp'] ) {
 				// Get full referer string.
-				// @codingStandardsIgnoreStart The globals are checked.
-				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '/' );
-				// @codingStandardsIgnoreEnd
+				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL ) : '/' );
 				// Merge given regular expressions into one.
-				$regexp = '/' . implode( '|', array_keys( self::$_options['target']['blacklist'] ) ) . '/';
-				if ( 2 === self::$_options['target']['regexp'] ) {
-					$regexp .= 'i';
-				}
+				$regexp = self::regex(
+					array_keys( self::$options['target']['blacklist'] ),
+					self::MODE_REGEX_CI === self::$options['target']['regexp']
+				);
 
 				// Check blacklist (no return to continue filtering #12).
 				if ( 1 === preg_match( $regexp, $target ) ) {
@@ -226,11 +239,9 @@ class StatifyBlacklist {
 				}
 			} else {
 				// Extract target page.
-				// @codingStandardsIgnoreStart The globals are checked.
-				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '/' );
-				// @codingStandardsIgnoreEnd
+				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL ) : '/' );
 				// Get blacklist.
-				$blacklist = self::$_options['target']['blacklist'];
+				$blacklist = self::$options['target']['blacklist'];
 				// Check blacklist.
 				if ( isset( $blacklist[ $target ] ) ) {
 					return true;
@@ -239,10 +250,10 @@ class StatifyBlacklist {
 		}
 
 		// IP blacklist (since 1.4.0).
-		if ( isset( self::$_options['ip']['active'] ) && 0 !== self::$_options['ip']['active'] ) {
+		if ( isset( self::$options['ip']['active'] ) && 0 !== self::$options['ip']['active'] ) {
 			$ip = self::get_ip();
 			if ( false !== ( $ip ) ) {
-				foreach ( self::$_options['ip']['blacklist'] as $net ) {
+				foreach ( self::$options['ip']['blacklist'] as $net ) {
 					if ( self::cidr_match( $ip, $net ) ) {
 						return true;
 					}
@@ -252,6 +263,37 @@ class StatifyBlacklist {
 
 		// Skip and continue (return NULL), if all blacklists are inactive.
 		return null;
+	}
+
+	/**
+	 * Preprocess regular expression provided by the user, i.e. add delimiters and optional ci flag.
+	 *
+	 * @param string|array $expression       Original expression string or array of expressions.
+	 * @param string|array $case_insensitive Make expression match case-insensitive.
+	 *
+	 * @return string Preprocessed expression ready for preg_match().
+	 */
+	protected static function regex( $expression, $case_insensitive ) {
+		$res = '/';
+		if ( is_string( $expression ) ) {
+			$res .= str_replace( '/', '\/', $expression );
+		} elseif ( is_array( $expression ) ) {
+			$res .= implode(
+				'|',
+				array_map(
+					function ( $e ) {
+						return str_replace( '/', '\/', $e );
+					},
+					$expression
+				)
+			);
+		}
+		$res .= '/';
+		if ( $case_insensitive ) {
+			$res .= 'i';
+		}
+
+		return $res;
 	}
 
 	/**
@@ -277,15 +319,14 @@ class StatifyBlacklist {
 				'REMOTE_ADDR',
 			) as $k
 		) {
-			// @codingStandardsIgnoreStart The globals are checked.
 			if ( isset( $_SERVER[ $k ] ) ) {
+				// phpcs:ignore
 				foreach ( explode( ',', $_SERVER[ $k ] ) as $ip ) {
 					if ( false !== filter_var( $ip, FILTER_VALIDATE_IP ) ) {
 						return $ip;
 					}
 				}
 			}
-			// @codingStandardsIgnoreEnd
 		}
 
 		return false;
@@ -361,6 +402,6 @@ class StatifyBlacklist {
 			}
 
 			return ( 0 === substr_compare( sprintf( '%032b', ip2long( $ip ) ), sprintf( '%032b', ip2long( $base ) ), 0, $mask ) );
-		} // End if().
+		}
 	}
 }

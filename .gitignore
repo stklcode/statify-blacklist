@@ -5,3 +5,4 @@ composer.lock
 .idea
 tests-clover.xml
 tests-junit.xml
+.phpunit.result.cache

@@ -1,6 +1,6 @@
 <?php
 /**
- * Statify Blacklist: StatifyBlacklist_Syste, class
+ * Statify Blacklist: StatifyBlacklist_System class
  *
  * This file contains the derived class for the plugin's system operations.
  *
@@ -9,8 +9,10 @@
  * @since     1.0.0
  */
 
-// Quit.
-defined( 'ABSPATH' ) || exit;
+// Quit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Statify Blacklist system configuration.
@@ -25,15 +27,14 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @since 1.0.0
 	 *
 	 * @param bool $network_wide Whether the plugin was activated network-wide or not.
+	 *
+	 * @return void
 	 */
 	public static function install( $network_wide = false ) {
 		// Create tables for each site in a network.
 		if ( $network_wide && is_multisite() ) {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
-			} elseif ( function_exists( 'wp_get_sites' ) ) {
-				// @codingStandardsIgnoreLine Legacy support for WP < 4.6.
-				$sites = wp_get_sites();
 			} else {
 				return;
 			}
@@ -62,6 +63,8 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @since 1.4.3
 	 *
 	 * @param integer $site_id Site ID.
+	 *
+	 * @return void
 	 */
 	public static function install_site( $site_id ) {
 		switch_to_blog( (int) $site_id );
@@ -77,6 +80,8 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * Plugin uninstall handler.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @return void
 	 */
 	public static function uninstall() {
 		if ( is_multisite() ) {
@@ -85,7 +90,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			if ( function_exists( 'get_sites' ) ) {
 				$sites = get_sites();
 			} elseif ( function_exists( 'wp_get_sites' ) ) {
-				// @codingStandardsIgnoreLine Legacy support for WP < 4.6.
+				// phpcs:ignore WordPress.WP.DeprecatedFunctions.wp_get_sitesFound -- Legacy support for WP < 4.6.
 				$sites = wp_get_sites();
 			} else {
 				return;
@@ -112,6 +117,8 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * @since 1.4.3
 	 *
 	 * @param integer $site_id Site ID.
+	 *
+	 * @return void
 	 */
 	public static function uninstall_site( $site_id ) {
 		$old = get_current_blog_id();
@@ -124,14 +131,16 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	 * Upgrade plugin options.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @return void
 	 */
 	public static function upgrade() {
 		self::update_options();
 		// Check if config array is not associative (pre 1.2.0).
-		if ( array_keys( self::$_options['referer'] ) === range( 0, count( self::$_options['referer'] ) - 1 ) ) {
+		if ( array_keys( self::$options['referer'] ) === range( 0, count( self::$options['referer'] ) - 1 ) ) {
 			// Flip referer array to make domains keys.
-			$options            = self::$_options;
-			$options['referer'] = array_flip( self::$_options['referer'] );
+			$options            = self::$options;
+			$options['referer'] = array_flip( self::$options['referer'] );
 			if ( self::$multisite ) {
 				update_site_option( 'statify-blacklist', $options );
 			} else {
@@ -140,14 +149,14 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		}
 
 		// Version not set (pre 1.3.0) or older than 1.4.
-		if ( ! isset( self::$_options['version'] ) || self::$_options['version'] < 1.4 ) {
+		if ( ! isset( self::$options['version'] ) || self::$options['version'] < 1.4 ) {
 			// Upgrade options to new schema.
 			$options = array(
 				'referer' => array(
-					'active'    => self::$_options['active_referer'],
-					'cron'      => self::$_options['cron_referer'],
-					'regexp'    => self::$_options['referer_regexp'],
-					'blacklist' => self::$_options['referer'],
+					'active'    => self::$options['active_referer'],
+					'cron'      => self::$options['cron_referer'],
+					'regexp'    => self::$options['referer_regexp'],
+					'blacklist' => self::$options['referer'],
 				),
 				'target'  => array(
 					'active'    => 0,
@@ -170,9 +179,9 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		}
 
 		// Version older than current major release.
-		if ( self::VERSION_MAIN > self::$_options['version'] ) {
+		if ( self::VERSION_MAIN > self::$options['version'] ) {
 			// Merge default options with current config, assuming only additive changes.
-			$options            = array_merge_recursive( self::default_options(), self::$_options );
+			$options            = array_merge_recursive( self::default_options(), self::$options );
 			$options['version'] = self::VERSION_MAIN;
 			if ( self::$multisite ) {
 				update_site_option( 'statify-blacklist', $options );

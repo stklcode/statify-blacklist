@@ -8,7 +8,7 @@
  * @author    Stefan Kalscheuer <stefan@stklcode.de>
  *
  * @package   Statify_Blacklist
- * @version   1.4.4
+ * @version   1.5.0
  */
 
 use Robo\Exception\TaskException;
@@ -19,10 +19,10 @@ use Robo\Tasks;
  */
 class RoboFile extends Tasks {
 	const PROJECT_NAME = 'statify-blacklist';
-	const SVN_URL = 'https://plugins.svn.wordpress.org/statify-blacklist';
+	const SVN_URL      = 'https://plugins.svn.wordpress.org/statify-blacklist';
 
-	const OPT_TARGET = 'target';
-	const OPT_SKIPTEST = 'skipTests';
+	const OPT_TARGET    = 'target';
+	const OPT_SKIPTEST  = 'skipTests';
 	const OPT_SKIPSTYLE = 'skipStyle';
 
 	/**
@@ -134,13 +134,21 @@ class RoboFile extends Tasks {
 	 */
 	private function bundle() {
 		$this->say( 'Bundling resources...' );
-		$this->taskCopyDir( [
-			'inc'   => $this->target_dir . '/' . $this->final_name . '/inc',
-			'views' => $this->target_dir . '/' . $this->final_name . '/views',
-		] )->run();
+		$this->taskCopyDir(
+			[
+				'inc'   => $this->target_dir . '/' . $this->final_name . '/inc',
+				'views' => $this->target_dir . '/' . $this->final_name . '/views',
+			]
+		)->run();
 		$this->_copy( 'statify-blacklist.php', $this->target_dir . '/' . $this->final_name . '/statify-blacklist.php' );
-		$this->_copy( 'README.md', $this->target_dir . '/' . $this->final_name . '/README.md' );
 		$this->_copy( 'LICENSE.md', $this->target_dir . '/' . $this->final_name . '/LICENSE.md' );
+		$this->_copy( 'README.md', $this->target_dir . '/' . $this->final_name . '/README.md' );
+
+		// Remove content before title (e.g. badges) from README file.
+		$this->taskReplaceInFile( $this->target_dir . '/' . $this->final_name . '/README.md' )
+			->regex( '/^[^\\#]*/' )
+			->to( '' )
+			->run();
 	}
 
 	/**

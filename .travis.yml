@@ -1,12 +1,13 @@
 language: php
-dist: trusty
 php:
-  - '5.5'
   - '5.6'
-  - '7.0'
-  - '7.1'
   - '7.2'
+  - '7.3'
+  - '7.4'
 before_script:
   - composer install
 script:
   - composer test-all
+notifications:
+  slack:
+    secure: "ScXTSMO65veI1jA6TBHGDUtvDqEMkqJykaNf7vLLbb7YIxPIHHNBiX/wcjOHVFfQXZCV3qxQrflB7Lbm9qVUsAv861jTO9x/ZkECl5QhRoc0DIznejwZoypx0HJ9tBZFYT6qNUkViXRKZ/ILAiBLU9Yw52WACtQB9hu3FNFZwmKsjipvV8Sne1qEyTkLYLaMphsbC5mtXYdKMHvdt39jsYsk91UWGeYbXQ37LkMbsaG/8YHXF724d5JO7BRGoThw6p5knKAO5fk29V7GfNqg2h+hnGyNIUOcmxujgMDMFLyFCGMZpPoBa+3jyWWgq4PgpQt0F5VZtJFGoXCGcoMQm5IbVfqkSKJ4jYhqiSIrqSebLmzoPHepWX3yn8tpfOiBWjC6K9w9esp6vcZf26rnAJcjcGkA01rMrHRwR+UEMCLvj7q0DR0qzi/AFeED6gtpODzUf93Rp42Tz1iGvWIbgeCtkCWjfPO6XLuNiqGVPEVaT5BDKqlqbijdKxxp7yh1fdt8s0fInWdIsgoWTbU9DC1W4ZiqtQW7oYO+QtFZMaD6kZWpSqJUwB3kW5JL3odAUEm8bLbRWBvK5ZjGdaGqSbOs6f9gAKcf86iQQhwzCJSOgFlLlKFv9smicjPC+BGOxgx32pgseHNPWn6tmEo/ihmmr/NbbqoOusUKX9gQbA4="

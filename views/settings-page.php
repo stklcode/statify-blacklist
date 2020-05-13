@@ -198,7 +198,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				<td>
 					<input type="checkbox" name="statifyblacklist[referer][cron]" id="statify-blacklist_cron_referer"
 						   value="1" <?php checked( StatifyBlacklist::$options['referer']['cron'], 1 ); ?>>
-					<p class="description"><?php esc_html_e( 'Clean database periodically in background', 'statify-blacklist' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Periodically clean up database in background', 'statify-blacklist' ); ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -305,9 +305,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 					<p class="description">
 						<?php esc_html_e( 'Exact', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match only given targets', 'statify-blacklist' ); ?>
 						<br>
-						<?php esc_html_e( 'Keyword', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match every referer that contains one of the keywords', 'statify-blacklist' ); ?>
-						<br>
-						<?php esc_html_e( 'RegEx', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match referer by regular expression', 'statify-blacklist' ); ?>
+						<?php esc_html_e( 'RegEx', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match target by regular expression', 'statify-blacklist' ); ?>
 					</p>
 				</td>
 			</tr>

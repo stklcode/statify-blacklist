@@ -6,9 +6,9 @@
 # Statify Blacklist #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 4.7
-* Tested up to:      5.3
+* Tested up to:      5.4
 * Requires PHP:      5.5
-* Stable tag:        1.4.4
+* Stable tag:        1.5.0
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,7 +90,7 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ## Changelog ##
 
-### 1.5.0 / unreleased ###
+### 1.5.0 / 13.05.2020 ###
 * Minimum required WordPress version is 4.7
 * Removed `load_plugin_textdomain()` and `Domain Path` header
 * Added automatic compatibility check for WP and PHP version (#17)

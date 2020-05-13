@@ -8,7 +8,7 @@
  * @author    Stefan Kalscheuer <stefan@stklcode.de>
  *
  * @package   Statify_Blacklist
- * @version   1.4.4
+ * @version   1.5.0
  */
 
 use Robo\Exception\TaskException;

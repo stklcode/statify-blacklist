@@ -90,6 +90,9 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ## Changelog ##
 
+### 1.5.1 / unreleased ###
+* Fix initialization on AJAX calls for _Statify_ 1.7 compatibility
+
 ### 1.5.0 / 13.05.2020 ###
 * Minimum required WordPress version is 4.7
 * Removed `load_plugin_textdomain()` and `Domain Path` header

@@ -81,8 +81,8 @@ class StatifyBlacklist {
 	 * @return void
 	 */
 	public static function init() {
-		// Skip on autosave or AJAX.
-		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		// Skip on autosave.
+		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
 			return;
 		}
 
@@ -95,6 +95,11 @@ class StatifyBlacklist {
 		// Add Filter to statify hook if enabled.
 		if ( 0 !== self::$options['referer']['active'] || 0 !== self::$options['target']['active'] || 0 !== self::$options['ip']['active'] ) {
 			add_filter( 'statify__skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
+		}
+
+		// Statify uses WP AJAX as of 1.7, so we need to reach this point. But there are no further admin/cron actions.
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
 		}
 
 		// Admin only filters.

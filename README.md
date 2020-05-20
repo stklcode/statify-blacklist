@@ -8,7 +8,7 @@
 * Requires at least: 4.7
 * Tested up to:      5.4
 * Requires PHP:      5.5
-* Stable tag:        1.5.0
+* Stable tag:        1.5.1
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -90,8 +90,8 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ## Changelog ##
 
-### 1.5.1 / unreleased ###
-* Fix initialization on AJAX calls for _Statify_ 1.7 compatibility
+### 1.5.1 / 20.05.2020 ###
+* Fix initialization on AJAX calls for _Statify_ 1.7 compatibility (#22)
 
 ### 1.5.0 / 13.05.2020 ###
 * Minimum required WordPress version is 4.7

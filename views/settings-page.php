@@ -21,7 +21,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 
 	// Check user capabilities.
 	if ( ! current_user_can( 'manage_options' ) ) {
-		die( esc_html__( 'Are you sure you want to do this?' ) );
+		die( esc_html__( 'Are you sure you want to do this?', 'statify-blacklist' ) );
 	}
 
 	if ( ! empty( $_POST['cleanUp'] ) ) {
@@ -375,7 +375,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 		</table>
 
 		<p class="submit">
-			<input class="button-primary" type="submit" name="submit" value="<?php esc_html_e( 'Save Changes' ); ?>">
+			<input class="button-primary" type="submit" name="submit" value="<?php esc_html_e( 'Save Changes', 'statify-blacklist' ); ?>">
 			<hr>
 			<input class="button-secondary" type="submit" name="cleanUp"
 				   value="<?php esc_html_e( 'CleanUp Database', 'statify-blacklist' ); ?>"

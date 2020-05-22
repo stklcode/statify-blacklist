@@ -18,6 +18,12 @@
 		<exclude name="WordPress.DB.DirectDatabaseQuery.NoCaching"/>
 	</rule>
 
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="statify-blacklist"/>
+		</properties>
+	</rule>
+
 	<!-- PHP compatibility level -->
 	<config name="testVersion" value="5.5-"/>
 	<rule ref="PHPCompatibility"/>

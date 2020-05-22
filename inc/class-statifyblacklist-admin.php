@@ -209,7 +209,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 		if ( STATIFYBLACKLIST_BASE === $file && current_user_can( 'manage_options' ) ) {
 			array_unshift(
 				$links,
-				sprintf( '<a href="%s">%s</a>', esc_attr( add_query_arg( 'page', 'statify-blacklist', $base ) ), __( 'Settings' ) )
+				sprintf( '<a href="%s">%s</a>', esc_attr( add_query_arg( 'page', 'statify-blacklist', $base ) ), __( 'Settings', 'statify-blacklist' ) )
 			);
 		}
 
@@ -226,7 +226,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	public static function cleanup_database() {
 		// Check user permissions.
 		if ( ! current_user_can( 'manage_options' ) && ! ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
-			die( esc_html__( 'Are you sure you want to do this?' ) );
+			die( esc_html__( 'Are you sure you want to do this?', 'statify-blacklist' ) );
 		}
 
 		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {

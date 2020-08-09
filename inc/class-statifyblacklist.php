@@ -1,6 +1,6 @@
 <?php
 /**
- * Statify Blacklist: StatifyBlacklist class
+ * Statify Filter: StatifyBlacklist class
  *
  * This file contains the plugin's base class.
  *
@@ -14,9 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Statify Blacklist.
- *
- * @since   1.0.0
+ * Statify Filter.
  */
 class StatifyBlacklist {
 
@@ -163,14 +161,14 @@ class StatifyBlacklist {
 	}
 
 	/**
-	 * Apply the blacklist filter if active
+	 * Apply the filter if active
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return bool TRUE if referer matches blacklist.
+	 * @return bool TRUE if referer matches filter.
 	 */
 	public static function apply_blacklist_filter() {
-		// Referer blacklist.
+		// Referer filter.
 		if ( isset( self::$options['referer']['active'] ) && 0 !== self::$options['referer']['active'] ) {
 			// Determine filter mode.
 			$mode = isset( self::$options['referer']['regexp'] ) ? intval( self::$options['referer']['regexp'] ) : 0;
@@ -192,7 +190,7 @@ class StatifyBlacklist {
 						self::MODE_REGEX_CI === self::$options['referer']['regexp']
 					);
 
-					// Check blacklist (no return to continue filtering #12).
+					// Check filter (no return to continue filtering #12).
 					if ( 1 === preg_match( $regexp, $referer ) ) {
 						return true;
 					}
@@ -200,7 +198,7 @@ class StatifyBlacklist {
 
 				// Keyword filter since 1.5.0 (#15).
 				case self::MODE_KEYWORD:
-					// Get blacklist.
+					// Get filter.
 					$blacklist = self::$options['referer']['blacklist'];
 
 					foreach ( array_keys( $blacklist ) as $keyword ) {
@@ -216,17 +214,17 @@ class StatifyBlacklist {
 					$referer = wp_parse_url( $referer );
 					$referer = strtolower( ( isset( $referer['host'] ) ? $referer['host'] : '' ) );
 
-					// Get blacklist.
+					// Get filter.
 					$blacklist = self::$options['referer']['blacklist'];
 
-					// Check blacklist.
+					// Check filter.
 					if ( isset( $blacklist[ $referer ] ) ) {
 						return true;
 					}
 			}
 		}
 
-		// Target blacklist (since 1.4.0).
+		// Target filter (since 1.4.0).
 		if ( isset( self::$options['target']['active'] ) && 0 !== self::$options['target']['active'] ) {
 			// Regular Expression filtering since 1.3.0.
 			if ( isset( self::$options['target']['regexp'] ) && 0 < self::$options['target']['regexp'] ) {
@@ -238,23 +236,23 @@ class StatifyBlacklist {
 					self::MODE_REGEX_CI === self::$options['target']['regexp']
 				);
 
-				// Check blacklist (no return to continue filtering #12).
+				// Check filter (no return to continue filtering #12).
 				if ( 1 === preg_match( $regexp, $target ) ) {
 					return true;
 				}
 			} else {
 				// Extract target page.
 				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL ) : '/' );
-				// Get blacklist.
+				// Get filter.
 				$blacklist = self::$options['target']['blacklist'];
-				// Check blacklist.
+				// Check filter.
 				if ( isset( $blacklist[ $target ] ) ) {
 					return true;
 				}
 			}
 		}
 
-		// IP blacklist (since 1.4.0).
+		// IP filter (since 1.4.0).
 		if ( isset( self::$options['ip']['active'] ) && 0 !== self::$options['ip']['active'] ) {
 			$ip = self::get_ip();
 			if ( false !== ( $ip ) ) {
@@ -266,7 +264,7 @@ class StatifyBlacklist {
 			}
 		}
 
-		// Skip and continue (return NULL), if all blacklists are inactive.
+		// Skip and continue (return NULL), if all filters are inactive.
 		return null;
 	}
 

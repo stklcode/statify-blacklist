@@ -3,7 +3,7 @@
 [![Packagist Version](https://img.shields.io/packagist/v/stklcode/statify-blacklist.svg)](https://packagist.org/packages/stklcode/statify-blacklist)
 [![License](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://github.com/stklcode/statify-blacklist/blob/master/LICENSE.md)
 
-# Statify Blacklist #
+# Statify Filter #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 4.7
 * Tested up to:      5.5
@@ -13,19 +13,19 @@
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
 ## Description ##
-A blacklist extension for the famous [Statify](https://wordpress.org/plugins/statify/) Wordpress plugin.
+A filter extension for the famous [Statify](https://wordpress.org/plugins/statify/) Wordpress plugin.
 
-This plugin adds a customizable blacklist to Statify to allow blocking of referer spam or internal interactions.
+This plugin adds customizable filters to Statify to allow blocking of referer spam or internal interactions.
 
 ### Features ##
 
-#### Referer Blacklist ####
+#### Referer Filter ####
 Add a list of domains (for simplicity only second-level, e.g. _example.com_ which blocks _everything.example.com_).
 
-#### Target Blacklist ####
+#### Target Filter ####
 Add a list of target pages (e.g. _/test/page/_, _/?page_id=123_) that will be excluded from tracking.
 
-#### IP Blacklist ####
+#### IP Filter ####
 Add a list of IP addresses or subnets (e.g. _192.0.2.123_, _198.51.100.0/24_, _2001:db8:a0b:12f0::/64_).
 
 #### CleanUp Database ####
@@ -47,7 +47,7 @@ The plugin is capable of handling multisite installations.
 ## Installation ##
 * If you don’t know how to install a plugin for WordPress, [here’s how](https://wordpress.org/support/article/managing-plugins/#installing-plugins).
 * Make sure _Statify_ plugin is installed and active
-* Goto _Settings_ -> _Statify Blacklist_ to configure the plugin
+* Goto _Settings_ -> _Statify Filter_ to configure the plugin
 
 ### Requirements ###
 * PHP 5.5 or above
@@ -57,9 +57,9 @@ The plugin is capable of handling multisite installations.
 ## Frequently Asked Questions ##
 
 ### What is blocked by default? ###
-Nothing. By default, all blacklists are empty and disabled. They can and have to be filled by the blog administrator.
+Nothing. By default, all filters are empty and disabled. They can and have to be filled by the blog administrator.
 
-A default blacklist is not provided, as the plugin itself is totally neutral. If you want to filter out referer spam, 
+A default filter is not provided, as the plugin itself is totally neutral. If you want to filter out referer spam, 
 visitors from search engines, just "false" referrers from 301 redirects or you own IP address used for testing only depends on you.
 
 ### Does the filter effect user experience? ###
@@ -77,16 +77,16 @@ Yes, it is. Just select regular expressions (case-sensitive or insensitive) as m
 
 ### Why is IP filtering only available as live filter? ###
 As you might know, _Statify_ does not store any personal information, including IP addresses in the database.
-Because of this, an IP blacklist can only be applied while processing the request and not afterwards.
+Because of this, an IP filter can only be applied while processing the request and not afterwards.
 
 ### Can whole IP subnet be blocked? ###
-Yes. The plugin features subnet blacklists using CIDR notation.
-For example _198.51.100.0/24_ blacklists all sources from _198.51.100.1_ to _198.51.100.254_.
+Yes. The plugin features subnet filters using CIDR notation.
+For example _198.51.100.0/24_ filters all sources from _198.51.100.1_ to _198.51.100.254_.
 Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 
 ## Screenshots ##
-1. Statify Blacklist settings page
+1. Statify Filter settings page
 
 ## Changelog ##
 

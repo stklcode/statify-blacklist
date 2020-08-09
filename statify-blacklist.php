@@ -1,33 +1,33 @@
 <?php
 /**
- * Statify Blacklist
+ * Statify Filter
  *
  * @package     PluginPackage
  * @author      Stefan Kalscheuer <stefan@stklcode.de>
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
- * Plugin Name: Statify Blacklist
+ * Plugin Name: Statify Filter
  * Plugin URI:  https://wordpress.org/plugins/statify-blacklist/
- * Description: Extension for the Statify plugin to add a customizable blacklists.
- * Version:     1.5.2
+ * Description: Extension for the Statify plugin to add customizable filters. (formerly "Statify Blacklist)
+ * Version:     1.6.0-alpha
  * Author:      Stefan Kalscheuer (@stklcode)
  * Author URI:  https://www.stklcode.de
  * Text Domain: statify-blacklist
  * License:     GPLv2 or later
  *
- * Statify Blacklist is free software: you can redistribute it and/or modify
+ * Statify Filter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 2 of the License, or
  * any later version.
  *
- * Statify Blacklist is distributed in the hope that it will be useful,
+ * Statify Filter is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Statify Blacklist. If not, see https://www.gnu.org/licenses/gpl-2.0.html.
+ * along with Statify Filter. If not, see https://www.gnu.org/licenses/gpl-2.0.html.
  */
 
 // Quit if accessed directly.
@@ -124,7 +124,7 @@ function statify_blacklist_disabled_notice() {
 	echo '<div class="notice notice-error is-dismissible"><p><strong>';
 	printf(
 		/* translators: minimum version numbers for WordPress and PHP inserted at placeholders */
-		esc_html__( 'Statify Blacklist requires at least WordPress %1$s and PHP %2$s.', 'statify-blacklist' ),
+		esc_html__( 'Statify Filter requires at least WordPress %1$s and PHP %2$s.', 'statify-blacklist' ),
 		'4.7',
 		'5.5'
 	);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Statify Blacklist: StatifyBlacklist_System class
+ * Statify Filter: StatifyBlacklist_System class
  *
  * This file contains the derived class for the plugin's system operations.
  *
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Statify Blacklist system configuration.
+ * Statify Filter system configuration.
  *
  * @since   1.0.0
  */

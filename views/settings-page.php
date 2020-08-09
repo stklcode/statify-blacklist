@@ -1,6 +1,6 @@
 <?php
 /**
- * Statify Blacklist: Settings View
+ * Statify Filter: Settings View
  *
  * This file contains the dynamic HTML skeleton for the plugin's settings page.
  *
@@ -146,7 +146,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 ?>
 
 <div class="wrap">
-	<h1><?php esc_html_e( 'Statify Blacklist', 'statify-blacklist' ); ?></h1>
+	<h1><?php esc_html_e( 'Statify Filter', 'statify-blacklist' ); ?></h1>
 	<?php
 	if ( is_plugin_inactive( 'statify/statify.php' ) ) {
 		print '<div class="notice notice-warning"><p>';
@@ -170,7 +170,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 	<form action="" method="post" id="statify-blacklist-settings">
 		<?php wp_nonce_field( 'statify-blacklist-settings' ); ?>
 
-		<h2><?php esc_html_e( 'Referer blacklist', 'statify-blacklist' ); ?></h2>
+		<h2><?php esc_html_e( 'Referer filter', 'statify-blacklist' ); ?></h2>
 
 		<table class="form-table">
 			<tbody>
@@ -232,7 +232,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			</tr>
 			<tr>
 				<th scope="row">
-					<label for="statify-blacklist_referer"><?php esc_html_e( 'Referer blacklist', 'statify-blacklist' ); ?></label>
+					<label for="statify-blacklist_referer"><?php esc_html_e( 'Referer filter', 'statify-blacklist' ); ?></label>
 				</th>
 				<td>
 					<textarea cols="40" rows="5" name="statifyblacklist[referer][blacklist]" id="statify-blacklist_referer"><?php
@@ -250,7 +250,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			</tbody>
 		</table>
 
-		<h2><?php esc_html_e( 'Target blacklist', 'statify-blacklist' ); ?></h2>
+		<h2><?php esc_html_e( 'Target filter', 'statify-blacklist' ); ?></h2>
 
 		<table class="form-table">
 			<tbody>
@@ -312,7 +312,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			<tr>
 				<th scope="row">
 					<label for="statify-blacklist_target">
-						<?php esc_html_e( 'Target blacklist', 'statify-blacklist' ); ?>
+						<?php esc_html_e( 'Target filter', 'statify-blacklist' ); ?>
 					</label>
 				</th>
 				<td>
@@ -332,7 +332,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			</tbody>
 		</table>
 
-		<h2><?php esc_html_e( 'IP blacklist', 'statify-blacklist' ); ?></h2>
+		<h2><?php esc_html_e( 'IP filter', 'statify-blacklist' ); ?></h2>
 
 		<table class="form-table">
 			<tbody>
@@ -354,7 +354,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			</tr>
 			<tr>
 				<th scope="row">
-					<label for="statify-blacklist_ip"><?php esc_html_e( 'IP blacklist', 'statify-blacklist' ); ?></label>:
+					<label for="statify-blacklist_ip"><?php esc_html_e( 'IP filter', 'statify-blacklist' ); ?></label>:
 				</th>
 				<td>
 					<textarea cols="40" rows="5" name="statifyblacklist[ip][blacklist]" id="statify-blacklist_ip"><?php

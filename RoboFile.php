@@ -1,6 +1,6 @@
 <?php
 /**
- * Statify Blacklist Robo build script.
+ * Statify Filter Robo build script.
  *
  * This file contains the Robo tasks for building a distributable plugin package.
  * Should not be included in final package.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Statify Blacklist: Unit Test
+ * Statify Filter: Unit Test
  *
  * This is a PHPunit test class for the plugin's functionality
  *
@@ -47,7 +47,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 * @return void
 	 */
 	public function test_referer_filter() {
-		// Prepare Options: 2 blacklisted domains, disabled.
+		// Prepare Options: 2 filtered domains, disabled.
 		StatifyBlacklist::$options = array(
 			'referer' => array(
 				'active'    => 0,
@@ -77,13 +77,13 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		// No referer.
 		unset( $_SERVER['HTTP_REFERER'] );
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		// Non-blacklisted referer.
+		// Non-filtered referer.
 		$_SERVER['HTTP_REFERER'] = 'http://example.org';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		// Blacklisted referer.
+		// Filtered referer.
 		$_SERVER['HTTP_REFERER'] = 'http://example.com';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		// Blacklisted referer with path.
+		// Filtered referer with path.
 		$_SERVER['HTTP_REFERER'] = 'http://example.net/foo/bar.html';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 
@@ -139,13 +139,13 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		// No referer.
 		unset( $_SERVER['HTTP_REFERER'] );
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		// Non-blacklisted referer.
+		// Non-filtered referer.
 		$_SERVER['HTTP_REFERER'] = 'http://not.evil';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		// Blacklisted referer.
+		// Filtered referer.
 		$_SERVER['HTTP_REFERER'] = 'http://example.com';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
-		// Blacklisted referer with path.
+		// Filtered referer with path.
 		$_SERVER['HTTP_REFERER'] = 'http://foobar.net/test/me';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		// Matching both.
@@ -196,13 +196,13 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		// No referer.
 		unset( $_SERVER['HTTP_REFERER'] );
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		// Non-blacklisted referer.
+		// Non-filtered referer.
 		$_SERVER['HTTP_REFERER'] = 'http://not.evil';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		// Blacklisted referer.
+		// Filtered referer.
 		$_SERVER['HTTP_REFERER'] = 'http://example.com';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
-		// Blacklisted referer with path.
+		// Filtered referer with path.
 		$_SERVER['HTTP_REFERER'] = 'http://foobar.net/test/me';
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		// Matching both.
@@ -405,7 +405,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 * @return void
 	 */
 	public function test_ip_filter() {
-		// Prepare Options: 2 blacklisted IPs, disabled.
+		// Prepare Options: 2 filtered IPs, disabled.
 		StatifyBlacklist::$options = array(
 			'referer' => array(
 				'active'    => 0,
@@ -477,7 +477,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 * @return void
 	 */
 	public function test_target_filter() {
-		// Prepare Options: 2 blacklisted domains, disabled.
+		// Prepare Options: 2 filtered domains, disabled.
 		StatifyBlacklist::$options = array(
 			'referer' => array(
 				'active'    => 0,
@@ -507,14 +507,14 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		// Empty target.
 		unset( $_SERVER['REQUEST_URI'] );
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		// Non-blacklisted targets.
+		// Non-filtered targets.
 		$_SERVER['REQUEST_URI'] = '';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		$_SERVER['REQUEST_URI'] = '/';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		$_SERVER['REQUEST_URI'] = '/?page_id=1';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
-		// Blacklisted referer.
+		// Filtered referer.
 		$_SERVER['REQUEST_URI'] = '/excluded/page/';
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		$_SERVER['REQUEST_URI'] = '/?page_id=3';

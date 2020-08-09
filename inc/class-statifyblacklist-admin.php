@@ -1,6 +1,6 @@
 <?php
 /**
- * Statify Blacklist: StatifyBlacklist_Admin class
+ * Statify Filter: StatifyBlacklist_Admin class
  *
  * This file contains the derived class for the plugin's administration features.
  *
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Statify Blacklist admin configuration.
+ * Statify Filter admin configuration.
  *
  * @since   1.0.0
  */
@@ -137,7 +137,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 * @since 1.0.0
 	 */
 	public static function add_menu_page() {
-		$title = __( 'Statify Blacklist', 'statify-blacklist' );
+		$title = __( 'Statify Filter', 'statify-blacklist' );
 		if ( self::$multisite ) {
 			add_submenu_page(
 				'settings.php',

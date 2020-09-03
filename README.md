@@ -6,9 +6,9 @@
 # Statify Blacklist #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 4.7
-* Tested up to:      5.4
+* Tested up to:      5.5
 * Requires PHP:      5.5
-* Stable tag:        1.5.1
+* Stable tag:        1.5.2
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,6 +89,10 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 1. Statify Blacklist settings page
 
 ## Changelog ##
+
+### 1.5.2 / 03.09.2020 ###
+* Minor translation updates
+* Declared compatibility with WordPress 5.5
 
 ### 1.5.1 / 20.05.2020 ###
 * Fix initialization on AJAX calls for _Statify_ 1.7 compatibility (#22)

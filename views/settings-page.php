@@ -290,7 +290,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 					</label>
 				</th>
 				<td>
-					<select name="statifyblacklist[target][regexp]" id="statify-blacklist_referer_regexp">
+					<select name="statifyblacklist[target][regexp]" id="statify-blacklist_target_regexp">
 						<option value="<?php print esc_attr( StatifyBlacklist::MODE_NORMAL ); ?>" <?php selected( StatifyBlacklist::$options['target']['regexp'], StatifyBlacklist::MODE_NORMAL ); ?>>
 							<?php esc_html_e( 'Exact', 'statify-blacklist' ); ?>
 						</option>
@@ -325,7 +325,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 					?></textarea>
 
 					<p class="description">
-						(<?php esc_html_e( 'Add one target URL each line, e.g.', 'statify-blacklist' ); ?> /, /test/page/, /?page_id=123)
+						<?php esc_html_e( 'Add one target URL each line, e.g.', 'statify-blacklist' ); ?> /, /test/page/, /?page_id=123
 					</p>
 				</td>
 			</tr>

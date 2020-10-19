@@ -90,6 +90,9 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ## Changelog ##
 
+### 1.6.0 / unreleased ###
+* Minor accessibility fixes on settings page
+
 ### 1.5.2 / 03.09.2020 ###
 * Minor translation updates
 * Declared compatibility with WordPress 5.5

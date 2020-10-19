@@ -88,6 +88,26 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			);
 		}
 
+		// TODO: Extract user agent array.
+		if ( isset( $_POST['statifyblacklist']['ua']['blacklist'] ) ) {
+			$ua_string = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['ua']['blacklist'] ) );
+		}
+		if ( empty( trim( $ua_string ) ) ) {
+			$ua = array();
+		} else {
+			$ua = array_filter(
+				array_map(
+					function ( $a ) {
+						return trim( $a );
+					},
+					explode( "\r\n", str_replace( '\\\\', '\\', $ua_string ) )
+				),
+				function ( $a ) {
+					return ! empty( $a );
+				}
+			);
+		}
+
 		// Update options (data will be sanitized).
 		$statifyblacklist_update_result = StatifyBlacklist_Admin::update_options(
 			array(
@@ -113,6 +133,13 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 					'active'    => isset( $_POST['statifyblacklist']['ip']['active'] )
 						? (int) $_POST['statifyblacklist']['ip']['active'] : 0,
 					'blacklist' => $ip,
+				),
+				'ua'      => array(
+					'active'    => isset( $_POST['statifyblacklist']['ua']['active'] )
+						? (int) $_POST['statifyblacklist']['ua']['active'] : 0,
+					'regexp'    => isset( $_POST['statifyblacklist']['ua']['regexp'] )
+						? (int) $_POST['statifyblacklist']['ua']['regexp'] : 0,
+					'blacklist' => $ua,
 				),
 				'version' => StatifyBlacklist::VERSION_MAIN,
 			)
@@ -368,6 +395,77 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 					<p class="description">
 						<?php esc_html_e( 'Add one IP address or range per line, e.g.', 'statify-blacklist' ); ?>
 						127.0.0.1, 192.168.123.0/24, 2001:db8:a0b:12f0::1/64
+					</p>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h2><?php esc_html_e( 'User agent filter', 'statify-blacklist' ); ?></h2>
+
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_active_ua">
+						<?php esc_html_e( 'Activate live filter', 'statify-blacklist' ); ?>
+					</label>
+				</th>
+				<td>
+					<input type="checkbox" name="statifyblacklist[ua][active]" id="statify-blacklist_active_ua"
+						   value="1" <?php checked( StatifyBlacklist::$options['ua']['active'], 1 ); ?>>
+					<p class="description">
+						<?php esc_html_e( 'Filter at time of tracking, before anything is stored', 'statify-blacklist' ); ?>
+						<br>
+						<?php esc_html_e( 'Cron execution is not possible for user agent filter, because the user agent is stored.', 'statify-blacklist' ); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_ua_regexp"><?php esc_html_e( 'Matching method', 'statify-blacklist' ); ?></label>
+				</th>
+				<td>
+					<select name="statifyblacklist[ua][regexp]" id="statify-blacklist_ua_regexp">
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_NORMAL ); ?>" <?php selected( StatifyBlacklist::$options['ua']['regexp'], StatifyBlacklist::MODE_NORMAL ); ?>>
+							<?php esc_html_e( 'Exact', 'statify-blacklist' ); ?>
+						</option>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_KEYWORD ); ?>" <?php selected( StatifyBlacklist::$options['ua']['regexp'], StatifyBlacklist::MODE_KEYWORD ); ?>>
+							<?php esc_html_e( 'Keyword', 'statify-blacklist' ); ?>
+						</option>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX ); ?>" <?php selected( StatifyBlacklist::$options['ua']['regexp'], StatifyBlacklist::MODE_REGEX ); ?>>
+							<?php esc_html_e( 'RegEx case-sensitive', 'statify-blacklist' ); ?>
+						</option>
+						<option value="<?php print esc_attr( StatifyBlacklist::MODE_REGEX_CI ); ?>" <?php selected( StatifyBlacklist::$options['ua']['regexp'], StatifyBlacklist::MODE_REGEX_CI ); ?>>
+							<?php esc_html_e( 'RegEx case-insensitive', 'statify-blacklist' ); ?>
+						</option>
+					</select>
+
+					<p class="description">
+						<?php esc_html_e( 'Exact', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match only given user agents', 'statify-blacklist' ); ?>
+						<br>
+						<?php esc_html_e( 'Keyword', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match every referer that contains one of the keywords', 'statify-blacklist' ); ?>
+						<br>
+						<?php esc_html_e( 'RegEx', 'statify-blacklist' ); ?> - <?php esc_html_e( 'Match user agent by regular expression', 'statify-blacklist' ); ?>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">
+					<label for="statify-blacklist_ua"><?php esc_html_e( 'User agent filter', 'statify-blacklist' ); ?></label>:
+				</th>
+				<td>
+					<textarea cols="40" rows="5" name="statifyblacklist[ua][blacklist]" id="statify-blacklist_ua"><?php
+					if ( empty( $statifyblacklist_update_result['ua'] ) ) {
+						print esc_html( implode( "\r\n", StatifyBlacklist::$options['ua']['blacklist'] ) );
+					} else {
+						print esc_html( implode( "\r\n", $statifyblacklist_update_result['ua']['sanitized'] ) );
+					}
+					?></textarea>
+
+					<p class="description">
+						<?php esc_html_e( 'Add one user agent string per line, e.g.', 'statify-blacklist' ); ?>
+						MyBot/1.23
 					</p>
 				</td>
 			</tr>

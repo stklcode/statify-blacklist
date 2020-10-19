@@ -91,7 +91,10 @@ class StatifyBlacklist {
 		self::update_options();
 
 		// Add Filter to statify hook if enabled.
-		if ( 0 !== self::$options['referer']['active'] || 0 !== self::$options['target']['active'] || 0 !== self::$options['ip']['active'] ) {
+		if ( 0 !== self::$options['referer']['active'] ||
+			0 !== self::$options['target']['active'] ||
+			0 !== self::$options['ip']['active'] ||
+			0 !== self::$options['ua']['active'] ) {
 			add_filter( 'statify__skip_tracking', array( 'StatifyBlacklist', 'apply_blacklist_filter' ) );
 		}
 
@@ -154,6 +157,11 @@ class StatifyBlacklist {
 			),
 			'ip'      => array(
 				'active'    => 0,
+				'blacklist' => array(),
+			),
+			'ua'      => array(
+				'active'    => 0,
+				'regexp'    => 0,
 				'blacklist' => array(),
 			),
 			'version' => self::VERSION_MAIN,
@@ -259,6 +267,59 @@ class StatifyBlacklist {
 				foreach ( self::$options['ip']['blacklist'] as $net ) {
 					if ( self::cidr_match( $ip, $net ) ) {
 						return true;
+					}
+				}
+			}
+		}
+
+		// User agent filter (since 1.6).
+		if ( isset( self::$options['ua']['active'] ) && 0 !== self::$options['ua']['active'] ) {
+			// Determine filter mode.
+			$mode = isset( self::$options['ua']['regexp'] ) ? intval( self::$options['ua']['regexp'] ) : 0;
+
+			// Get full user agent string.
+			if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
+				$user_agent = filter_var( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ), FILTER_SANITIZE_STRING );
+
+				if ( $user_agent ) {
+					switch ( $mode ) {
+
+						// Regular Expression filtering since 1.3.0.
+						case self::MODE_REGEX:
+						case self::MODE_REGEX_CI:
+							// Merge given regular expressions into one.
+							$regexp = self::regex(
+								array_keys( self::$options['ua']['blacklist'] ),
+								self::MODE_REGEX_CI === self::$options['ua']['regexp']
+							);
+
+							// Check filter (no return to continue filtering #12).
+							if ( 1 === preg_match( $regexp, $user_agent ) ) {
+								return true;
+							}
+							break;
+
+						// Keyword filter since 1.5.0 (#15).
+						case self::MODE_KEYWORD:
+							// Get filter.
+							$blacklist = self::$options['ua']['blacklist'];
+
+							foreach ( array_keys( $blacklist ) as $keyword ) {
+								if ( false !== strpos( strtolower( $user_agent ), strtolower( $keyword ) ) ) {
+									return true;
+								}
+							}
+							break;
+
+						// Standard exact filter.
+						default:
+							// Get filter.
+							$blacklist = self::$options['ua']['blacklist'];
+
+							// Check filter.
+							if ( isset( $blacklist[ $user_agent ] ) ) {
+								return true;
+							}
 					}
 				}
 			}

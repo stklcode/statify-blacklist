@@ -68,6 +68,11 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 				'active'    => 0,
 				'blacklist' => array(),
 			),
+			'ua'      => array(
+				'active'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
+				'blacklist' => array(),
+			),
 			'version' => StatifyBlacklist::VERSION_MAIN,
 		);
 
@@ -130,6 +135,11 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 				'active'    => 0,
 				'blacklist' => array(),
 			),
+			'ua'      => array(
+				'active'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
+				'blacklist' => array(),
+			),
 			'version' => StatifyBlacklist::VERSION_MAIN,
 		);
 
@@ -185,6 +195,11 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 			),
 			'ip'      => array(
 				'active'    => 0,
+				'blacklist' => array(),
+			),
+			'ua'      => array(
+				'active'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
 				'blacklist' => array(),
 			),
 			'version' => StatifyBlacklist::VERSION_MAIN,
@@ -426,6 +441,11 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 					'2001:db8:a0b:12f0::1',
 				),
 			),
+			'ua'      => array(
+				'active'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
+				'blacklist' => array(),
+			),
 			'version' => StatifyBlacklist::VERSION_MAIN,
 		);
 
@@ -498,6 +518,11 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 				'active'    => 0,
 				'blacklist' => array(),
 			),
+			'ua'      => array(
+				'active'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
+				'blacklist' => array(),
+			),
 			'version' => StatifyBlacklist::VERSION_MAIN,
 		);
 
@@ -545,6 +570,69 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 
 
 	/**
+	 * Test user agent filter (#20).
+	 *
+	 * @return void
+	 */
+	public function test_ua_filter() {
+		// Prepare Options: 2 filtered IPs, disabled.
+		StatifyBlacklist::$options = array(
+			'referer' => array(
+				'active'    => 0,
+				'cron'      => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
+				'blacklist' => array(),
+			),
+			'target'  => array(
+				'active'    => 0,
+				'cron'      => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
+				'blacklist' => array(),
+			),
+			'ip'      => array(
+				'active'    => 0,
+				'blacklist' => array(),
+			),
+			'ua'      => array(
+				'active'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
+				'blacklist' => array(
+					'TestBot/1.23' => 0,
+				),
+			),
+			'version' => StatifyBlacklist::VERSION_MAIN,
+		);
+
+		// No multisite.
+		StatifyBlacklist::$multisite = false;
+
+		// Set matching user agent.
+		$_SERVER['HTTP_USER_AGENT'] = 'TestBot/1.23';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		// Activate filter.
+		StatifyBlacklist::$options['ua']['active'] = 1;
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		// Non-matching addresses.
+		$_SERVER['HTTP_USER_AGENT'] = 'Another Browser 4.5.6 (Linux)';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		$_SERVER['HTTP_USER_AGENT'] = 'TestBot/2.34';
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		// Keyword matching.
+		StatifyBlacklist::$options['ua']['blacklist'] = array( 'TestBot' => 0 );
+		StatifyBlacklist::$options['ua']['regexp'] = StatifyBlacklist::MODE_KEYWORD;
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		// RegEx.
+		StatifyBlacklist::$options['ua']['blacklist'] = array( 'T[a-z]+B[a-z]+' => 0 );
+		StatifyBlacklist::$options['ua']['regexp'] = StatifyBlacklist::MODE_REGEX;
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+		StatifyBlacklist::$options['ua']['blacklist'] = array( 't[a-z]+' => 0 );
+		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
+		StatifyBlacklist::$options['ua']['regexp'] = StatifyBlacklist::MODE_REGEX_CI;
+		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
+	}
+
+
+	/**
 	 * Test combined filters.
 	 *
 	 * @since 1.4.4
@@ -575,6 +663,11 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 				'blacklist' => array(
 					'192.0.2.123',
 				),
+			),
+			'ua'      => array(
+				'active'    => 0,
+				'regexp'    => StatifyBlacklist::MODE_NORMAL,
+				'blacklist' => array(),
 			),
 			'version' => StatifyBlacklist::VERSION_MAIN,
 		);

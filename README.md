@@ -92,6 +92,7 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ### 1.6.0 / unreleased ###
 * Minor accessibility fixes on settings page
+* Introduced new user agent filter (#20)
 
 ### 1.5.2 / 03.09.2020 ###
 * Minor translation updates

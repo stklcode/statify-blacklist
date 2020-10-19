@@ -177,87 +177,21 @@ class StatifyBlacklist {
 	 */
 	public static function apply_blacklist_filter() {
 		// Referer filter.
-		if ( isset( self::$options['referer']['active'] ) && 0 !== self::$options['referer']['active'] ) {
-			// Determine filter mode.
-			$mode = isset( self::$options['referer']['regexp'] ) ? intval( self::$options['referer']['regexp'] ) : 0;
-
-			// Get full referer string.
-			$referer = wp_get_raw_referer();
-			if ( ! $referer ) {
-				$referer = '';
-			}
-
-			switch ( $mode ) {
-
-				// Regular Expression filtering since 1.3.0.
-				case self::MODE_REGEX:
-				case self::MODE_REGEX_CI:
-					// Merge given regular expressions into one.
-					$regexp = self::regex(
-						array_keys( self::$options['referer']['blacklist'] ),
-						self::MODE_REGEX_CI === self::$options['referer']['regexp']
-					);
-
-					// Check filter (no return to continue filtering #12).
-					if ( 1 === preg_match( $regexp, $referer ) ) {
-						return true;
-					}
-					break;
-
-				// Keyword filter since 1.5.0 (#15).
-				case self::MODE_KEYWORD:
-					// Get filter.
-					$blacklist = self::$options['referer']['blacklist'];
-
-					foreach ( array_keys( $blacklist ) as $keyword ) {
-						if ( false !== strpos( strtolower( $referer ), strtolower( $keyword ) ) ) {
-							return true;
-						}
-					}
-					break;
-
-				// Standard domain filter.
-				default:
-					// Extract relevant domain parts.
-					$referer = wp_parse_url( $referer );
-					$referer = strtolower( ( isset( $referer['host'] ) ? $referer['host'] : '' ) );
-
-					// Get filter.
-					$blacklist = self::$options['referer']['blacklist'];
-
-					// Check filter.
-					if ( isset( $blacklist[ $referer ] ) ) {
-						return true;
-					}
-			}
+		if (
+		self::apply_single_filter(
+			self::$options['referer'],
+			array(
+				__CLASS__,
+				( ! isset( self::$options['referer']['regexp'] ) || self::MODE_NORMAL === self::$options['referer']['regexp'] ) ? 'get_referer_domain' : 'get_referer',
+			)
+		)
+		) {
+			return true;
 		}
 
 		// Target filter (since 1.4.0).
-		if ( isset( self::$options['target']['active'] ) && 0 !== self::$options['target']['active'] ) {
-			// Regular Expression filtering since 1.3.0.
-			if ( isset( self::$options['target']['regexp'] ) && 0 < self::$options['target']['regexp'] ) {
-				// Get full referer string.
-				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL ) : '/' );
-				// Merge given regular expressions into one.
-				$regexp = self::regex(
-					array_keys( self::$options['target']['blacklist'] ),
-					self::MODE_REGEX_CI === self::$options['target']['regexp']
-				);
-
-				// Check filter (no return to continue filtering #12).
-				if ( 1 === preg_match( $regexp, $target ) ) {
-					return true;
-				}
-			} else {
-				// Extract target page.
-				$target = ( isset( $_SERVER['REQUEST_URI'] ) ? filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL ) : '/' );
-				// Get filter.
-				$blacklist = self::$options['target']['blacklist'];
-				// Check filter.
-				if ( isset( $blacklist[ $target ] ) ) {
-					return true;
-				}
-			}
+		if ( self::apply_single_filter( self::$options['target'], array( __CLASS__, 'get_target' ) ) ) {
+			return true;
 		}
 
 		// IP filter (since 1.4.0).
@@ -273,60 +207,70 @@ class StatifyBlacklist {
 		}
 
 		// User agent filter (since 1.6).
-		if ( isset( self::$options['ua']['active'] ) && 0 !== self::$options['ua']['active'] ) {
-			// Determine filter mode.
-			$mode = isset( self::$options['ua']['regexp'] ) ? intval( self::$options['ua']['regexp'] ) : 0;
-
-			// Get full user agent string.
-			if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
-				$user_agent = filter_var( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ), FILTER_SANITIZE_STRING );
-
-				if ( $user_agent ) {
-					switch ( $mode ) {
-
-						// Regular Expression filtering since 1.3.0.
-						case self::MODE_REGEX:
-						case self::MODE_REGEX_CI:
-							// Merge given regular expressions into one.
-							$regexp = self::regex(
-								array_keys( self::$options['ua']['blacklist'] ),
-								self::MODE_REGEX_CI === self::$options['ua']['regexp']
-							);
-
-							// Check filter (no return to continue filtering #12).
-							if ( 1 === preg_match( $regexp, $user_agent ) ) {
-								return true;
-							}
-							break;
-
-						// Keyword filter since 1.5.0 (#15).
-						case self::MODE_KEYWORD:
-							// Get filter.
-							$blacklist = self::$options['ua']['blacklist'];
-
-							foreach ( array_keys( $blacklist ) as $keyword ) {
-								if ( false !== strpos( strtolower( $user_agent ), strtolower( $keyword ) ) ) {
-									return true;
-								}
-							}
-							break;
-
-						// Standard exact filter.
-						default:
-							// Get filter.
-							$blacklist = self::$options['ua']['blacklist'];
-
-							// Check filter.
-							if ( isset( $blacklist[ $user_agent ] ) ) {
-								return true;
-							}
-					}
-				}
-			}
+		if ( self::apply_single_filter( self::$options['ua'], array( __CLASS__, 'get_user_agent' ) ) ) {
+			return true;
 		}
 
 		// Skip and continue (return NULL), if all filters are inactive.
 		return null;
+	}
+
+	/**
+	 * Apply a single filter, if active.
+	 *
+	 * @param array    $config   Configuration array from plugin options.
+	 * @param callable $value_fn Extractor function for filterable value.
+	 *
+	 * @return bool TRUE if referer matches filter.
+	 *
+	 * @since 1.6 Extracted from "apply_blacklist_filter" to reduce redundancies.
+	 */
+	private static function apply_single_filter( $config, $value_fn ) {
+		// Is the filter active?
+		if ( ! isset( $config['active'] ) || 0 === $config['active'] ) {
+			return false;
+		}
+
+		// Extract the filterable value.
+		$value = call_user_func( $value_fn );
+
+		$mode = isset( $config['regexp'] ) ? intval( $config['regexp'] ) : self::MODE_NORMAL;
+
+		switch ( $mode ) {
+			case self::MODE_REGEX:
+			case self::MODE_REGEX_CI:
+				// Regular Expression filtering since 1.3.0.
+
+				// Merge given regular expressions into one.
+				$regexp = self::regex(
+					array_keys( $config['blacklist'] ),
+					self::MODE_REGEX_CI === $config['regexp']
+				);
+
+				// Check filter (no return to continue filtering #12).
+				if ( 1 === preg_match( $regexp, $value ) ) {
+					return true;
+				}
+				break;
+
+			case self::MODE_KEYWORD:
+				// Keyword filter since 1.5.0 (#15).
+				foreach ( array_keys( $config['blacklist'] ) as $keyword ) {
+					if ( false !== strpos( strtolower( $value ), strtolower( $keyword ) ) ) {
+						return true;
+					}
+				}
+
+				break;
+
+			default:
+				// Standard exact filter.
+				if ( isset( $config['blacklist'][ $value ] ) ) {
+					return true;
+				}
+		}
+
+		return false;
 	}
 
 	/**
@@ -358,6 +302,47 @@ class StatifyBlacklist {
 		}
 
 		return $res;
+	}
+
+	/**
+	 * Helper method to determine the client's referer.
+	 *
+	 * @return string The referer.
+	 */
+	private static function get_referer() {
+		$referer = wp_get_raw_referer();
+		if ( ! $referer ) {
+			$referer = '';
+		}
+
+		return $referer;
+	}
+
+	/**
+	 * Helper method to determine the host part of the client's referer.
+	 *
+	 * @return string Referer domain.
+	 */
+	private static function get_referer_domain() {
+		$referer = wp_parse_url( self::get_referer() );
+
+		return strtolower( ( isset( $referer['host'] ) ? $referer['host'] : '' ) );
+	}
+
+	/**
+	 * Helper method to determine the client's referer.
+	 *
+	 * @return string The referer.
+	 */
+	private static function get_target() {
+		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+			$target = filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL );
+			if ( $target ) {
+				return $target;
+			}
+		}
+
+		return '';
 	}
 
 	/**
@@ -394,6 +379,22 @@ class StatifyBlacklist {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Helper method to determine the user agent.
+	 *
+	 * @return string The user agent string.
+	 */
+	private static function get_user_agent() {
+		if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
+			$user_agent = filter_var( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ), FILTER_SANITIZE_STRING );
+			if ( $user_agent ) {
+				return $user_agent;
+			}
+		}
+
+		return '';
 	}
 
 	/**

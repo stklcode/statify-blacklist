@@ -6,9 +6,9 @@
 # Statify Filter #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 4.7
-* Tested up to:      5.5
+* Tested up to:      5.6
 * Requires PHP:      5.5
-* Stable tag:        1.5.2
+* Stable tag:        1.6.0
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,11 +28,14 @@ Add a list of target pages (e.g. _/test/page/_, _/?page_id=123_) that will be ex
 #### IP Filter ####
 Add a list of IP addresses or subnets (e.g. _192.0.2.123_, _198.51.100.0/24_, _2001:db8:a0b:12f0::/64_).
 
+#### User Agent Filter ####
+Add a list of (partial) user agent strings to exclude (e.g. _curl_, _my/bot_, _Firefox_).
+
 #### CleanUp Database ####
 Filters can be applied to data stored in database after modifying filter rules or for one-time clean-up.
 
 #### Compatibility ####
-This plugin requires Statify to be installed. The extension has been tested with Statify up to version 1.7
+This plugin requires Statify to be installed. The extension has been tested with Statify up to version 1.8
 The plugin is capable of handling multisite installations.
 
 ### Support & Contributions ###
@@ -75,9 +78,9 @@ No. The privacy policy of _Statify_ is untouched. Data is only processed, not st
 ### Are regular expression filters possible? ###
 Yes, it is. Just select regular expressions (case-sensitive or insensitive) as matching method instead of exact or keyword match.
 
-### Why is IP filtering only available as live filter? ###
+### Why is IP and User Agent filtering only available as live filter? ###
 As you might know, _Statify_ does not store any personal information, including IP addresses in the database.
-Because of this, an IP filter can only be applied while processing the request and not afterwards.
+Because of this, these filters can only be applied while processing the request and not afterwards.
 
 ### Can whole IP subnet be blocked? ###
 Yes. The plugin features subnet filters using CIDR notation.
@@ -88,11 +91,25 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 ## Screenshots ##
 1. Statify Filter settings page
 
+## Upgrade Notice ##
+
+### 1.6.0 ###
+The plugin has been renamed from _Statify Blacklist_ to _Statify Filter_.
+This does not imply any changes in functionality, rather than using a better wording.
+
+In addition, there is a new filter by User Agent along with some minor corrections.
+This version should be compatible with latest WordPress 5.6.
+
+
 ## Changelog ##
 
-### 1.6.0 / unreleased ###
+### 1.6.0 / 09.12.2020 ###
+
+Plugin renamed to _Statify Filter_.
+
 * Minor accessibility fixes on settings page
 * Introduced new user agent filter (#20)
+* Declared compatibility with WordPress 5.6
 
 ### 1.5.2 / 03.09.2020 ###
 * Minor translation updates

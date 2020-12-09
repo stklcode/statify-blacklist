@@ -26,5 +26,5 @@
 
 	<!-- PHP compatibility level -->
 	<config name="testVersion" value="5.5-"/>
-	<rule ref="PHPCompatibility"/>
+	<rule ref="PHPCompatibilityWP"/>
 </ruleset>

@@ -1,0 +1,16 @@
+/.git
+/.github
+/assets
+/test
+/.distignore
+/.gitattributes
+/.gitignore
+/.travis.yml
+/composer.json
+/composer.lock
+/CONTRIBUTING.md
+/package.json
+/package-lock.json
+/phpcs.xml
+/phpunit.xml
+/RoboFile.php

@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.com/stklcode/statify-blacklist.svg?branch=master)](https://travis-ci.com/stklcode/statify-blacklist)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=de.stklcode.web.wordpress.plugins%3Astatify-blacklist&metric=alert_status)](https://sonarcloud.io/dashboard?id=de.stklcode.web.wordpress.plugins%3Astatify-blacklist)
+[![Build Status](https://travis-ci.com/stklcode/statify-blacklist.svg?branch=stable)](https://travis-ci.com/stklcode/statify-blacklist)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=de.stklcode.web.wordpress.plugins%3Astatify-blacklist&metric=alert_status)](https://sonarcloud.io/dashboard?id=stklcode%3Astatify-blacklist)
 [![Packagist Version](https://img.shields.io/packagist/v/stklcode/statify-blacklist.svg)](https://packagist.org/packages/stklcode/statify-blacklist)
-[![License](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://github.com/stklcode/statify-blacklist/blob/master/LICENSE.md)
+[![License](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://github.com/stklcode/statify-blacklist/blob/stable/LICENSE.md)
 
 # Statify Filter #
 * Contributors:      Stefan Kalscheuer

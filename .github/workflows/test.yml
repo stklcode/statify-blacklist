@@ -1,0 +1,54 @@
+name: CI
+on: push
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '5.6', '7.3', '7.4', '8.0' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer
+      - name: Install
+        run: composer install --no-interaction
+      - name: Unit tests
+        run: |
+          composer test
+          sed -i "s#<file name=\"${GITHUB_WORKSPACE}#<file name=\"/github/workspace#g" tests-clover.xml
+      - name: Analyze with SonarCloud
+        if: matrix.php == '8.0'
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.organization=stklcode-github
+            -Dsonar.projectKey=stklcode:statify-blacklist
+            -Dsonar.sources=inc,views,statify-blacklist.php
+            -Dsonar.tests=test
+            -Dsonar.php.tests.reportPath=tests-junit.xml
+            -Dsonar.php.coverage.reportPaths=tests-clover.xml
+            -Dsonar.coverage.exclusions=test/**/*.php
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer
+      - name: Install
+        run: composer install --no-interaction
+      - name: Code style checks for PHP
+        run: composer test-cs

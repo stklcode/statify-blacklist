@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.com/stklcode/statify-blacklist.svg?branch=stable)](https://travis-ci.com/stklcode/statify-blacklist)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=de.stklcode.web.wordpress.plugins%3Astatify-blacklist&metric=alert_status)](https://sonarcloud.io/dashboard?id=stklcode%3Astatify-blacklist)
+[![Build Status](https://github.com/stklcode/statify-blacklist/actions/workflows/test.yml/badge.svg?branch=stable)](https://github.com/stklcode/statify-blacklist/actions/workflows/test.yml?query=branch%3Astable)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=stklcode%3Astatify-blacklist&metric=alert_status)](https://sonarcloud.io/dashboard?id=stklcode%3Astatify-blacklist)
 [![Packagist Version](https://img.shields.io/packagist/v/stklcode/statify-blacklist.svg)](https://packagist.org/packages/stklcode/statify-blacklist)
 [![License](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://github.com/stklcode/statify-blacklist/blob/stable/LICENSE.md)
 

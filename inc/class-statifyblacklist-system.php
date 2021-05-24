@@ -178,6 +178,30 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 			self::update_options();
 		}
 
+		// Version older than 1.6.
+		if ( self::$options['version'] < 1.6 ) {
+			$options = self::$options;
+			if ( ! isset( $options['ua'] ) ) {
+				$options['ua'] = array(
+					'active'    => 0,
+					'regexp'    => 0,
+					'blacklist' => array(),
+				);
+			} elseif ( ! isset( $options['ua']['blacklist'] ) ) {
+				$options['ua']['blacklist'] = array();
+			} elseif ( isset( $options['ua'] ) ) {
+				// User agent strings got stored incorrectly in 1.6.0 - luckily the version was not updated, either.
+				$options['ua']['blacklist'] = array_flip( $options['ua']['blacklist'] );
+			}
+			$options['version'] = 1.6;
+			if ( self::$multisite ) {
+				update_site_option( 'statify-blacklist', $options );
+			} else {
+				update_option( 'statify-blacklist', $options );
+			}
+			self::update_options();
+		}
+
 		// Version older than current major release.
 		if ( self::VERSION_MAIN > self::$options['version'] ) {
 			// Merge default options with current config, assuming only additive changes.

@@ -255,7 +255,7 @@ class StatifyBlacklist {
 
 			case self::MODE_KEYWORD:
 				// Keyword filter since 1.5.0 (#15).
-				foreach ( $config['blacklist'] as $keyword ) {
+				foreach ( array_keys( $config['blacklist'] ) as $keyword ) {
 					if ( false !== strpos( strtolower( $value ), strtolower( $keyword ) ) ) {
 						return true;
 					}

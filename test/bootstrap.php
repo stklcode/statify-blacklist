@@ -17,6 +17,7 @@ const ABSPATH = false;
  */
 require_once __DIR__ . '/../inc/class-statifyblacklist.php';
 require_once __DIR__ . '/../inc/class-statifyblacklist-admin.php';
+require_once __DIR__ . '/../inc/class-statifyblacklist-settings.php';
 require_once __DIR__ . '/../inc/class-statifyblacklist-system.php';
 
 // Include Composer autoloader.
@@ -36,6 +37,8 @@ function invoke_static( $class, $method_name, $parameters = array() ) {
 // Some mocked WP functions.
 $mock_options   = array();
 $mock_multisite = false;
+$settings_error = array();
+$settings       = array();
 
 /** @ignore */
 function is_multisite() {
@@ -86,4 +89,46 @@ function wp_parse_url( $value ) {
 /** @ignore */
 function wp_unslash( $value ) {
 	return is_string( $value ) ? stripslashes( $value ) : $value;
+}
+
+/** @ignore */
+function __( $text, $domain = 'default' ) {
+	return $text;
+}
+
+/** @ignore */
+function add_settings_error( $setting, $code, $message, $type = 'error' ) {
+	global $settings_error;
+	$settings_error[] = array( $setting, $code, $message, $type );
+}
+
+/** @ignore */
+function register_setting( $option_group, $option_name, $args = array() ) {
+	global $settings;
+	$settings[ $option_name ] = array(
+		'group'    => $option_group,
+		'args'     => $args,
+		'sections' => array(),
+	);
+}
+
+/** @ignore */
+function add_settings_section( $id, $title, $callback, $page, $args = array() ) {
+	global $settings;
+	$settings[ $page ]['sections'][ $id ] = array(
+		'title'    => $title,
+		'callback' => $callback,
+		'args'     => $args,
+		'fields'   => array(),
+	);
+}
+
+/** @ignore */
+function add_settings_field( $id, $title, $callback, $page, $section = 'default', $args = array() ) {
+	global $settings;
+	$settings[ $page ]['sections'][ $section ]['fields'][ $id ] = array(
+		'title'    => $title,
+		'callback' => $callback,
+		'args'     => $args,
+	);
 }

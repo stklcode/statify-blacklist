@@ -70,6 +70,7 @@ function statify_blacklist_autoload( $class ) {
 	$plugin_classes = array(
 		'StatifyBlacklist',
 		'StatifyBlacklist_Admin',
+		'StatifyBlacklist_Settings',
 		'StatifyBlacklist_System',
 	);
 

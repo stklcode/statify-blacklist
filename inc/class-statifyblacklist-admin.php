@@ -16,17 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Statify Filter admin configuration.
- *
- * @since   1.0.0
  */
 class StatifyBlacklist_Admin extends StatifyBlacklist {
 
 	/**
 	 * Initialize admin-only components of the plugin.
 	 *
-	 * @since 1.5.0
-	 *
 	 * @return void
+	 *
+	 * @since 1.5.0
 	 */
 	public static function init() {
 		// Add actions.
@@ -46,6 +44,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				2
 			);
 		} else {
+			add_action( 'admin_init', array( 'StatifyBlacklist_Settings', 'register_settings' ) );
 			add_action( 'admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
 			add_filter( 'plugin_action_links', array( 'StatifyBlacklist_Admin', 'plugin_actions_links' ), 10, 2 );
 		}
@@ -54,15 +53,14 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Update options.
 	 *
-	 * @since 1.1.1
-	 *
-	 * @param  array $options Optional. New options to save.
+	 * @param array $options Optional. New options to save.
 	 *
 	 * @return array|bool  array of sanitized array on errors, FALSE if there were none.
+	 *
+	 * @since 1.1.1
 	 */
 	public static function update_options( $options = null ) {
 		if ( isset( $options ) && current_user_can( 'manage_options' ) ) {
-
 			// Sanitize referer list.
 			$given_referer   = $options['referer']['blacklist'];
 			$invalid_referer = array();
@@ -139,51 +137,34 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	public static function add_menu_page() {
 		$title = __( 'Statify Filter', 'statify-blacklist' );
 		if ( self::$multisite ) {
-			add_submenu_page(
-				'settings.php',
+			add_options_page(
 				$title,
 				$title,
 				'manage_network_plugins',
-				'statify-blacklist-settings',
-				array(
-					'StatifyBlacklist_Admin',
-					'settings_page',
-				)
+				'statify-blacklist',
+				array( 'StatifyBlacklist_Settings', 'create_settings_page' )
 			);
 		} else {
-			add_submenu_page(
-				'options-general.php',
+			add_options_page(
 				$title,
 				$title,
 				'manage_options',
 				'statify-blacklist',
-				array(
-					'StatifyBlacklist_Admin',
-					'settings_page',
-				)
+				array( 'StatifyBlacklist_Settings', 'create_settings_page' )
 			);
 		}
 
 	}
 
 	/**
-	 * Include the Statify-Blacklist settings page.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function settings_page() {
-		include STATIFYBLACKLIST_DIR . '/views/settings-page.php';
-	}
-
-	/**
 	 * Add plugin meta links
-	 *
-	 * @since 1.0.0
 	 *
 	 * @param array  $links Registered links.
 	 * @param string $file  The filename.
 	 *
 	 * @return array  Merged links.
+	 *
+	 * @since 1.0.0
 	 */
 	public static function plugin_meta_link( $links, $file ) {
 		if ( STATIFYBLACKLIST_BASE === $file ) {
@@ -196,12 +177,12 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Add plugin action links.
 	 *
-	 * @since 1.0.0
-	 *
 	 * @param array  $links Registered links.
 	 * @param string $file  The filename.
 	 *
 	 * @return array  Merged links.
+	 *
+	 * @since 1.0.0
 	 */
 	public static function plugin_actions_links( $links, $file ) {
 		$base = self::$multisite ? network_admin_url( 'settings.php' ) : admin_url( 'options-general.php' );
@@ -299,11 +280,11 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Sanitize URLs and remove empty results.
 	 *
-	 * @since 1.1.1
-	 *
 	 * @param array $urls given array of URLs.
 	 *
 	 * @return array  sanitized array.
+	 *
+	 * @since 1.1.1
 	 */
 	private static function sanitize_urls( $urls ) {
 		return array_flip(
@@ -321,11 +302,11 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Sanitize IP addresses with optional CIDR notation and remove empty results.
 	 *
-	 * @since 1.4.0
-	 *
 	 * @param array $ips given array of URLs.
 	 *
 	 * @return array  sanitized array.
+	 *
+	 * @since 1.4.0
 	 */
 	private static function sanitize_ips( $ips ) {
 		return array_filter(

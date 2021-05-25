@@ -151,7 +151,7 @@ class StatifyBlacklist_Settings_Test extends PHPUnit\Framework\TestCase {
 			),
 			'ip'      => array(
 				'active'    => '1',
-				'blacklist' => "127.0.0.1/8\r\nthisisnotanip",
+				'blacklist' => "127.0.0.1/8\r\nthisisnotanip\r\n127.0.0.1/8",
 			),
 			'ua'      => array(
 				'blacklist' => 'MyBot/1.23',
@@ -240,6 +240,7 @@ class StatifyBlacklist_Settings_Test extends PHPUnit\Framework\TestCase {
 			'2001:db8:a0b:12f0::1/128',
 			'2001:DB8:A0B:12F0::/64',
 			'fe80::7645:6de2:ff:1',
+			'2001:db8:a0b:12f0::',
 			'::ffff:192.0.2.123',
 		);
 		$invalid = array(
@@ -266,7 +267,7 @@ class StatifyBlacklist_Settings_Test extends PHPUnit\Framework\TestCase {
 				'fe80::7645:6de2:ff:1',
 				'::ffff:192.0.2.123',
 			),
-			array_values( $result )
+			$result
 		);
 	}
 

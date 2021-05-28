@@ -93,6 +93,9 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ## Upgrade Notice ##
 
+### 1.6.1 ###
+This is a bugfix release that corrects storage and evaluation of the user agent filter list.
+
 ### 1.6.0 ###
 The plugin has been renamed from _Statify Blacklist_ to _Statify Filter_.
 This does not imply any changes in functionality, rather than using a better wording.
@@ -103,7 +106,7 @@ This version should be compatible with latest WordPress 5.6.
 
 ## Changelog ##
 
-### 1.6.1 / unreleased ###
+### 1.6.1 / 28.05.2021 ###
 * Fix storage of user agent filter list (#28, props @BananaSquishee)
 
 ### 1.6.0 / 09.12.2020 ###

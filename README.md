@@ -103,6 +103,9 @@ This version should be compatible with latest WordPress 5.6.
 
 ## Changelog ##
 
+### 1.6.1 / unreleased ###
+* Fix storage of user agent filter list (#28, props @BananaSquishee)
+
 ### 1.6.0 / 09.12.2020 ###
 
 Plugin renamed to _Statify Filter_.

@@ -42,10 +42,12 @@ class StatifyBlacklist_System_Test extends PHPUnit\Framework\TestCase {
 		$options_updated = get_option( 'statify-blacklist' );
 
 		// Verify size against default options (no junk left).
-		$this->assertEquals( 4, count( $options_updated ) );
+		$this->assertEquals( 5, count( $options_updated ) );
 		$this->assertEquals( 4, count( $options_updated['referer'] ) );
 		$this->assertEquals( 4, count( $options_updated['target'] ) );
 		$this->assertEquals( 2, count( $options_updated['ip'] ) );
+		$this->assertEquals( 3, count( $options_updated['ua'] ) );
+		$this->assertEquals( 1.6, $options_updated['version'] );
 
 		// Verify that original attributes are unchanged.
 		$this->assertEquals( $options13['active_referer'], $options_updated['referer']['active'] );
@@ -60,8 +62,31 @@ class StatifyBlacklist_System_Test extends PHPUnit\Framework\TestCase {
 		$this->assertEquals( array(), $options_updated['target']['blacklist'] );
 		$this->assertEquals( 0, $options_updated['ip']['active'] );
 		$this->assertEquals( array(), $options_updated['ip']['blacklist'] );
+		$this->assertEquals( 0, $options_updated['ua']['active'] );
+		$this->assertEquals( 0, $options_updated['ua']['regexp'] );
+		$this->assertEquals( array(), $options_updated['ua']['blacklist'] );
 
 		// Verify that version number has changed to current release.
+		$this->assertEquals( StatifyBlacklist::VERSION_MAIN, $options_updated['version'] );
+
+		// Test upgrade of incorrectly stored user agent list in 1.6.
+		$options_updated['version']         = 1.4;
+		$options_updated['ua']['blacklist'] = array( 'user agent 1', 'user agent 2' );
+		update_option( 'statify-blacklist', $options_updated );
+
+		// Execute upgrade.
+		StatifyBlacklist_System::upgrade();
+
+		// Retrieve updated options.
+		$options_updated = get_option( 'statify-blacklist' );
+		$this->assertEquals(
+			array(
+				'user agent 1' => 0,
+				'user agent 2' => 1,
+			),
+			$options_updated['ua']['blacklist']
+		);
+		$this->assertEquals( 1.6, $options_updated['version'] );
 		$this->assertEquals( StatifyBlacklist::VERSION_MAIN, $options_updated['version'] );
 	}
 }

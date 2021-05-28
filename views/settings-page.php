@@ -88,7 +88,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 			);
 		}
 
-		// TODO: Extract user agent array.
+		// Extract user agent array.
 		if ( isset( $_POST['statifyblacklist']['ua']['blacklist'] ) ) {
 			$ua_string = sanitize_textarea_field( wp_unslash( $_POST['statifyblacklist']['ua']['blacklist'] ) );
 		}
@@ -139,7 +139,7 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 						? (int) $_POST['statifyblacklist']['ua']['active'] : 0,
 					'regexp'    => isset( $_POST['statifyblacklist']['ua']['regexp'] )
 						? (int) $_POST['statifyblacklist']['ua']['regexp'] : 0,
-					'blacklist' => $ua,
+					'blacklist' => array_flip( $ua ),
 				),
 				'version' => StatifyBlacklist::VERSION_MAIN,
 			)

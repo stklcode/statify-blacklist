@@ -24,7 +24,7 @@ class StatifyBlacklist {
 	 * @since 1.4.0
 	 * @var int VERSION_MAIN
 	 */
-	const VERSION_MAIN = 1.4;
+	const VERSION_MAIN = 1.6;
 
 	/**
 	 * Operation mode "normal".

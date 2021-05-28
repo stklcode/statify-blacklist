@@ -4,33 +4,9 @@
  *
  * This is a PHPunit test class for the plugin's functionality
  *
- * @package    Statify_Blacklist
- * @subpackage Admin
- * @since      1.3.0
+ * @package Statify_Blacklist
+ * @since   1.3.0
  */
-
-/**
- * Simulating the ABSPATH constant.
- *
- * @since 1.3.0
- * @var bool ABSPATH
- */
-const ABSPATH = false;
-
-/**
- * The StatifyBlacklist base class.
- */
-require_once __DIR__ . '/../inc/class-statifyblacklist.php';
-
-/**
- * The StatifyBlacklist system class.
- */
-require_once __DIR__ . '/../inc/class-statifyblacklist-system.php';
-
-/**
- * The StatifyBlacklist admin class.
- */
-require_once __DIR__ . '/../inc/class-statifyblacklist-admin.php';
 
 /**
  * Class StatifyBlacklistTest.
@@ -229,83 +205,6 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	}
 
 	/**
-	 * Test the upgrade methodology for configuration options.
-	 *
-	 * @return void
-	 */
-	public function test_upgrade() {
-		// Create configuration of version 1.3.
-		$options13 = array(
-			'active_referer' => 1,
-			'cron_referer'   => 0,
-			'referer'        => array(
-				'example.net' => 0,
-				'example.com' => 1,
-			),
-			'referer_regexp' => 0,
-			'version'        => 1.3,
-		);
-
-		// Set options in mock.
-		update_option( 'statify-blacklist', $options13 );
-
-		// Execute upgrade.
-		StatifyBlacklist_System::upgrade();
-
-		// Retrieve updated options.
-		$options_updated = get_option( 'statify-blacklist' );
-
-		// Verify size against default options (no junk left).
-		$this->assertEquals( 5, count( $options_updated ) );
-		$this->assertEquals( 4, count( $options_updated['referer'] ) );
-		$this->assertEquals( 4, count( $options_updated['target'] ) );
-		$this->assertEquals( 2, count( $options_updated['ip'] ) );
-		$this->assertEquals( 3, count( $options_updated['ua'] ) );
-		$this->assertEquals( 1.6, $options_updated['version'] );
-
-		// Verify that original attributes are unchanged.
-		$this->assertEquals( $options13['active_referer'], $options_updated['referer']['active'] );
-		$this->assertEquals( $options13['cron_referer'], $options_updated['referer']['cron'] );
-		$this->assertEquals( $options13['referer'], $options_updated['referer']['blacklist'] );
-		$this->assertEquals( $options13['referer_regexp'], $options_updated['referer']['regexp'] );
-
-		// Verify that new attributes are present in config and filled with default values (disabled, empty).
-		$this->assertEquals( 0, $options_updated['target']['active'] );
-		$this->assertEquals( 0, $options_updated['target']['cron'] );
-		$this->assertEquals( 0, $options_updated['target']['regexp'] );
-		$this->assertEquals( array(), $options_updated['target']['blacklist'] );
-		$this->assertEquals( 0, $options_updated['ip']['active'] );
-		$this->assertEquals( array(), $options_updated['ip']['blacklist'] );
-		$this->assertEquals( 0, $options_updated['ua']['active'] );
-		$this->assertEquals( 0, $options_updated['ua']['regexp'] );
-		$this->assertEquals( array(), $options_updated['ua']['blacklist'] );
-
-		// Verify that version number has changed to current release.
-		$this->assertEquals( StatifyBlacklist::VERSION_MAIN, $options_updated['version'] );
-
-
-		// Test upgrade of incorrectly stored user agent list in 1.6
-		$options_updated['version'] = 1.4;
-		$options_updated['ua']['blacklist'] = array( 'user agent 1', 'user agent 2' );
-		update_option( 'statify-blacklist', $options_updated );
-
-		// Execute upgrade.
-		StatifyBlacklist_System::upgrade();
-
-		// Retrieve updated options.
-		$options_updated = get_option( 'statify-blacklist' );
-		$this->assertEquals(
-			array(
-				'user agent 1' => 0,
-				'user agent 2' => 1,
-			),
-			$options_updated['ua']['blacklist']
-		);
-		$this->assertEquals( 1.6, $options_updated['version'] );
-		$this->assertEquals( StatifyBlacklist::VERSION_MAIN, $options_updated['version'] );
-	}
-
-	/**
 	 * Test CIDR address matching for IP filter (#7).
 	 *
 	 * @return void
@@ -391,53 +290,6 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 				array( '2001:db8:a0b:12f0::1:132:465', '2001:db8:a0b:12f0::1/96 ' )
 			)
 		);
-	}
-
-	/**
-	 * Test sanitization of IP addresses.
-	 *
-	 * @return void
-	 */
-	public function test_sanitize_ips() {
-		// IPv4 tests.
-		$valid   = array( '192.0.2.123', '192.0.2.123/32', '192.0.2.0/24', '192.0.2.128/25' );
-		$invalid = array( '12.34.56.789', '192.0.2.123/33', '192.0.2.123/-1' );
-		$result  = invoke_static( StatifyBlacklist_Admin::class, 'sanitize_ips', array( array_merge( $valid, $invalid ) ) );
-		$this->assertNotFalse( $result );
-
-		/*
-		 * Unfortunately this is necessary as long as we run PHP 5 tests, because "assertInternalType" is deprecated
-		 * as of PHPUnit 8, but "assertIsArray" has been introduces in PHPUnit 7.5 which requires PHP >= 7.1.
-		 */
-		if ( method_exists( $this, 'assertIsArray' ) ) {
-			$this->assertIsArray( $result );
-		} else {
-			$this->assertInternalType( 'array', $result );
-		}
-		$this->assertEquals( $valid, $result );
-
-		// IPv6 tests.
-		$valid   = array(
-			'2001:db8:a0b:12f0::',
-			'2001:db8:a0b:12f0::1',
-			'2001:db8:a0b:12f0::1/128',
-			'2001:db8:a0b:12f0::/64',
-		);
-		$invalid = array(
-			'2001:db8:a0b:12f0::x',
-			'2001:db8:a0b:12f0:::',
-			'2001:fffff:a0b:12f0::1',
-			'2001:db8:a0b:12f0::/129',
-			'1:2:3:4:5:6:7:8:9',
-		);
-		$result  = invoke_static( StatifyBlacklist_Admin::class, 'sanitize_ips', array( array_merge( $valid, $invalid ) ) );
-		$this->assertNotFalse( $result );
-		if ( method_exists( $this, 'assertIsArray' ) ) {
-			$this->assertIsArray( $result );
-		} else {
-			$this->assertInternalType( 'array', $result );
-		}
-		$this->assertEquals( $valid, $result );
 	}
 
 	/**
@@ -645,11 +497,11 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
 		// Keyword matching.
 		StatifyBlacklist::$options['ua']['blacklist'] = array( 'TestBot' => 0 );
-		StatifyBlacklist::$options['ua']['regexp'] = StatifyBlacklist::MODE_KEYWORD;
+		StatifyBlacklist::$options['ua']['regexp']    = StatifyBlacklist::MODE_KEYWORD;
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		// RegEx.
 		StatifyBlacklist::$options['ua']['blacklist'] = array( 'T[a-z]+B[a-z]+' => 0 );
-		StatifyBlacklist::$options['ua']['regexp'] = StatifyBlacklist::MODE_REGEX;
+		StatifyBlacklist::$options['ua']['regexp']    = StatifyBlacklist::MODE_REGEX;
 		$this->assertTrue( StatifyBlacklist::apply_blacklist_filter() );
 		StatifyBlacklist::$options['ua']['blacklist'] = array( 't[a-z]+' => 0 );
 		$this->assertNull( StatifyBlacklist::apply_blacklist_filter() );
@@ -746,70 +598,4 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 		$_SERVER['REMOTE_ADDR'] = '192.0.2.234';
 
 	}
-}
-
-
-/** @ignore */
-function invoke_static( $class, $method_name, $parameters = array() ) {
-	$reflection = new \ReflectionClass( $class );
-	$method     = $reflection->getMethod( $method_name );
-	$method->setAccessible( true );
-
-	return $method->invokeArgs( null, $parameters );
-}
-
-
-// Some mocked WP functions.
-$mock_options   = array();
-$mock_multisite = false;
-
-/** @ignore */
-function is_multisite() {
-	global $mock_multisite;
-
-	return $mock_multisite;
-}
-
-/** @ignore */
-function wp_parse_args( $args, $defaults = '' ) {
-	if ( is_object( $args ) ) {
-		$r = get_object_vars( $args );
-	} elseif ( is_array( $args ) ) {
-		$r =& $args;
-	} else {
-		parse_str( $args, $r );
-	}
-
-	if ( is_array( $defaults ) ) {
-		return array_merge( $defaults, $r );
-	}
-
-	return $r;
-}
-
-/** @ignore */
-function get_option( $option, $default = false ) {
-	global $mock_options;
-
-	return isset( $mock_options[ $option ] ) ? $mock_options[ $option ] : $default;
-}
-
-/** @ignore */
-function update_option( $option, $value, $autoload = null ) {
-	global $mock_options;
-	$mock_options[ $option ] = $value;
-}
-
-/** @ignore */
-function wp_get_raw_referer() {
-	return isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '';
-}
-
-function wp_parse_url( $value ) {
-	return parse_url( $value );
-}
-
-/** @ignore */
-function wp_unslash( $value ) {
-	return is_string( $value ) ? stripslashes( $value ) : $value;
 }

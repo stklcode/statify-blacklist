@@ -457,9 +457,9 @@ if ( ! empty( $_POST['statifyblacklist'] ) ) {
 				<td>
 					<textarea cols="40" rows="5" name="statifyblacklist[ua][blacklist]" id="statify-blacklist_ua"><?php
 					if ( empty( $statifyblacklist_update_result['ua'] ) ) {
-						print esc_html( implode( "\r\n", StatifyBlacklist::$options['ua']['blacklist'] ) );
+						print esc_html( implode( "\r\n", array_keys( StatifyBlacklist::$options['ua']['blacklist'] ) ) );
 					} else {
-						print esc_html( implode( "\r\n", $statifyblacklist_update_result['ua']['sanitized'] ) );
+						print esc_html( implode( "\r\n", array_keys( $statifyblacklist_update_result['ua']['sanitized'] ) ) );
 					}
 					?></textarea>
 

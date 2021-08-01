@@ -6,7 +6,7 @@
 # Statify Filter #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 4.7
-* Tested up to:      5.7
+* Tested up to:      5.8
 * Requires PHP:      5.5
 * Stable tag:        1.6.1
 * License:           GPLv2 or later

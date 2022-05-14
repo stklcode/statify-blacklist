@@ -19,7 +19,7 @@
   "type": "wordpress-plugin",
   "require": {
     "php": ">=5.5",
-    "composer/installers": "~1.11"
+    "composer/installers": "~1.12"
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
@@ -44,5 +44,11 @@
     "fix-cs": [
       "phpcbf --standard=phpcs.xml"
     ]
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }

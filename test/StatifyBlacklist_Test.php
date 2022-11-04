@@ -283,6 +283,20 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 				array( '2001:db8:a0b:12f0::123:456', '2001:db8:a0b:12f0::1/96 ' )
 			)
 		);
+		$this->assertTrue(
+			invoke_static(
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '2001:DB8:A0B:12F0::123:456', '2001:db8:a0b:12f0::1/96 ' )
+			)
+		);
+		$this->assertTrue(
+			invoke_static(
+				StatifyBlacklist::class,
+				'cidr_match',
+				array( '2001:db8:a0b:12f0::123:456', '2001:DB8:A0B:12F0::1/96 ' )
+			)
+		);
 		$this->assertFalse(
 			invoke_static(
 				StatifyBlacklist::class,

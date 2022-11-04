@@ -43,14 +43,17 @@ class StatifyBlacklist_Admin_Test extends PHPUnit\Framework\TestCase {
 			'2001:db8:a0b:12f0::',
 			'2001:db8:a0b:12f0::1',
 			'2001:db8:a0b:12f0::1/128',
-			'2001:db8:a0b:12f0::/64',
+			'2001:DB8:A0B:12F0::/64',
+			'fe80::7645:6de2:ff:1',
+			'::ffff:192.0.2.123',
 		);
 		$invalid = array(
 			'2001:db8:a0b:12f0::x',
 			'2001:db8:a0b:12f0:::',
 			'2001:fffff:a0b:12f0::1',
-			'2001:db8:a0b:12f0::/129',
+			'2001:DB8:A0B:12F0::/129',
 			'1:2:3:4:5:6:7:8:9',
+			'::ffff:12.34.56.789',
 		);
 		$result  = invoke_static( StatifyBlacklist_Admin::class, 'sanitize_ips', array( array_merge( $valid, $invalid ) ) );
 		$this->assertNotFalse( $result );
@@ -59,6 +62,6 @@ class StatifyBlacklist_Admin_Test extends PHPUnit\Framework\TestCase {
 		} else {
 			$this->assertInternalType( 'array', $result );
 		}
-		$this->assertEquals( $valid, $result );
+		$this->assertEquals( array_map( 'strtolower', $valid ), $result );
 	}
 }

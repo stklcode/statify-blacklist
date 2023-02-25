@@ -388,7 +388,7 @@ class StatifyBlacklist {
 	 */
 	private static function get_user_agent() {
 		if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
-			$user_agent = filter_var( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ), FILTER_SANITIZE_STRING );
+			$user_agent = filter_var( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 			if ( $user_agent ) {
 				return $user_agent;
 			}

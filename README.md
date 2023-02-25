@@ -8,12 +8,12 @@
 * Requires at least: 4.7
 * Tested up to:      6.1
 * Requires PHP:      5.5
-* Stable tag:        1.6.1
+* Stable tag:        1.6.2
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
 ## Description ##
-A filter extension for the famous [Statify](https://wordpress.org/plugins/statify/) Wordpress plugin.
+A filter extension for the famous [Statify](https://wordpress.org/plugins/statify/) WordPress plugin.
 
 This plugin adds customizable filters to Statify to allow blocking of referer spam or internal interactions.
 
@@ -93,6 +93,9 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ## Upgrade Notice ##
 
+### 1.6.2 ###
+This is a service release with minor internal corrections and PHP 8.2 compatibility.
+
 ### 1.6.1 ###
 This is a bugfix release that corrects storage and evaluation of the user agent filter list.
 
@@ -105,6 +108,11 @@ This version should be compatible with latest WordPress 5.6.
 
 
 ## Changelog ##
+
+### 1.6.2 / 25.02.2023 ###
+* Always process IPv6 addresses lowercase
+* Optimize internally used regular expression
+* Minor adjustments to prevent warnings during user agent filtering with PHP 8.2
 
 ### 1.6.1 / 28.05.2021 ###
 * Fix storage of user agent filter list (#28, props @BananaSquishee)

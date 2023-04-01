@@ -436,7 +436,7 @@ class StatifyBlacklist {
 			}
 
 			$ceil = ceil( $mask / 16 );
-			for ( $i = 1; $i <= $ceil; ++ $i ) {
+			for ( $i = 1; $i <= $ceil; ++$i ) {
 				$left   = $mask - 16 * ( $i - 1 );
 				$left   = ( $left <= 16 ) ? $left : 16;
 				$mask_b = ~( 0xffff >> $left ) & 0xffff;

@@ -163,7 +163,6 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 				)
 			);
 		}
-
 	}
 
 	/**

@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Constants.
 define( 'STATIFYBLACKLIST_FILE', __FILE__ );
-define( 'STATIFYBLACKLIST_DIR', dirname( __FILE__ ) );
+define( 'STATIFYBLACKLIST_DIR', __DIR__ );
 define( 'STATIFYBLACKLIST_BASE', plugin_basename( __FILE__ ) );
 
 // Check for compatibility.

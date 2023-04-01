@@ -3,6 +3,7 @@
 /assets
 /test
 /.distignore
+/.editorconfig
 /.gitattributes
 /.gitignore
 /.travis.yml

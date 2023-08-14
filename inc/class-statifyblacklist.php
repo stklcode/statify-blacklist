@@ -80,7 +80,7 @@ class StatifyBlacklist {
 	 */
 	public static function init() {
 		// Skip on autosave.
-		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) ) {
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
 

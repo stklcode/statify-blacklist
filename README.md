@@ -8,7 +8,7 @@
 * Requires at least: 4.7
 * Tested up to:      6.3
 * Requires PHP:      5.5
-* Stable tag:        1.6.2
+* Stable tag:        1.6.3
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,9 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ## Upgrade Notice ##
 
+### 1.6.3 ###
+This is a service release with minor internal corrections and WP 6.3 compatibility.
+
 ### 1.6.2 ###
 This is a service release with minor internal corrections and PHP 8.2 compatibility.
 
@@ -108,6 +111,10 @@ This version should be compatible with latest WordPress 5.6.
 
 
 ## Changelog ##
+
+### 1.6.3 / 14.08.2023 ###
+* Minor internal code cleanup
+* Declared compatibility with WordPress 6.3
 
 ### 1.6.2 / 25.02.2023 ###
 * Always process IPv6 addresses lowercase

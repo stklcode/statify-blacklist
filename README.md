@@ -6,7 +6,7 @@
 # Statify Filter #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 4.7
-* Tested up to:      6.2
+* Tested up to:      6.3
 * Requires PHP:      5.5
 * Stable tag:        1.6.2
 * License:           GPLv2 or later
@@ -62,7 +62,7 @@ The plugin is capable of handling multisite installations.
 ### What is blocked by default? ###
 Nothing. By default, all filters are empty and disabled. They can and have to be filled by the blog administrator.
 
-A default filter is not provided, as the plugin itself is totally neutral. If you want to filter out referer spam, 
+A default filter is not provided, as the plugin itself is totally neutral. If you want to filter out referer spam,
 visitors from search engines, just "false" referrers from 301 redirects or you own IP address used for testing only depends on you.
 
 ### Does the filter effect user experience? ###
@@ -71,7 +71,7 @@ No. It only prevents _Statify_ from tracking, nothing more or less.
 ### Does live filtering impact performance? ###
 Yes, but probably not noticeable. Checking a single referer string against a (usually small) list should be negligible compared to the total loading procedure.
 If this still is an issue for you, consider deactivating the filter and only run the one-time-cleanup or activate the cron job.
- 
+
 ### Is any personal data collected? ###
 No. The privacy policy of _Statify_ is untouched. Data is only processed, not stored or exposed to anyone.
 

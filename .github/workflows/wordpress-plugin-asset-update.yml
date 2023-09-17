@@ -8,7 +8,7 @@ jobs:
     name: Push to stable
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Clean README.md
         run: tail -n +6 README.md > README.md.tmp && mv README.md.tmp README.md
       - name: WordPress.org plugin asset/readme update

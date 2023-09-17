@@ -22,9 +22,9 @@ class StatifyBlacklist {
 	 * Plugin major version.
 	 *
 	 * @since 1.4.0
-	 * @var int VERSION_MAIN
+	 * @var float VERSION_MAIN
 	 */
-	const VERSION_MAIN = 1.6;
+	const VERSION_MAIN = 1.7;
 
 	/**
 	 * Operation mode "normal".

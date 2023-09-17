@@ -47,7 +47,7 @@ class StatifyBlacklist_System_Test extends PHPUnit\Framework\TestCase {
 		$this->assertEquals( 4, count( $options_updated['target'] ) );
 		$this->assertEquals( 2, count( $options_updated['ip'] ) );
 		$this->assertEquals( 3, count( $options_updated['ua'] ) );
-		$this->assertEquals( 1.6, $options_updated['version'] );
+		$this->assertEquals( StatifyBlacklist::VERSION_MAIN, $options_updated['version'] );
 
 		// Verify that original attributes are unchanged.
 		$this->assertEquals( $options13['active_referer'], $options_updated['referer']['active'] );
@@ -86,7 +86,6 @@ class StatifyBlacklist_System_Test extends PHPUnit\Framework\TestCase {
 			),
 			$options_updated['ua']['blacklist']
 		);
-		$this->assertEquals( 1.6, $options_updated['version'] );
 		$this->assertEquals( StatifyBlacklist::VERSION_MAIN, $options_updated['version'] );
 	}
 }

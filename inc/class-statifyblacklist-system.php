@@ -205,7 +205,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		// Version older than current major release.
 		if ( self::VERSION_MAIN > self::$options['version'] ) {
 			// Merge default options with current config, assuming only additive changes.
-			$options            = array_merge_recursive( self::default_options(), self::$options );
+			$options            = array_replace_recursive( self::default_options(), self::$options );
 			$options['version'] = self::VERSION_MAIN;
 			if ( self::$multisite ) {
 				update_site_option( 'statify-blacklist', $options );

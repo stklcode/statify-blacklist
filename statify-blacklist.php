@@ -62,11 +62,11 @@ if ( statify_blacklist_compatibility_check() ) {
 /**
  * Autoloader for StatifyBlacklist classes.
  *
- * @param string $class Name of the class to load.
+ * @param string $class_name Name of the class to load.
  *
  * @since 1.0.0
  */
-function statify_blacklist_autoload( $class ) {
+function statify_blacklist_autoload( $class_name ) {
 	$plugin_classes = array(
 		'StatifyBlacklist',
 		'StatifyBlacklist_Admin',
@@ -74,11 +74,11 @@ function statify_blacklist_autoload( $class ) {
 		'StatifyBlacklist_System',
 	);
 
-	if ( in_array( $class, $plugin_classes, true ) ) {
+	if ( in_array( $class_name, $plugin_classes, true ) ) {
 		require_once sprintf(
 			'%s/inc/class-%s.php',
 			STATIFYBLACKLIST_DIR,
-			strtolower( str_replace( '_', '-', $class ) )
+			strtolower( str_replace( '_', '-', $class_name ) )
 		);
 	}
 }

@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: [ '5.6', '7.4', '8.0', '8.1', '8.2' ]
+        php: [ '5.6', '7.4', '8.0', '8.1', '8.2', '8.3' ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
+          php-version: '8.2'
           tools: composer
       - name: Install
         run: composer install --no-interaction

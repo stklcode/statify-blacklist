@@ -5,7 +5,7 @@
  * This file contains the plugin's settings capabilities.
  *
  * @package Statify_Blacklist
- * @since 1.7
+ * @since 1.7.0
  */
 
 // Quit if accessed directly..

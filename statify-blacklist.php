@@ -10,7 +10,7 @@
  * Plugin Name: Statify Filter
  * Plugin URI:  https://wordpress.org/plugins/statify-blacklist/
  * Description: Extension for the Statify plugin to add customizable filters. (formerly "Statify Blacklist)
- * Version:     1.6.3
+ * Version:     1.7.0
  * Author:      Stefan Kalscheuer (@stklcode)
  * Author URI:  https://www.stklcode.de
  * Text Domain: statify-blacklist

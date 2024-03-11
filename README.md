@@ -6,9 +6,9 @@
 # Statify Filter #
 * Contributors:      Stefan Kalscheuer
 * Requires at least: 4.7
-* Tested up to:      6.3
+* Tested up to:      6.4
 * Requires PHP:      5.5
-* Stable tag:        1.6.3
+* Stable tag:        1.7.0
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,24 +93,17 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ## Upgrade Notice ##
 
-### 1.6.3 ###
-This is a service release with minor internal corrections and WP 6.3 compatibility.
-
-### 1.6.2 ###
-This is a service release with minor internal corrections and PHP 8.2 compatibility.
-
-### 1.6.1 ###
-This is a bugfix release that corrects storage and evaluation of the user agent filter list.
-
-### 1.6.0 ###
-The plugin has been renamed from _Statify Blacklist_ to _Statify Filter_.
-This does not imply any changes in functionality, rather than using a better wording.
-
-In addition, there is a new filter by User Agent along with some minor corrections.
-This version should be compatible with latest WordPress 5.6.
+### 1.7.0 ###
+This is a service release with primarily internal rework. Tested up to 6.4 and PHP 8.3.
 
 
 ## Changelog ##
+
+### 1.7.0 / 11.03.2024 ###
+* Internal rework of plugin settings
+* Make the IP filter list unique
+* Fix options upgrade routine
+* Declared compatibility with WordPress 6.4
 
 ### 1.6.3 / 14.08.2023 ###
 * Minor internal code cleanup

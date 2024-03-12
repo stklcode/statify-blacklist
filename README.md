@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://github.com/stklcode/statify-blacklist/blob/stable/LICENSE.md)
 
 # Statify Filter #
-* Contributors:      Stefan Kalscheuer
+* Contributors:      stklcode
 * Requires at least: 4.7
 * Tested up to:      6.4
 * Requires PHP:      5.5

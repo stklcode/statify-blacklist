@@ -8,7 +8,7 @@
  * @since 1.7.0
  */
 
-// Quit if accessed directly..
+// Quit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -575,14 +575,13 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 	 * @since 1.7.0
 	 */
 	private static function sanitize_target_options( &$options ) {
-		$target_given   = $options['blacklist'];
-		$target_invalid = array();
+		$target_given     = $options['blacklist'];
+		$target_sanitized = $target_given;
 		if ( StatifyBlacklist::MODE_REGEX === $options['regexp'] || StatifyBlacklist::MODE_REGEX_CI === $options['regexp'] ) {
-			$target_sanitized = $target_given;
 			// Check regular expressions.
 			$target_invalid = self::sanitize_regex( $target_given );
 		} else {
-			$target_sanitized = $target_given;
+			$target_invalid = array();
 		}
 		$options['blacklist'] = $target_sanitized;
 

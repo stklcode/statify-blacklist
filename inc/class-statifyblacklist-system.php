@@ -186,7 +186,7 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 				);
 			} elseif ( ! isset( $options['ua']['blacklist'] ) ) {
 				$options['ua']['blacklist'] = array();
-			} elseif ( isset( $options['ua'] ) ) {
+			} else {
 				// User agent strings got stored incorrectly in 1.6.0 - luckily the version was not updated, either.
 				$options['ua']['blacklist'] = array_flip( $options['ua']['blacklist'] );
 			}

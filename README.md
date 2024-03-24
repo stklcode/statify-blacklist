@@ -6,9 +6,9 @@
 # Statify Filter #
 * Contributors:      stklcode
 * Requires at least: 4.7
-* Tested up to:      6.4
+* Tested up to:      6.5
 * Requires PHP:      5.5
-* Stable tag:        1.7.0
+* Stable tag:        1.7.1
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,11 +93,20 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ## Upgrade Notice ##
 
+### 1.7.1 ###
+This is a service release with minor corrections. Recommended for all users. Tested up to 6.5.
+
 ### 1.7.0 ###
 This is a service release with primarily internal rework. Tested up to 6.4 and PHP 8.3.
 
 
 ## Changelog ##
+
+### 1.7.1 / 24.03.2024 ###
+* Fix HTML syntax for checkboxes on settings page
+* Simplify some internal control structures
+* Add plugin dependency to Statify
+* Declared compatibility with WordPress 6.5
 
 ### 1.7.0 / 11.03.2024 ###
 * Internal rework of plugin settings

@@ -208,7 +208,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 		<fieldset>
 			<legend class="screen-reader-text"><?php esc_html_e( 'Activate live filter', 'statify-blacklist' ); ?></legend>
 			<label for="statifyblacklist-referer-active">
-				<input id="statifyblacklist-referer-active" name="statify-blacklist[referer][active]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['referer']['active'], 1 ); ?>">
+				<input id="statifyblacklist-referer-active" name="statify-blacklist[referer][active]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['referer']['active'], 1 ); ?>>
 				<?php esc_html_e( 'Activate', 'statify-blacklist' ); ?>
 			</label>
 			<p class="description">
@@ -228,7 +228,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 		<fieldset>
 			<legend class="screen-reader-text"><?php esc_html_e( 'CronJob execution', 'statify-blacklist' ); ?></legend>
 			<label for="statifyblacklist-referer-cron">
-				<input id="statifyblacklist-referer-cron" name="statify-blacklist[referer][cron]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['referer']['cron'], 1 ); ?>">
+				<input id="statifyblacklist-referer-cron" name="statify-blacklist[referer][cron]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['referer']['cron'], 1 ); ?>>
 				<?php esc_html_e( 'Activate', 'statify-blacklist' ); ?>
 			</label>
 			<p class="description">
@@ -295,7 +295,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 		<fieldset>
 			<legend class="screen-reader-text"><?php esc_html_e( 'Activate live filter', 'statify-blacklist' ); ?></legend>
 			<label for="statifyblacklist-target-active">
-				<input id="statifyblacklist-target-active" name="statify-blacklist[target][active]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['target']['active'], 1 ); ?>">
+				<input id="statifyblacklist-target-active" name="statify-blacklist[target][active]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['target']['active'], 1 ); ?>>
 				<?php esc_html_e( 'Activate', 'statify-blacklist' ); ?>
 			</label>
 			<p class="description">
@@ -315,7 +315,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 		<fieldset>
 			<legend class="screen-reader-text"><?php esc_html_e( 'CronJob execution', 'statify-blacklist' ); ?></legend>
 			<label for="statifyblacklist-target-cron">
-				<input id="statifyblacklist-target-cron" name="statify-blacklist[target][cron]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['target']['cron'], 1 ); ?>">
+				<input id="statifyblacklist-target-cron" name="statify-blacklist[target][cron]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['target']['cron'], 1 ); ?>>
 				<?php esc_html_e( 'Activate', 'statify-blacklist' ); ?>
 			</label>
 			<p class="description">
@@ -377,7 +377,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 		<fieldset>
 			<legend class="screen-reader-text"><?php esc_html_e( 'Activate live filter', 'statify-blacklist' ); ?></legend>
 			<label for="statifyblacklist-ip-active">
-				<input id="statifyblacklist-ip-active" name="statify-blacklist[ip][active]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['ip']['active'], 1 ); ?>">
+				<input id="statifyblacklist-ip-active" name="statify-blacklist[ip][active]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['ip']['active'], 1 ); ?>>
 				<?php esc_html_e( 'Activate', 'statify-blacklist' ); ?>
 			</label>
 			<p class="description">
@@ -414,7 +414,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 	public static function option_ua_active() {
 		?>
 		<label for="statifyblacklist-ua-active">
-			<input id="statifyblacklist-ua-active" name="statify-blacklist[ua][active]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['ua']['active'], 1 ); ?>">
+			<input id="statifyblacklist-ua-active" name="statify-blacklist[ua][active]" type="checkbox" value="1" <?php checked( StatifyBlacklist::$options['ua']['active'], 1 ); ?>>
 			<?php esc_html_e( 'Activate', 'statify-blacklist' ); ?>
 		</label>
 

@@ -19,7 +19,7 @@ class StatifyBlacklist_System_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_upgrade() {
+	public function test_upgrade(): void {
 		// Create configuration of version 1.3.
 		$options13 = array(
 			'active_referer' => 1,

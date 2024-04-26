@@ -69,7 +69,7 @@ if ( statify_blacklist_compatibility_check() ) {
  *
  * @since 1.0.0
  */
-function statify_blacklist_autoload( $class_name ) {
+function statify_blacklist_autoload( string $class_name ): void {
 	$plugin_classes = array(
 		'StatifyBlacklist',
 		'StatifyBlacklist_Admin',
@@ -93,7 +93,7 @@ function statify_blacklist_autoload( $class_name ) {
  *
  * @return boolean Whether minimum WP and PHP versions are met.
  */
-function statify_blacklist_compatibility_check() {
+function statify_blacklist_compatibility_check(): bool {
 	return version_compare( $GLOBALS['wp_version'], '4.7', '>=' ) &&
 		version_compare( phpversion(), '7.2', '>=' );
 }
@@ -105,7 +105,7 @@ function statify_blacklist_compatibility_check() {
  *
  * @return void
  */
-function statify_blacklist_disable() {
+function statify_blacklist_disable(): void {
 	if ( is_plugin_active( STATIFYBLACKLIST_BASE ) ) {
 		deactivate_plugins( STATIFYBLACKLIST_BASE );
 		add_action( 'admin_notices', 'statify_blacklist_disabled_notice' );
@@ -124,7 +124,7 @@ function statify_blacklist_disable() {
  *
  * @return void
  */
-function statify_blacklist_disabled_notice() {
+function statify_blacklist_disabled_notice(): void {
 	echo '<div class="notice notice-error is-dismissible"><p><strong>';
 	printf(
 		/* translators: minimum version numbers for WordPress and PHP inserted at placeholders */

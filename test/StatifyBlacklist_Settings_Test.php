@@ -19,7 +19,7 @@ class StatifyBlacklist_Settings_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_sanitize_options() {
+	public function test_sanitize_options(): void {
 		global $settings_error;
 
 		// Emulate default submission: nothing checked, all textareas empty.
@@ -215,7 +215,7 @@ class StatifyBlacklist_Settings_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_sanitize_ips() {
+	public function test_sanitize_ips(): void {
 		// IPv4 tests.
 		$valid   = array( '192.0.2.123', '192.0.2.123/32', '192.0.2.0/24', '192.0.2.128/25' );
 		$invalid = array( '12.34.56.789', '192.0.2.123/33', '192.0.2.123/-1' );
@@ -276,7 +276,7 @@ class StatifyBlacklist_Settings_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_register_settings() {
+	public function test_register_settings(): void {
 		global $settings;
 		$settings = array();
 

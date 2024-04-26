@@ -22,7 +22,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_referer_filter() {
+	public function test_referer_filter(): void {
 		// Prepare Options: 2 filtered domains, disabled.
 		StatifyBlacklist::$options = array(
 			'referer' => array(
@@ -89,7 +89,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_referer_regex_filter() {
+	public function test_referer_regex_filter(): void {
 		// Prepare Options: 2 regular expressions.
 		StatifyBlacklist::$options = array(
 			'referer' => array(
@@ -151,7 +151,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_referer_keyword_filter() {
+	public function test_referer_keyword_filter(): void {
 		// Prepare Options: 2 regular expressions.
 		StatifyBlacklist::$options = array(
 			'referer' => array(
@@ -209,7 +209,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_cidr_match() {
+	public function test_cidr_match(): void {
 		// IPv4 tests.
 		$this->assertTrue( invoke_static( StatifyBlacklist::class, 'cidr_match', array( '127.0.0.1', '127.0.0.1' ) ) );
 		$this->assertTrue( invoke_static( StatifyBlacklist::class, 'cidr_match', array( '127.0.0.1', '127.0.0.1/32' ) ) );
@@ -311,7 +311,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_ip_filter() {
+	public function test_ip_filter(): void {
 		// Prepare Options: 2 filtered IPs, disabled.
 		StatifyBlacklist::$options = array(
 			'referer' => array(
@@ -388,7 +388,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_target_filter() {
+	public function test_target_filter(): void {
 		// Prepare Options: 2 filtered domains, disabled.
 		StatifyBlacklist::$options = array(
 			'referer' => array(
@@ -466,7 +466,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_ua_filter() {
+	public function test_ua_filter(): void {
 		// Prepare Options: 2 filtered IPs, disabled.
 		StatifyBlacklist::$options = array(
 			'referer' => array(
@@ -531,7 +531,7 @@ class StatifyBlacklist_Test extends PHPUnit\Framework\TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_combined_filters() {
+	public function test_combined_filters(): void {
 		// Prepare Options: simple referer + simple target + ip.
 		StatifyBlacklist::$options = array(
 			'referer' => array(

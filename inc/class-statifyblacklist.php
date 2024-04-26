@@ -78,7 +78,7 @@ class StatifyBlacklist {
 	 *
 	 * @return void
 	 */
-	public static function init() {
+	public static function init(): void {
 		// Skip on autosave.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
@@ -121,11 +121,11 @@ class StatifyBlacklist {
 	 * @since 1.0.0
 	 * @since 1.2.1 update_options($options = null) Parameter with default value introduced.
 	 *
-	 * @param array $options Optional. New options to save.
+	 * @param array|null $options Optional. New options to save.
 	 *
 	 * @return void
 	 */
-	public static function update_options( $options = null ) {
+	public static function update_options( ?array $options = null ): void {
 		if ( self::$multisite ) {
 			$o = get_site_option( 'statify-blacklist' );
 		} else {
@@ -141,7 +141,7 @@ class StatifyBlacklist {
 	 *
 	 * @return array The options array.
 	 */
-	protected static function default_options() {
+	protected static function default_options(): array {
 		return array(
 			'referer' => array(
 				'active'    => 0,
@@ -173,9 +173,9 @@ class StatifyBlacklist {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return bool TRUE if referer matches filter.
+	 * @return bool|null TRUE if referer matches filter.
 	 */
-	public static function apply_blacklist_filter() {
+	public static function apply_blacklist_filter(): ?bool {
 		// Referer filter.
 		if (
 		self::apply_single_filter(
@@ -225,7 +225,7 @@ class StatifyBlacklist {
 	 *
 	 * @since 1.6 Extracted from "apply_blacklist_filter" to reduce redundancies.
 	 */
-	private static function apply_single_filter( $config, $value_fn ) {
+	private static function apply_single_filter( array $config, callable $value_fn ): bool {
 		// Is the filter active?
 		if ( ! isset( $config['active'] ) || 0 === $config['active'] ) {
 			return false;
@@ -281,7 +281,7 @@ class StatifyBlacklist {
 	 *
 	 * @return string Preprocessed expression ready for preg_match().
 	 */
-	protected static function regex( $expression, $case_insensitive ) {
+	protected static function regex( $expression, $case_insensitive ): string {
 		$res = '/';
 		if ( is_string( $expression ) ) {
 			$res .= str_replace( '/', '\/', $expression );
@@ -309,7 +309,7 @@ class StatifyBlacklist {
 	 *
 	 * @return string The referer.
 	 */
-	private static function get_referer() {
+	private static function get_referer(): string {
 		$referer = wp_get_raw_referer();
 		if ( ! $referer ) {
 			$referer = '';
@@ -323,7 +323,7 @@ class StatifyBlacklist {
 	 *
 	 * @return string Referer domain.
 	 */
-	private static function get_referer_domain() {
+	private static function get_referer_domain(): string {
 		$referer = wp_parse_url( self::get_referer() );
 
 		return strtolower( ( isset( $referer['host'] ) ? $referer['host'] : '' ) );
@@ -334,7 +334,7 @@ class StatifyBlacklist {
 	 *
 	 * @return string The referer.
 	 */
-	private static function get_target() {
+	private static function get_target(): string {
 		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
 			$target = filter_var( wp_unslash( $_SERVER['REQUEST_URI'] ), FILTER_SANITIZE_URL );
 			if ( $target ) {
@@ -386,7 +386,7 @@ class StatifyBlacklist {
 	 *
 	 * @return string The user agent string.
 	 */
-	private static function get_user_agent() {
+	private static function get_user_agent(): string {
 		if ( ! empty( $_SERVER['HTTP_USER_AGENT'] ) ) {
 			$user_agent = filter_var( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) );
 			if ( $user_agent ) {
@@ -405,7 +405,7 @@ class StatifyBlacklist {
 	 *
 	 * @return bool TRUE, if the given IP addresses matches the given subnet.
 	 */
-	private static function cidr_match( $ip, $net ) {
+	private static function cidr_match( string $ip, string $net ): bool {
 		if ( substr_count( $net, ':' ) > 1 ) {  // Check for IPv6.
 			if ( ! ( ( extension_loaded( 'sockets' ) && defined( 'AF_INET6' ) ) || inet_pton( '::1' ) ) ) {
 				return false;

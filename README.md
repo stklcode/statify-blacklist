@@ -12,6 +12,8 @@
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
+Filter extension for the famous Statify WordPress plugin.
+
 ## Description ##
 A filter extension for the famous [Statify](https://wordpress.org/plugins/statify/) WordPress plugin.
 

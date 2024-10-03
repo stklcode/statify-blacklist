@@ -1,6 +1,6 @@
-[![Build Status](https://github.com/stklcode/statify-blacklist/actions/workflows/test.yml/badge.svg?branch=stable)](https://github.com/stklcode/statify-blacklist/actions/workflows/test.yml?query=branch%3Astable)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=stklcode%3Astatify-blacklist&metric=alert_status)](https://sonarcloud.io/dashboard?id=stklcode%3Astatify-blacklist)
-[![Packagist Version](https://img.shields.io/packagist/v/stklcode/statify-blacklist.svg)](https://packagist.org/packages/stklcode/statify-blacklist)
+[![CI](https://github.com/stklcode/statify-blacklist/actions/workflows/test.yml/badge.svg?branch=stable)](https://github.com/stklcode/statify-blacklist/actions/workflows/test.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=stklcode%3Astatify-blacklist&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=stklcode%3Astatify-blacklist)
+[![Packagist Version](https://img.shields.io/packagist/v/stklcode/statify-blacklist)](https://packagist.org/packages/stklcode/statify-blacklist)
 [![License](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://github.com/stklcode/statify-blacklist/blob/stable/LICENSE.md)
 
 # Statify Filter #

@@ -1,5 +1,6 @@
 /.github export-ignore
 /assets export-ignore
+/dist export-ignore
 /test export-ignore
 .distignore export-ignore
 .gitattributes export-ignore

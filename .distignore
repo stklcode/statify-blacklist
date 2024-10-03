@@ -1,7 +1,9 @@
 /.git
 /.github
 /assets
+/dist
 /test
+/vendor
 /.distignore
 /.editorconfig
 /.gitattributes

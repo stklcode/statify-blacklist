@@ -12,7 +12,7 @@
     },
     {
       "step": "installPlugin",
-      "pluginZipFile": {
+      "pluginData": {
         "resource": "wordpress.org/plugins",
         "slug": "statify"
       }
@@ -23,14 +23,14 @@
     },
     {
       "step": "installPlugin",
-      "pluginZipFile": {
+      "pluginData": {
         "resource": "wordpress.org/plugins",
         "slug": "statify-blacklist"
       }
     },
     {
       "step": "activatePlugin",
-      "pluginPath": "statify-blacklis/statify-blacklist.php"
+      "pluginPath": "statify-blacklist/statify-blacklist.php"
     }
   ]
 }

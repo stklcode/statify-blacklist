@@ -1,9 +1,9 @@
 name: Plugin check
 on:
   push:
-    branches: [ stable', 'release/*' ]
+    branches: [ 'stable', 'release/*' ]
   pull_request:
-    branches: [ stable ]
+    branches: [ 'stable' ]
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -16,6 +16,7 @@ jobs:
           mkdir -p ./dist
           tail -n +6 README.md > README.md.tmp && mv README.md.tmp README.md
           rsync -rc --exclude-from=.distignore ./ ./dist/statify-blacklist --delete --delete-excluded
+
       - name: Check WP plugin
         uses: wordpress/plugin-check-action@v1
         with:

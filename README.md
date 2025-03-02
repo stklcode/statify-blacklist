@@ -19,7 +19,7 @@ A filter extension for the famous [Statify](https://wordpress.org/plugins/statif
 
 This plugin adds customizable filters to Statify to allow blocking of referer spam or internal interactions.
 
-### Features ##
+### Features ###
 
 #### Referer Filter ####
 Add a list of domains (for simplicity only second-level, e.g. _example.com_ which blocks _everything.example.com_).

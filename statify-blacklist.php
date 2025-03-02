@@ -9,7 +9,7 @@
  * @wordpress-plugin
  * Plugin Name:       Statify Filter
  * Plugin URI:        https://wordpress.org/plugins/statify-blacklist/
- * Description:       Extension for the Statify plugin to add customizable filters. (formerly "Statify Blacklist)
+ * Description:       Extension for the Statify plugin to add customizable filters. (formerly "Statify Blacklist")
  * Version:           1.7.2
  * Requires at least: 4.7
  * Requires PHP:      5.5

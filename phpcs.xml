@@ -10,7 +10,7 @@
 	<file>inc</file>
 
 	<!-- Compliance with WordPress Coding Standard -->
-	<config name="minimum_supported_wp_version" value="4.7"/>
+	<config name="minimum_supported_wp_version" value="5.1"/>
 	<rule ref="WordPress">
 		<!-- Direct queries used to clean up statify table. -->
 		<exclude name="WordPress.DB.DirectDatabaseQuery.DirectQuery"/>

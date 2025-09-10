@@ -5,7 +5,7 @@
 
 # Statify Filter #
 * Contributors:      stklcode
-* Requires at least: 4.7
+* Requires at least: 5.1
 * Tested up to:      6.8
 * Requires PHP:      7.2
 * Stable tag:        1.7.2
@@ -56,7 +56,7 @@ The plugin is capable of handling multisite installations.
 
 ### Requirements ###
 * PHP 7.2 or above
-* WordPress 4.7 or above
+* WordPress 5.1 or above
 * _Statify_ plugin installed and activated (1.5 or above)
 
 ## Frequently Asked Questions ##

@@ -11,7 +11,7 @@
  * Plugin URI:        https://wordpress.org/plugins/statify-blacklist/
  * Description:       Extension for the Statify plugin to add customizable filters. (formerly "Statify Blacklist")
  * Version:           1.7.2
- * Requires at least: 4.7
+ * Requires at least: 5.1
  * Requires PHP:      7.2
  * Requires Plugins:  statify
  * Author:            Stefan Kalscheuer (@stklcode)
@@ -94,7 +94,7 @@ function statify_blacklist_autoload( string $class_name ): void {
  * @return boolean Whether minimum WP and PHP versions are met.
  */
 function statify_blacklist_compatibility_check(): bool {
-	return version_compare( $GLOBALS['wp_version'], '4.7', '>=' ) &&
+	return version_compare( $GLOBALS['wp_version'], '5.1', '>=' ) &&
 		version_compare( phpversion(), '7.2', '>=' );
 }
 
@@ -129,7 +129,7 @@ function statify_blacklist_disabled_notice(): void {
 	printf(
 		/* translators: minimum version numbers for WordPress and PHP inserted at placeholders */
 		esc_html__( 'Statify Filter requires at least WordPress %1$s and PHP %2$s.', 'statify-blacklist' ),
-		'4.7',
+		'5.1',
 		'7.2'
 	);
 	echo '<br>';

@@ -99,7 +99,7 @@ class StatifyBlacklist {
 		}
 
 		// Statify uses WP AJAX as of 1.7, so we need to reach this point. But there are no further admin/cron actions.
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( wp_doing_ajax() ) {
 			return;
 		}
 

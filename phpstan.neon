@@ -1,0 +1,8 @@
+parameters:
+  level: 3
+  paths:
+    - inc/
+    - statify-blacklist.php
+  ignoreErrors:
+    - message: '/^Constant STATIFYBLACKLIST_BASE not found\.$/'
+      path: inc/

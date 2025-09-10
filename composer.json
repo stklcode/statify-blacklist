@@ -26,6 +26,9 @@
     "phpunit/phpunit": "^8|^9",
     "slowprog/composer-copy-file": "~0.3",
     "squizlabs/php_codesniffer": "^3.13",
+    "szepeviktor/phpstan-wordpress": "^v2.0",
+    "phpstan/extension-installer": "^1.4",
+    "phpstan/phpstan": "^2.1",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "wp-coding-standards/wpcs": "^3.2"
   },
@@ -42,12 +45,16 @@
     ],
     "fix-cs": [
       "phpcbf --standard=phpcs.xml"
+    ],
+    "phpstan": [
+      "phpstan analyse --memory-limit=1G"
     ]
   },
   "config": {
     "allow-plugins": {
       "composer/installers": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true
     }
   }
 }

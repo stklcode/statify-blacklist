@@ -53,3 +53,20 @@ jobs:
         run: composer install --no-interaction
       - name: Code style checks for PHP
         run: composer test-cs
+
+  phpstan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          tools: composer
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-scripts
+      - name: PHPStan
+        run: composer phpstan

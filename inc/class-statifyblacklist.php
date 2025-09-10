@@ -109,7 +109,7 @@ class StatifyBlacklist {
 		}
 
 		// CronJob to clean up database.
-		if ( defined( 'DOING_CRON' ) && DOING_CRON &&
+		if ( wp_doing_cron() &&
 			( 1 === self::$options['referer']['cron'] || 1 === self::$options['target']['cron'] ) ) {
 			add_action( 'statify_cleanup', array( 'StatifyBlacklist_Admin', 'cleanup_database' ) );
 		}

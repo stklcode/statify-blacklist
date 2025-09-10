@@ -126,11 +126,11 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	 */
 	public static function cleanup_database(): void {
 		// Check user permissions.
-		if ( ! current_user_can( 'manage_options' ) && ! ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
+		if ( ! current_user_can( 'manage_options' ) && ! wp_doing_cron() ) {
 			die( esc_html__( 'Are you sure you want to do this?', 'statify-blacklist' ) );
 		}
 
-		if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+		if ( wp_doing_cron() ) {
 			$clean_ref = ( 1 === self::$options['referer']['cron'] );
 			$clean_trg = ( 1 === self::$options['target']['cron'] );
 		} else {

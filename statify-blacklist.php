@@ -12,7 +12,7 @@
  * Description:       Extension for the Statify plugin to add customizable filters. (formerly "Statify Blacklist")
  * Version:           1.7.2
  * Requires at least: 5.1
- * Requires PHP:      7.2
+ * Requires PHP:      7.4
  * Requires Plugins:  statify
  * Author:            Stefan Kalscheuer (@stklcode)
  * Author URI:        https://www.stklcode.de

@@ -7,7 +7,7 @@
 * Contributors:      stklcode
 * Requires at least: 5.1
 * Tested up to:      6.9
-* Requires PHP:      7.2
+* Requires PHP:      7.4
 * Stable tag:        1.7.2
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -55,7 +55,7 @@ The plugin is capable of handling multisite installations.
 * Goto _Settings_ -> _Statify Filter_ to configure the plugin
 
 ### Requirements ###
-* PHP 7.2 or above
+* PHP 7.4 or above
 * WordPress 5.1 or above
 * _Statify_ plugin installed and activated (1.5 or above)
 

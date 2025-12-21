@@ -326,7 +326,7 @@ class StatifyBlacklist {
 	private static function get_referer_domain(): string {
 		$referer = wp_parse_url( self::get_referer() );
 
-		return strtolower( ( isset( $referer['host'] ) ? $referer['host'] : '' ) );
+		return strtolower( $referer['host'] ?? '' );
 	}
 
 	/**

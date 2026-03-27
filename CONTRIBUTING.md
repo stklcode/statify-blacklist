@@ -110,7 +110,7 @@ The coverage is not yet perfect, but be invited to write tests for methods not y
 This project, as part of the WordPress ecosystem adheres to the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards).
 Please make sure that you are at least roughly familiar with those guidelines.
 
-The code style is automatically checked for commits (including pull requests) using [PHP CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer).
+The code style is automatically checked for commits (including pull requests) using [PHP CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer).
 You can check your code against the configured ruleset yourself by running
  `./vendor/bin/phpcs --standard=phpcs.xml your-edited-file.php` (assuming `composer install` has been executed) or the Robo task `robo test:cs` for a complete scan.
 

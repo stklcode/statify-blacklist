@@ -277,11 +277,11 @@ class StatifyBlacklist {
 	 * Preprocess regular expression provided by the user, i.e. add delimiters and optional ci flag.
 	 *
 	 * @param string|array $expression       Original expression string or array of expressions.
-	 * @param string|array $case_insensitive Make expression match case-insensitive.
+	 * @param bool         $case_insensitive Make expression match case-insensitive.
 	 *
 	 * @return string Preprocessed expression ready for preg_match().
 	 */
-	protected static function regex( $expression, $case_insensitive ): string {
+	protected static function regex( $expression, bool $case_insensitive ): string {
 		$res = '/';
 		if ( is_string( $expression ) ) {
 			$res .= str_replace( '/', '\/', $expression );

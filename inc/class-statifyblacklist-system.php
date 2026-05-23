@@ -33,19 +33,10 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 	public static function install( bool $network_wide = false ): void {
 		// Create tables for each site in a network.
 		if ( $network_wide && is_multisite() ) {
-			if ( function_exists( 'get_sites' ) ) {
-				$sites = get_sites();
-			} else {
-				return;
-			}
+			$sites = get_sites( array( 'fields' => 'ids' ) );
 
 			foreach ( $sites as $site ) {
-				if ( is_array( $site ) ) {
-					$site_id = $site['blog_id'];
-				} else {
-					$site_id = $site->blog_id;
-				}
-				self::install_site( $site_id );
+				self::install_site( $site );
 			}
 
 			restore_current_blog();
@@ -87,19 +78,10 @@ class StatifyBlacklist_System extends StatifyBlacklist {
 		if ( is_multisite() ) {
 			$old = get_current_blog_id();
 
-			if ( function_exists( 'get_sites' ) ) {
-				$sites = get_sites();
-			} else {
-				return;
-			}
+			$sites = get_sites( array( 'fields' => 'ids' ) );
 
 			foreach ( $sites as $site ) {
-				if ( is_array( $site ) ) {
-					$site_id = $site['blog_id'];
-				} else {
-					$site_id = $site->blog_id;
-				}
-				self::uninstall_site( $site_id );
+				self::uninstall_site( $site );
 			}
 
 			switch_to_blog( $old );

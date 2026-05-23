@@ -34,7 +34,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 		add_settings_section(
 			'statifyblacklist-referer',
 			__( 'Referer filter', 'statify-blacklist' ),
-			null,
+			array( __CLASS__, 'section_referer' ),
 			'statify-blacklist'
 		);
 		add_settings_field(
@@ -72,7 +72,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 		add_settings_section(
 			'statifyblacklist-target',
 			__( 'Target filter', 'statify-blacklist' ),
-			null,
+			array( __CLASS__, 'section_target' ),
 			'statify-blacklist'
 		);
 		add_settings_field(
@@ -110,7 +110,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 		add_settings_section(
 			'statifyblacklist-ip',
 			__( 'IP filter', 'statify-blacklist' ),
-			null,
+			array( __CLASS__, 'section_ip' ),
 			'statify-blacklist'
 		);
 		add_settings_field(
@@ -133,7 +133,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 		add_settings_section(
 			'statifyblacklist-ua',
 			__( 'User agent filter', 'statify-blacklist' ),
-			null,
+			array( __CLASS__, 'section_ua' ),
 			'statify-blacklist'
 		);
 		add_settings_field(
@@ -219,6 +219,17 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 	 * phpcs:disable Squiz.PHP.EmbeddedPhp.ContentBeforeOpen
 	 * phpcs:disable Squiz.PHP.EmbeddedPhp.ContentAfterEnd
 	 */
+
+	/**
+	 * Options section for referer filters.
+	 *
+	 * @return void
+	 */
+	public static function section_referer(): void {
+		print '<p>';
+		esc_html_e( 'These filter rules are applied to the origin URL of the request.', 'statify-blacklist' );
+		print '</p>';
+	}
 
 	/**
 	 * Option for activating the live referer filter.
@@ -328,6 +339,17 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 	}
 
 	/**
+	 * Options section for target filters.
+	 *
+	 * @return void
+	 */
+	public static function section_target(): void {
+		print '<p>';
+		esc_html_e( 'These filter rules are applied to the visited page.', 'statify-blacklist' );
+		print '</p>';
+	}
+
+	/**
 	 * Option for activating cron the target filter.
 	 *
 	 * @return void
@@ -390,6 +412,19 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 	}
 
 	/**
+	 * Options section for IP filters.
+	 *
+	 * @return void
+	 */
+	public static function section_ip(): void {
+		print '<p>';
+		esc_html_e( 'These filter rules are applied to the IP address of the visitor.', 'statify-blacklist' );
+		print '</p><p>';
+		esc_html_e( 'Cron execution is not possible for IP filter, because IP addresses are not stored.', 'statify-blacklist' );
+		print '</p>';
+	}
+
+	/**
 	 * Option for activating the live IP filter.
 	 *
 	 * @return void
@@ -404,8 +439,6 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 			</label>
 			<p class="description">
 				<?php esc_html_e( 'Filter at time of tracking, before anything is stored', 'statify-blacklist' ); ?>
-				<br>
-				<?php esc_html_e( 'Cron execution is not possible for IP filter, because IP addresses are not stored.', 'statify-blacklist' ); ?>
 			</p>
 		</fieldset>
 		<?php
@@ -429,6 +462,19 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 	}
 
 	/**
+	 * Options section for user agent filters.
+	 *
+	 * @return void
+	 */
+	public static function section_ua(): void {
+		print '<p>';
+		esc_html_e( 'These filter rules are applied to the user agent (browser) identifier of the request.', 'statify-blacklist' );
+		print '</p><p>';
+		esc_html_e( 'Cron execution is not possible for user agent filter, because the user agent is stored.', 'statify-blacklist' );
+		print '</p>';
+	}
+
+	/**
 	 * Option for activating the live user agent filter.
 	 *
 	 * @return void
@@ -442,8 +488,6 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 
 		<p class="description">
 			<?php esc_html_e( 'Filter at time of tracking, before anything is stored', 'statify-blacklist' ); ?>
-			<br>
-			<?php esc_html_e( 'Cron execution is not possible for user agent filter, because the user agent is stored.', 'statify-blacklist' ); ?>
 		</p>
 		<?php
 	}

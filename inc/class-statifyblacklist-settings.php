@@ -764,7 +764,7 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 				// Check of preg_match() fails (warnings suppressed).
 
 				// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
-				return false === @preg_match( StatifyBlacklist::regex( $re, false ), null );
+				return false === @preg_match( StatifyBlacklist::regex( $re, false ), '' );
 			}
 		);
 	}

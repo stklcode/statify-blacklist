@@ -1,8 +1,10 @@
 parameters:
-  level: 4
+  level: 5
   paths:
     - inc/
     - statify-blacklist.php
   ignoreErrors:
     - message: '/^Constant STATIFYBLACKLIST_BASE not found\.$/'
       path: inc/
+    - message: '/^Parameter \#1 \$text of function esc_attr expects string, int given\.$/'
+      path: inc/class-statifyblacklist-settings.php

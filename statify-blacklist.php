@@ -3,21 +3,22 @@
  * Statify Filter
  *
  * @package     PluginPackage
- * @author      Stefan Kalscheuer <stefan@stklcode.de>
+ * @author      Stefan Kalscheuer
  * @license     GPL-2.0+
  *
  * @wordpress-plugin
  * Plugin Name:       Statify Filter
  * Plugin URI:        https://wordpress.org/plugins/statify-blacklist/
  * Description:       Extension for the Statify plugin to add customizable filters. (formerly "Statify Blacklist")
- * Version:           1.7.2
+ * Version:           1.8.0
  * Requires at least: 5.1
  * Requires PHP:      7.4
- * Requires Plugins:  statify
  * Author:            Stefan Kalscheuer (@stklcode)
  * Author URI:        https://www.stklcode.de
- * Text Domain:       statify-blacklist
  * License:           GPLv2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       statify-blacklist
+ * Requires Plugins:  statify
  *
  * Statify Filter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

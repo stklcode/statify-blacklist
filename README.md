@@ -8,7 +8,7 @@
 * Requires at least: 5.1
 * Tested up to:      7.0
 * Requires PHP:      7.4
-* Stable tag:        1.7.2
+* Stable tag:        1.8.0
 * License:           GPLv2 or later
 * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,8 +92,12 @@ Same for IPv6 prefixes like _2001:db8:a0b:12f0::/64_.
 
 ## Screenshots ##
 1. Statify Filter settings page
+2. Statify Filter settings page (continued)
 
 ## Upgrade Notice ##
+
+### 1.8.0 ###
+This release maintenance update that raises the minimum requirements to WordPress 5.1 and PHP 7.4.
 
 ### 1.7.2 ###
 This is a bugfix release to restore the manual cleanup function that was broken since 1.7.0.
@@ -106,6 +110,12 @@ This is a service release with primarily internal rework. Tested up to 6.4 and P
 
 
 ## Changelog
+
+### 1.8.0 / 24.05.2026 ###
+* Minimum required WordPress version is 5.1
+* Minimum required PHP version is 7.4
+* Declared compatibility with WordPress 7.0
+* Various internal code improvements
 
 ### 1.7.2 / 06.06.2024 ###
 * Restore manual database cleanup functionality

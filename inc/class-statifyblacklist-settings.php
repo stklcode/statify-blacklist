@@ -691,9 +691,9 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 	/**
 	 * Sanitize URLs and remove empty results.
 	 *
-	 * @param array $urls given array of URLs.
+	 * @param string[] $urls given array of URLs.
 	 *
-	 * @return array  sanitized array.
+	 * @return string[] sanitized array.
 	 *
 	 * @since 1.1.1
 	 * @since 1.7.0 moved from StatifyBlacklist_Admin to StatifyBlacklist_Settings.
@@ -714,9 +714,9 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 	/**
 	 * Sanitize IP addresses with optional CIDR notation and remove empty results.
 	 *
-	 * @param array $ips given array of URLs.
+	 * @param string[] $ips given array of URLs.
 	 *
-	 * @return array  sanitized array.
+	 * @return string[] sanitized array.
 	 *
 	 * @since 1.4.0
 	 * @since 1.7.0 moved from StatifyBlacklist_Admin to StatifyBlacklist_Settings.
@@ -750,9 +750,9 @@ class StatifyBlacklist_Settings extends StatifyBlacklist {
 	/**
 	 * Validate regular expressions, i.e. remove duplicates and empty values and validate others.
 	 *
-	 * @param array $expressions Given pre-sanitized array of regular expressions.
+	 * @param string[] $expressions Given pre-sanitized array of regular expressions.
 	 *
-	 * @return array Array of invalid expressions.
+	 * @return string[] Array of invalid expressions.
 	 *
 	 * @since 1.5.0 #13
 	 * @since 1.7.0 moved from StatifyBlacklist_Admin to StatifyBlacklist_Settings.

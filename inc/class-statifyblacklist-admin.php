@@ -36,10 +36,7 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 			add_action( 'network_admin_menu', array( 'StatifyBlacklist_Admin', 'add_menu_page' ) );
 			add_filter(
 				'network_admin_plugin_action_links',
-				array(
-					'StatifyBlacklist_Admin',
-					'plugin_actions_links',
-				),
+				array( 'StatifyBlacklist_Admin', 'plugin_actions_links' ),
 				10,
 				2
 			);
@@ -79,10 +76,10 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Add plugin meta links
 	 *
-	 * @param array  $links Registered links.
-	 * @param string $file  The filename.
+	 * @param string[] $links Registered links.
+	 * @param string   $file  The filename.
 	 *
-	 * @return array  Merged links.
+	 * @return string[] Merged links.
 	 *
 	 * @since 1.0.0
 	 */
@@ -97,10 +94,10 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Add plugin action links.
 	 *
-	 * @param array  $links Registered links.
-	 * @param string $file  The filename.
+	 * @param string[] $links Registered links.
+	 * @param string   $file  The filename.
 	 *
-	 * @return array  Merged links.
+	 * @return string[] Merged links.
 	 *
 	 * @since 1.0.0
 	 */
@@ -200,9 +197,9 @@ class StatifyBlacklist_Admin extends StatifyBlacklist {
 	/**
 	 * Sanitize URLs and remove empty results.
 	 *
-	 * @param array $urls given array of URLs.
+	 * @param string[] $urls given array of URLs.
 	 *
-	 * @return array  sanitized array.
+	 * @return string[] sanitized array.
 	 *
 	 * @since 1.1.1
 	 */

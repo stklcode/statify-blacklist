@@ -276,8 +276,8 @@ class StatifyBlacklist {
 	/**
 	 * Preprocess regular expression provided by the user, i.e. add delimiters and optional ci flag.
 	 *
-	 * @param string|array $expression       Original expression string or array of expressions.
-	 * @param bool         $case_insensitive Make expression match case-insensitive.
+	 * @param string|string[] $expression       Original expression string or array of expressions.
+	 * @param bool            $case_insensitive Make expression match case-insensitive.
 	 *
 	 * @return string Preprocessed expression ready for preg_match().
 	 */
